@@ -7,7 +7,7 @@
     >
       <header class="logo">
          <img src="../../assets/logo/logo_hotel.jpg" width="50%" alt=""><br>       
-          <span class="primary-word"  >  DentArt  </span>
+          <span class="primary-word"  >  SGC  </span>
       </header>
       <ul class="nav">
         <NavLink
@@ -22,50 +22,24 @@
          <NavLink
             :activeItem="activeItem"
             header="Metodologias"
-            link="/app/publicaciones"
+            link="/app/metodologia"
             iconName="flaticon-home"
-            index="publicaciones"
+            index="metodologia"
             isHeader
         />
-
-          |<NavLink
-            :activeItem="activeItem"
-            header="Registro"
-            link="/app/registro"
-            iconName="flaticon-home"
-            index="regigstro"
-            isHeader
-        />
-
 
         <NavLink
             :activeItem="activeItem"
-            header="Citas"
-            link="/app/citas"
+            header="Usuario"
+            link="/app/usuario"
             iconName="flaticon-network"
             index="citas"
-            :childrenLinks="[                         
-              { header: 'Comprobante', link: '/app/components/comprobantes' },
-               { header: 'Lista Comprobante', link: '/app/components/comprobanteslista' }, 
-            ]"
+             isHeader
+           
         />
         
-        <NavLink
-            :activeItem="activeItem"
-            header="Pacientes"
-            link="/app/pacientes"
-            iconName="flaticon-star"
-            index="pacientes"
-            isHeader
-            />
-         <NavLink
-            :activeItem="activeItem"
-            header="Doctores"
-            link="/app/doctores"
-            iconName="flaticon-star"
-            index="doctores"
-            isHeader
-            />
+      
+         
       </ul>
       
     </nav>

@@ -20,13 +20,11 @@ Vue.component('Widget', Widget);
 Vue.use(require('vue-moment'));
 Vue.filter('moneyfiltro', moneyfiltro)
 
-//Vue.mixin(layoutMixin);
-//Vue.use(Toasted, {duration: 10000});
+
 
 Vue.config.productionTip = false;
-//axios.defaults.baseURL='https://localhost:44358/'
 
-//http://localhost:60080  https://localhost:44323/
+
 axios.defaults.baseURL='https://localhost:44323/'
 /* eslint-disable no-new */
 new Vue({

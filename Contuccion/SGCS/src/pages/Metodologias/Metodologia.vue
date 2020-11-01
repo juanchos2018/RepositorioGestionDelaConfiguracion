@@ -1,23 +1,125 @@
 <template>
 
-   <div>
-       
-    </div>    
+    <div>
+       <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogMetodologia=true"> 
+            <i class="fa fa-plus-circle"></i> Nuevo
+         </b-button>
+         <!--
+            <div>
+              <b-table hover :items="items" :fields="fields" >
+               <template v-slot:cell(accion)="">
+                <b-button variant="primary" size="sm" class="m-1">VEr</b-button>               
+              </template>
+            </b-table>
+           </div>-->
+      <div>
+     <div class="inner-content">
+
+    
+      <div >   
+           <div class="row" id="listaproyectos">             
+              <div class="col-3" v-for="item in items" :key="item.key">  
+              
+               
+               <b-card text-variant="primary"   border-variant="primary"   header-bg-variant="primary"  header-text-variant="white" header="Metodoligia" class="text-center">
+               
+                <img class="img-fluid" src="../../assets/logometo.png" width="140px" alt="Card image cap">
+
+                <div class="card-body">               
+                  <h4 class="card-title">{{item.nombre}}</h4>                 
+                  
+                   <b-button type="button"  style="width:150px" class="m-1 p-2 px-4 btn-xs" @click="Detalle" variant="primary"> 
+                  Ver
+                </b-button>
+                </div>
+                </b-card>
+
+              
+              </div>           
+          </div>
+       </div>
+        </div>
+     </div>
+      <metodologia-nueva @CerrarModal="CerrarModal" :DialogMetodologia="DialogMetodologia"></metodologia-nueva>
+    
+ </div>
 </template>
 
 <script>
-export default {
 
+import firebase from '@/firebase'
+import MetodologiaNueva from './MetodologiaNueva';
+export default {
+    components: {
+             MetodologiaNueva
+        },
     data(){
         return{
-
-        }
-    },
+          codigo:'',
+          nombre:'',
+          roomid: '222',
+          roomname: 'mchat',
+          nickname: 'juancho',
+          items:[],
+          data: { type:'', nickname:'', message:'' },
+          chats: [],
+          errors: [],          
+          fields: [
+                    { label:"codigo", key: 'codigo', sortable: false },
+                    { label:"Nombre", key: 'nombre', sortable: false },    
+                    { label:"Acciones", key: 'accion', sortable: false },
+                ],
+          offStatus: false,
+          DialogMetodologia:false,
+      }
+    }, 
     created(){
-        
+      this.Listar();   
     },
     methods:{
 
+      Guardar(){
+            //  var key =firebase.getKey();
+           let newData = firebase.database().ref('Metodologia/').push();
+           newData.set({                 
+               codigo: this.codigo,
+               nombre: this.nombre,
+               fecha: Date(),                  
+           });
+         },
+       Detalle(){
+          this.$router.push('/app/fases');
+       }, 
+       CerrarModal() {
+           this.DialogMetodologia = false;             
+       },
+
+       hila(){
+          console.log("adsadsad");
+       },
+       Listar(){
+            
+            
+            firebase.database().ref('Metodologia').on('value', (data) => {   
+              this.items=[];             
+                  data.forEach((doc) => {
+                    var item = doc.val()
+                    item.key = doc.key  
+                    this.items.push(item)
+             });
+         });
+       },      
+      onSubmit (evt) {
+              evt.preventDefault()
+              let newData = firebase.database().ref('chatrooms/'+this.roomid+'/chats').push();
+              newData.set({
+                  type: 'newmsg',
+                  user: this.nickname,
+                  message: this.data.message,
+                  sendDate: Date()
+              });
+              this.data.message = '';
+          },
     }
 
 }

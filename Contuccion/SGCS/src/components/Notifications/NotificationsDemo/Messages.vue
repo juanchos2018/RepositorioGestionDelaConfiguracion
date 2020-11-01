@@ -10,6 +10,7 @@
       <h6 class="m-0 fw-bold mb-1"  >{{chat.usuario}}</h6>
       <p class="deemphasize text-ellipsis m-0" >{{chat.mensaje}} </p>
     </b-list-group-item>    
+    {{notificaciones}}
   </b-list-group>
 
 </template>
@@ -50,8 +51,6 @@ export default {
             item.key = doc.key
             this.notificaciones.push(item)
           });
-
-
         });
   },
   methods:{

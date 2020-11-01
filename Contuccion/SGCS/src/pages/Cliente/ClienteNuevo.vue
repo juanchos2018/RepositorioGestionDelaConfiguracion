@@ -1,6 +1,6 @@
 <template>
   <b-modal id="modal-cliente" size="lg" v-model="Show" @hide="CerrarModal"
-  title="Nuevo Cliente" hide-footer  >
+  title="Nuevo Cliente" hide-footer  body-class="myDiv " >
 
      <form action="">
        <div class="form-row">       

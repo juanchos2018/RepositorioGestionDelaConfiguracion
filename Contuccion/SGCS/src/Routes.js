@@ -9,20 +9,19 @@ import ErrorPage from '@/pages/Error/Error';
 import AnalyticsPage from '@/pages/Dashboard/Dashboard';
 
 
-import Comprobante from '@/pages/Comprobante/Comprobante';
 import ComprobanteLista from '@/pages/Comprobante/ComprobanteLista';
-import Preventa from '@/pages/Preventa/Preventa';
-import PreventaLista from '@/pages/Preventa/PreventaLista'
+
 //Articulo
 import Articulo from '@/pages/Articulo/Articulo';
 import Cliente from '@/pages/Cliente/Cliente';
 import Pacientes from '@/pages/Pacientes/Pacientes';
 import PacienteChat from '@/pages/Pacientes/PacienteChat';
-import Doctores from '@/pages/Doctores/Doctores';
+import Usuario from '@/pages/Usuario/Usuario';
 
 import Publicaciones from '@/pages/Publicaciones/Publicaciones';
-
+import Metodologia from '@/pages/Metodologias/Metodologia';
 import Registro from '@/pages/Registro/Registro';
+import Fases from '@/pages/Fases/Fases';
 
 Vue.use(Router);
 
@@ -54,6 +53,21 @@ export default new Router({
           component: Publicaciones,
         },
         {
+          path: 'usuario',
+          name: 'usuario',
+          component: Usuario,
+        },
+        {
+          path: 'metodologia',
+          name: 'metodologias',
+          component: Metodologia,
+        },
+        {
+          path: 'fases',
+          name: 'fases',
+          component: Fases,
+        },
+        {
           path: 'registro',
           name: 'registro',
           component: Registro,
@@ -64,16 +78,8 @@ export default new Router({
           component: ComprobanteLista,
         },
         // para preventa
-        {
-          path: 'components/preventas',
-          name: 'Preventa',
-          component: Preventa,
-        },
-        {
-          path: 'components/preventalista',
-          name: 'PreventaLista',
-          component: PreventaLista,
-        },
+        
+       
         {
           path: 'articulos',
           name: 'Articulo',
@@ -95,11 +101,7 @@ export default new Router({
           name: 'pacienteschat',
           component: PacienteChat
         },
-        {
-          path: 'doctores',
-          name: 'doctores',
-          component: Doctores
-        },
+       
       ],
     },
   ],
