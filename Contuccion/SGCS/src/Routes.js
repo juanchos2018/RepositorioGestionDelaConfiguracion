@@ -8,21 +8,16 @@ import ErrorPage from '@/pages/Error/Error';
 // Main
 import AnalyticsPage from '@/pages/Dashboard/Dashboard';
 
-
-import ComprobanteLista from '@/pages/Comprobante/ComprobanteLista';
-
-//Articulo
-import Articulo from '@/pages/Articulo/Articulo';
-import Cliente from '@/pages/Cliente/Cliente';
-import Pacientes from '@/pages/Pacientes/Pacientes';
 import PacienteChat from '@/pages/Pacientes/PacienteChat';
 import Usuario from '@/pages/Usuario/Usuario';
-
+import UsuarioTareas from '@/pages/Usuario/UsuarioTareas';
 import Publicaciones from '@/pages/Publicaciones/Publicaciones';
 import Metodologia from '@/pages/Metodologias/Metodologia';
 import Registro from '@/pages/Registro/Registro';
 import Fases from '@/pages/Fases/Fases';
-
+import Proyecto from '@/pages/Proyecto/Proyecto';
+import ProyectoNuevo from '@/pages/Proyecto/ProyectoNuevo';
+import ProyectoDetalle from '@/pages/Proyecto/ProyectoDetalle';
 Vue.use(Router);
 
 export default new Router({
@@ -58,6 +53,11 @@ export default new Router({
           component: Usuario,
         },
         {
+          path: 'usuariotareas',
+          name: 'usuariotareas',
+          component: UsuarioTareas,
+        },
+        {
           path: 'metodologia',
           name: 'metodologias',
           component: Metodologia,
@@ -73,29 +73,21 @@ export default new Router({
           component: Registro,
         },
         {
-          path: 'components/comprobanteslista',
-          name: 'ComprobanteLista',
-          component: ComprobanteLista,
-        },
-        // para preventa
-        
-       
-        {
-          path: 'articulos',
-          name: 'Articulo',
-          component: Articulo,
+          path: 'proyecto',
+          name: 'proyecto',
+          component: Proyecto,
         },
         {
-          path: 'clientes',
-          name: 'cliente',
-          component: Cliente
+          path: 'proyectonuevo',
+          name: 'proyectonuevo',
+          component: ProyectoNuevo,
         },
-        //dentartDoctores
         {
-          path: 'pacientes',
-          name: 'pacientes',
-          component: Pacientes
+          path: 'proyectodetalle',
+          name: 'proyectodetalle',
+          component: ProyectoDetalle,
         },
+
         {//  path: 'components/comprobantesdetalle/:id',
           path: 'pacienteschat/:id_usuario',
           name: 'pacienteschat',

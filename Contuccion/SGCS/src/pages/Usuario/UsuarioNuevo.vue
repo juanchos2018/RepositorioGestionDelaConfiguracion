@@ -76,8 +76,7 @@ export default {
      
     },
     methods: {
-        Guardar(){
-         
+        Guardar(){         
               let newData = firebase.database().ref('Usuario/').push();
               newData.set({                 
                   codigo: this.codigo,
@@ -87,8 +86,7 @@ export default {
                   //key:key
               });
             
-             },
-     
+          },     
          makeToast(msg,color) {
             this.toastCount++
             this.$bvToast.toast(msg, {

@@ -3,38 +3,24 @@
     <div>
        <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogMetodologia=true"> 
             <i class="fa fa-plus-circle"></i> Nuevo
-         </b-button>
-         <!--
-            <div>
-              <b-table hover :items="items" :fields="fields" >
-               <template v-slot:cell(accion)="">
-                <b-button variant="primary" size="sm" class="m-1">VEr</b-button>               
-              </template>
-            </b-table>
-           </div>-->
+         </b-button>        
       <div>
-     <div class="inner-content">
-
-    
+     <div class="inner-content">    
       <div >   
            <div class="row" id="listaproyectos">             
-              <div class="col-3" v-for="item in items" :key="item.key">  
-              
+              <div class="col-3" v-for="item in items" :key="item.key">             
                
                <b-card text-variant="primary"   border-variant="primary"   header-bg-variant="primary"  header-text-variant="white" header="Metodoligia" class="text-center">
                
                 <img class="img-fluid" src="../../assets/logometo.png" width="140px" alt="Card image cap">
-
                 <div class="card-body">               
-                  <h4 class="card-title">{{item.nombre}}</h4>                 
-                  
+                  <h4 class="card-title">{{item.nombre}}</h4>   
                    <b-button type="button"  style="width:150px" class="m-1 p-2 px-4 btn-xs" @click="Detalle" variant="primary"> 
                   Ver
                 </b-button>
                 </div>
-                </b-card>
-
-              
+                </b-card>     
+                <br>         
               </div>           
           </div>
        </div>

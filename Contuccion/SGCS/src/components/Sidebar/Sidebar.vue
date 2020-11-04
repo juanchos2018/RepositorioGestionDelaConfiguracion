@@ -33,8 +33,16 @@
             header="Usuario"
             link="/app/usuario"
             iconName="flaticon-network"
-            index="citas"
-             isHeader
+            index="usuario"
+             isHeader           
+        />
+        <NavLink
+            :activeItem="activeItem"
+            header="Proyecto"
+            link="/app/proyecto"
+            iconName="flaticon-network"
+            index="proyecto"
+            isHeader
            
         />
         

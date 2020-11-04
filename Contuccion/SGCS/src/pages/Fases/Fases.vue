@@ -1,21 +1,26 @@
 <template>
     <div>
+           
     <div class="row" id="listaproyectos">             
-       <div class="col-2" v-for="item in items" :key="item.key">  
-            
+       <div class="col-2" v-for="item in items" :key="item.key"  >              
        <div class="sixteen columns">
-        <div class="container">
-             
-           <img src="../../assets/fase1.png" style="position: relative;" width="150px" alt="">
-           <div class="text">
-          <h5 style="position: absolute;">{{item.nombre}}</h5>
+        <div class="container" >
+             <div style="position: relative;display: inline-block; text-align: center;">
+            <img src="../../assets/fase1.png"  width="150px" alt=""  >          
+             </div>
+              <div style="position: absolute; top: 45%; left: 45%; ">
+                <strong> <h5 style="color: #EFDDF6 ;">{{item.nombre}}</h5></strong>  
+            
+             </div>   
+            
+                              
+        </div>
+        </div>        
        </div>
+     
          
-        </div>
-        </div>
-       </div>
     </div>
-    </div>
+   </div>
 </template>
 
 <script>
@@ -42,6 +47,10 @@ export default {
              });
          });
        },
+       alerta(){
+        
+           this.$refs.popover.$emit('open')
+       }
     }
 }
 </script>

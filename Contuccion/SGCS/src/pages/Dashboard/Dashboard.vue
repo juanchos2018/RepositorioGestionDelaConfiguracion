@@ -1,31 +1,37 @@
 <template>
-  <div class="dashboard-page">
-    <h1 class="page-title">Inicio</h1>
-  
-
+  <div  class="bg-light">
+   <h5>Inicio</h5>
+    
   </div>
 </template>
 
 <script>
 import Widget from '@/components/Widget/Widget';
+import moment from 'moment'
+import firebase from '@/firebase'
+
+
 
 export default {
   name: 'Dashboard',
-  components: {
-    Widget,  
-  },
+  components: {  },
+  props: ['items'],
+
   data() {
     return {
-     valor:''
+     
     
     };
   },
+  created(){
+     
+  },
   methods: {
     
+  },
    
     
-  }
+  
 };
 </script>
 
-<style src="./Dashboard.scss" lang="scss" />

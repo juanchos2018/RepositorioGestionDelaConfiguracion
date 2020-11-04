@@ -1,14 +1,12 @@
 <template>
     <div>
-        <div>
-            <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogUsuario=true"> 
-                    <i class="fa fa-plus-circle"></i> Nuevo
-                </b-button>
-                <br>
-                
+      <div>
+         <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogUsuario=true"> 
+            <i class="fa fa-plus-circle"></i> Nuevo
+          </b-button>
+          <br>           
         </div>
-
- <div >   
+    <div >   
       <div class="row" id="listaproyectos">             
        <div class="col-4" v-for="item in items" :key="item.key">  
               
@@ -31,11 +29,14 @@
             </b-col>
             </b-row>            
                 <template #footer>
-                        <em> Datos </em>
+                     <div class="float:right">
+                       <b-button variant="success" @click="Tareas" > Ver</b-button>
+                     </div>                     
                 </template>
-        </b-card>
-              </div>
-           </div>
+         </b-card>
+         <br>
+       </div>
+      </div>
     </div>
 
          <usuario-nuevo @CerrarModal="CerrarModal" :DialogUsuario="DialogUsuario"></usuario-nuevo>
@@ -74,9 +75,13 @@ export default {
              });
          });
        },
+       Tareas(){
+          this.$router.push('/app/usuariotareas');
+
+       }
   }
 
 }
 </script>
 
-<style src="./stile.scss" lang="scss"  />
+<style src="./stile.scss" lang="scss" scoped />
