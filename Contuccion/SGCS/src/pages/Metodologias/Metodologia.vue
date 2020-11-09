@@ -15,7 +15,7 @@
                 <img class="img-fluid" src="../../assets/logometo.png" width="140px" alt="Card image cap">
                 <div class="card-body">               
                   <h4 class="card-title">{{item.nombre}}</h4>   
-                   <b-button type="button"  style="width:150px" class="m-1 p-2 px-4 btn-xs" @click="Detalle" variant="primary"> 
+                   <b-button type="button"  size="lg" class="m-1 p-2 px-4 btn-xs" @click="Detalle" variant="primary"> 
                   Ver
                 </b-button>
                 </div>
@@ -26,13 +26,14 @@
        </div>
         </div>
      </div>
-      <metodologia-nueva @CerrarModal="CerrarModal" :DialogMetodologia="DialogMetodologia"></metodologia-nueva>
+      <metodologia-nueva @CerrarModal="CerrarModal" :DialogMetodologia="DialogMetodologia" v-on:Listar-Emit="ListarMetodologia"></metodologia-nueva>
     
  </div>
 </template>
 
 <script>
 
+import axios from  'axios';
 import firebase from '@/firebase'
 import MetodologiaNueva from './MetodologiaNueva';
 export default {
@@ -60,7 +61,10 @@ export default {
       }
     }, 
     created(){
-      this.Listar();   
+  //  this.ListaTodo();
+    //  this.Listar(); 
+    this.ListarMetodologia();  
+    
     },
     methods:{
 
@@ -79,13 +83,30 @@ export default {
        CerrarModal() {
            this.DialogMetodologia = false;             
        },
+      ListarMetodologia(){
+        let me=this;
+         axios.get('Backphp/ProcesoMetodologia.php/').then(response => {
+                    
+                      me.items = response.data;
+                  }).catch(function (error) {
+                      console.log(error);
+                  }) .finally(() => {
+                     
+            })
 
-       hila(){
-          console.log("adsadsad");
        },
-       Listar(){
-            
-            
+      ListaTodo(){
+        console.log("funcion")
+         axios.get('Backphp/').then(response => {
+                       
+                     console.log(response);
+                  }).catch(function (error) {
+                      console.log(error);
+                  }) .finally(() => {
+                     
+              })
+      },
+       Listar(){  
             firebase.database().ref('Metodologia').on('value', (data) => {   
               this.items=[];             
                   data.forEach((doc) => {
@@ -95,7 +116,7 @@ export default {
              });
          });
        },      
-      onSubmit (evt) {
+       onSubmit (evt) {
               evt.preventDefault()
               let newData = firebase.database().ref('chatrooms/'+this.roomid+'/chats').push();
               newData.set({

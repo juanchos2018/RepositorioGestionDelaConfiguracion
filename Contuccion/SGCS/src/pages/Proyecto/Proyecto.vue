@@ -1,42 +1,39 @@
 <template>
     <div>
-            <div>
+       <div>
          <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="Nuevo"> 
             <i class="fa fa-plus-circle"></i> Nuevo Proyecto
           </b-button>
           <br>           
         </div>
-    <div class="row">
-         <div class="col-6" v-for="item in items" :key="item.key">  
-            <b-card  class="border border-4 border-dark">
-             <b-row no-gutters>
-            <b-col md="2">
-                <div class="UserAvatar__IconImage-hmym9w-1 jtNJTZ" >
-                   <center> 
-                       <img  src="../../assets/proyect.png" alt="Avatar"  class="avatar1">                  
-                    </center>
-                </div>     
-            </b-col>
-            <b-col md="8">
-                 <b-card-body >                   
-                <b-card-title>{{item.nombre_proyecto}}</b-card-title>                    
-                <b-card-text>
-                  {{item.fecha_inicio}}
-                </b-card-text>                
-                </b-card-body>                
-            </b-col>
-            </b-row>  
-            <div style="float:right">
-                <b-icon icon="people-fill" font-scale="2" shift-h="-2"></b-icon>                
-                 <b-icon icon="grid3x3-gap-fill" class="float:right" @click="Detalle" font-scale="2" shift-h="2"></b-icon>
-            </div>           
-           </b-card>
-         </div>
-    </div> 
+
+       <div class="row" >
+        <div class="col-4" v-for="item in items" :key="item.key">
+        <b-card  border-variant="primary" >
+            <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
+                    <b-dropdown-item @click="Miembros">Miembros</b-dropdown-item>
+                     <b-dropdown-item >Agregar Miembro</b-dropdown-item>
+                    <b-dropdown-item @click="Detalle">Detalle</b-dropdown-item>           
+                </b-dropdown>             
+            <b-card-title>{{item.nombre_proyecto}}</b-card-title>  
+            <br>    
+            <b-card-text>
+                Fecha Inicio :  {{item.fecha_inicio}} <br>
+                Fecha Termino:  {{item.fecha_termino}}<br>
+                Estado:  <span class="badge badge-success">{{item.estado}}</span>  <br>
+                Miembros :4
+            </b-card-text>
+            <b-card-text class="small text-muted">Ultima Actualizacion hace 3 min</b-card-text>
+            </b-card>
+            <br>
+            </div>
+        </div>
+
     </div>
 </template>
 <script>
 
+import axios from  'axios';
 import firebase from '@/firebase'
 export default {
     
@@ -46,7 +43,7 @@ export default {
         }
     },
     created(){
-       this. Listar();
+       this.ListarProyecto();
     },
     methods:{
         Nuevo(){
@@ -54,6 +51,21 @@ export default {
         },
         Detalle(){
              this.$router.push('/app/proyectodetalle');   
+        },
+        Miembros(){
+             this.$router.push('/app/proyectomiembro'); 
+        },
+        ListarProyecto(){
+             let me=this;
+              axios.get('Backphp/ProcesoProyecto.php/').then(response => {
+                    
+                      me.items = response.data;
+                      console.log(response.data);
+                  }).catch(function (error) {
+                      console.log(error);
+                  }) .finally(() => {
+                     
+            })
         },
         Listar(){
             firebase.database().ref('Proyectos').on('value', (data) => {   

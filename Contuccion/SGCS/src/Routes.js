@@ -18,6 +18,7 @@ import Fases from '@/pages/Fases/Fases';
 import Proyecto from '@/pages/Proyecto/Proyecto';
 import ProyectoNuevo from '@/pages/Proyecto/ProyectoNuevo';
 import ProyectoDetalle from '@/pages/Proyecto/ProyectoDetalle';
+import ProyectoMiembros from '@/pages/Proyecto/ProyectoMiembros';
 Vue.use(Router);
 
 export default new Router({
@@ -81,6 +82,11 @@ export default new Router({
           path: 'proyectonuevo',
           name: 'proyectonuevo',
           component: ProyectoNuevo,
+        },
+        {
+          path: 'proyectomiembro',
+          name: 'proyectomiembro',
+          component: ProyectoMiembros,
         },
         {
           path: 'proyectodetalle',

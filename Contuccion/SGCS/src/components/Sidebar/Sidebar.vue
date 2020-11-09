@@ -18,7 +18,7 @@
             index="inicio"
             isHeader
         />
-                
+        
          <NavLink
             :activeItem="activeItem"
             header="Metodologias"
@@ -28,15 +28,7 @@
             isHeader
         />
 
-        <NavLink
-            :activeItem="activeItem"
-            header="Usuario"
-            link="/app/usuario"
-            iconName="flaticon-network"
-            index="usuario"
-             isHeader           
-        />
-        <NavLink
+           <NavLink
             :activeItem="activeItem"
             header="Proyecto"
             link="/app/proyecto"
@@ -45,6 +37,15 @@
             isHeader
            
         />
+        <NavLink
+            :activeItem="activeItem"
+            header="Usuario"
+            link="/app/usuario"
+            iconName="flaticon-network"
+            index="usuario"
+             isHeader           
+        />
+      
         
       
          

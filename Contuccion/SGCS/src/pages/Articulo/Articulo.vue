@@ -1,69 +1,48 @@
 <template>
     <div>
+     
+  <div class="col-12 col-md-6 col-lg-3">
+							<div class="card">
 
-        <div>  
-           <b-card class="mt-3" header=" Listado de Articulos"  
-           
-            header-text-variant="white"
-            header-tag="header"
-            header-bg-variant="primary" >
-            
+								<div class="card-header px-4 pt-4">
+									<div class="card-actions float-right">
+										<div class="dropdown show">
+											<a href="#" data-toggle="dropdown" data-display="static">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal align-middle"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+											</a>
+                      
 
-             <div  class="form-row">
-                 
-                 <b-form-group  id="input-group-3" label="Filtrar " label-for="input-1" class="col-md-4">
-                <b-form-input
-                id="input-1"               
-                required
-                 v-model="Buscar1"
-                 class="p-2 px-4 btn-xs" 
-                ></b-form-input>
-                
-                
-            </b-form-group>
-            
-             <b-form-group  id="input-group-3" label="Filtrar " label-for="input-1" class="col-md-4">
-                <b-form-input
-                id="input-2"               
-                required
-                 v-model="Buscar2"
-                 class="p-2 px-4 btn-xs" 
-                ></b-form-input>
-                
-            </b-form-group>
+<!--
+											<div class="dropdown-menu dropdown-menu-right">
+												<a class="dropdown-item" href="#">Action</a>
+												<a class="dropdown-item" href="#">Another action</a>
+												<a class="dropdown-item" href="#">Something else here</a>
+											</div>-->
+										</div>
+									</div>
+									<h5 class="card-title mb-0">Landing page redesign</h5>
+									<div class="badge bg-success my-2">Finished</div>
+								</div>
+								<div class="card-body px-4 pt-2">
+									<p>Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque
+										sed ipsum.</p>
 
-            <b-form-group id="input-group-3" label="Filtrar " label-for="input-1" class="col-md-4">
-                 <b-button   type="button" variant="primary"  @click="BuscarProducto" class="p-2 px-4 btn-xs" > Buscar</b-button>
-                
-            </b-form-group>
-            </div>
-                       
-            <b-table 
-            
-            id="my-table"
-            :items="ListaArticulos"         
-            :per-page="TamanoPagina"            
-            smal 
-            :filter="filter">                               
-               
-            </b-table>
-             <div>
-    
-            <b-pagination
-                v-model="NumerosPaginas"
-                :total-rows="TotalPaginas"
-                :per-page="TamanoPagina"
-                first-number
-                v-on:input="cambiarPagina"
-            ></b-pagination>
-            </div>
-             </b-card> 
-        </div>
-      <div>
-
-</div>
-
-   
+									<img src="img/avatars/avatar-3.jpg" class="rounded-circle mr-1" alt="Avatar" width="28" height="28">
+									<img src="img/avatars/avatar-2.jpg" class="rounded-circle mr-1" alt="Avatar" width="28" height="28">
+									<img src="img/avatars/avatar.jpg" class="rounded-circle mr-1" alt="Avatar" width="28" height="28">
+								</div>
+								<ul class="list-group list-group-flush">
+									<li class="list-group-item px-4 pb-4">
+										<p class="mb-2 font-weight-bold">Progress <span class="float-right">100%</span></p>
+										<div class="progress progress-sm">
+											<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+     
 
     
  </div>
