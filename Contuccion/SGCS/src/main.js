@@ -14,14 +14,19 @@ const $ = require('jquery')
 import VueSweetalert2 from 'vue-sweetalert2'; 
 import 'sweetalert2/dist/sweetalert2.min.css';
 
-
+import VueSchedulerLite from 'vue-scheduler-lite'
 // Lo declaramos globalmente
-
-//import VueGoodWizard from '../src'
-//import VueGoodWizard from './components/Wizard.vue';
+import firebase from "firebase/app";
+import 'firebase/app';
+import 'firebase/auth';
 import VueGoodWizard from 'vue-good-wizard';
-Vue.use(VueGoodWizard);
+import Antd from "ant-design-vue";
+import "ant-design-vue/dist/antd.css";
+Vue.use(Antd);
 
+
+Vue.use(VueGoodWizard);
+Vue.use(VueSchedulerLite)
 
 window.$ = $
 Vue.use(VueSweetalert2);
@@ -48,4 +53,13 @@ new Vue({
   store,
   router,
   render: h => h(App),
+});
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(x => x.meta.requiresAuth);
+  if(requiresAuth) {
+    firebase.auth().onAuthStateChanged( (user) => {
+      if (!user) next('/login')
+      else next();
+    })
+  } else next()
 });

@@ -6,7 +6,7 @@
         @mouseleave="sidebarMouseLeave"
     >
       <header class="logo">
-         <img src="../../assets/logo/logo_hotel.jpg" width="50%" alt=""><br>       
+         <img src="../../assets/logo/logo1.png" width="30%" alt=""><br>       
           <span class="primary-word"  >  SGC  </span>
       </header>
       <ul class="nav">
@@ -37,12 +37,21 @@
             isHeader
            
         />
+        <!--
         <NavLink
             :activeItem="activeItem"
             header="Usuario"
             link="/app/usuario"
             iconName="flaticon-network"
             index="usuario"
+             isHeader           
+        />-->
+         <NavLink
+            :activeItem="activeItem"
+            header="Solicitud"
+            link="/app/solicitud"
+            iconName="flaticon-network"
+            index="solicitud"
              isHeader           
         />
       

@@ -1,9 +1,10 @@
 <template>
     <div>
       <div>
+        <!--
          <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" > 
             <i class="fa fa-plus-circle"></i> Nuevo Miembro
-          </b-button>
+          </b-button>-->
           <br>           
         </div>
     <div >   

@@ -13,7 +13,7 @@
             <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
                     <b-dropdown-item @click="Miembros">Miembros</b-dropdown-item>
                      <b-dropdown-item >Agregar Miembro</b-dropdown-item>
-                    <b-dropdown-item @click="Detalle">Detalle</b-dropdown-item>           
+                    <b-dropdown-item @click="Detalle(item.id_proyecto)">Detalle</b-dropdown-item>           
                 </b-dropdown>             
             <b-card-title>{{item.nombre_proyecto}}</b-card-title>  
             <br>    
@@ -49,8 +49,10 @@ export default {
         Nuevo(){
              this.$router.push('/app/proyectonuevo');
         },
-        Detalle(){
-             this.$router.push('/app/proyectodetalle');   
+        Detalle(id_proyecto){
+                console.log(id_proyecto);
+             this.$router.push({name:"proyectodetalle",params:{id_proyecto} });
+           //this.$router.push('/app/proyectodetalle');   
         },
         Miembros(){
              this.$router.push('/app/proyectomiembro'); 
@@ -59,8 +61,7 @@ export default {
              let me=this;
               axios.get('Backphp/ProcesoProyecto.php/').then(response => {
                     
-                      me.items = response.data;
-                      console.log(response.data);
+                      me.items = response.data;                      
                   }).catch(function (error) {
                       console.log(error);
                   }) .finally(() => {

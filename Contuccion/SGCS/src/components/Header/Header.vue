@@ -8,7 +8,7 @@
         <a class="fs-lg d-lg-none" href="#" @click="switchSidebarMethod">
           <i class="la la-bars la-lg" />
         </a>
-        <img src="../../assets/logo/logo_hotel.jpg" width="8%" style=" height: auto"  alt="">
+        <img src="../../assets/logo/logo1.png" width="5%" style=" height: auto"  alt="">
          <div class="site-branding-text d-md-down-none">
             <h5 class="site-title"  style="font-size:1.30vw;" > <strong> {{name}} </strong></h5>
             <p class="site-description" style="font-size:1.0vw; color:#808080" > {{ru}}</p>
@@ -34,9 +34,9 @@
             right>
             <template slot="button-content">
               <span class="avatar rounded-circle thumb-sm float-left mr-2">
-                <img class="rounded-circle" src="../../assets/people/a5.jpg" alt="..." />
+                <img class="rounded-circle" src="../../assets/logo/userlogo.png" alt="..." />
               </span>
-              <span class="small">Philip Smith</span>
+              <span class="small">{{NombreUsuario}}</span>
               <span class="ml-1 circle bg-primary text-white fw-bold">13</span>
             </template>
             <Notifications />
@@ -50,12 +50,10 @@
 
         <b-dropdown-item><i class="la la-user" /> Mi Cuenta</b-dropdown-item>
         <b-dropdown-divider />
-        <b-dropdown-item>Calendar</b-dropdown-item>
-        <b-dropdown-item>
-          Inbox &nbsp;&nbsp;<b-badge variant="danger" pill class="animate__animated animate__bounceIn">9</b-badge>
-        </b-dropdown-item>
+        <b-dropdown-item>User</b-dropdown-item>
+      
         <b-dropdown-divider />
-        <b-dropdown-item-button @click="logout">
+        <b-dropdown-item-button @click="CerrarSesion">
           <i class="la la-sign-out" /> Salir
         </b-dropdown-item-button>
       </b-nav-item-dropdown>
@@ -67,6 +65,7 @@
 import { mapState, mapActions } from 'vuex';
 
 import Notifications from '@/components/Notifications/Notifications';
+import firebase from '@/firebase'
 export default {
   name: 'Header',
   props:['name','ru'],
@@ -80,6 +79,20 @@ export default {
  components: { Notifications },
   computed: {
     ...mapState('layout', ['sidebarClose', 'sidebarStatic']),
+  },
+
+  created(){
+  firebase.auth().onAuthStateChanged(user =>  {
+      if (user) {
+        // User is signed in.
+        console.log(user.displayName)
+        this.NombreUsuario=user.displayName;
+        console.log("logueado")
+      } else {
+        // No user is signed in.
+         console.log("no logueado")
+      }
+      });
   },
   methods: {
     ...mapActions('layout', ['toggleSidebar', 'switchSidebar', 'changeSidebarActive']),
@@ -109,6 +122,15 @@ export default {
       window.localStorage.setItem('authenticated', false);
       this.$router.push('/login');
     },
+    CerrarSesion(){
+         firebase
+        .auth()
+        .signOut()
+        .then(() => {
+         window.localStorage.setItem('authenticated', false);
+        this.$router.push('/login');
+        });
+    }
   }
 };
 </script>

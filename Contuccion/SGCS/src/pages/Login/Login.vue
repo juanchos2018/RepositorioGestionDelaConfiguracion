@@ -1,4 +1,5 @@
 <template>
+<!--
   <div class="auth-page">
     <b-container>
       <h5 class="auth-logo">
@@ -42,21 +43,112 @@
     <footer class="auth-footer">
       2019 &copy; Sing App Vue Admin Dashboard Template.
     </footer>
-  </div>
+  </div>-->
+  <div>
+<img class="wave" src="../../assets/wave1.png">
+	<div class="container">		
+		<div class="img">
+			<img src="../../assets/loginsvg.svg">
+		</div>
+		<div class="login-content">
+			<form @submit.prevent="submit">
+				<img src="../../assets/avatar.svg">
+				<h2 class="title">Bienvenido</h2>
+           		<div class="input-div one">
+           		   <div class="i">
+           		   	 <i class="fas fa-user"></i>
+           		   </div>
+           		   <div class="div">
+           		   		<input  ref="email" required type="text" name="alias"  placeholder="Usuario" >
+           		   </div>
+           		</div>
+           		<div class="input-div pass">
+           		   <div class="i"> 
+           		    	<i class="fas fa-lock"></i>
+           		   </div>
+           		   <div class="div">
+           		    	<input  ref="password" v-model="password" required type="password" name="password"   v-on:keyup="validateEnter" placeholder="Contraseña">
+				   </div>
+            	</div>   
+              <b-button type="submit" style="padding: 10px 10px 10px;                            
+                                border-radius: 4px;
+                                font-size: 17px;
+                                font-weight: bold;
+                                line-height: 20px;    
+                                margin-bottom: 24px;"
+                                >
+						<div class="float-left">
+							<pulse-loader  v-if="loanding"  color="#F2E6E4" ></pulse-loader>
+						</div>							
+						Ingresar
+			 </b-button>
+            </form>
+        </div>
+    </div>
+</div>
 </template>
 
 <script>
 import Widget from '@/components/Widget/Widget';
+import firebase from '@/firebase'
 
 export default {
   name: 'LoginPage',
   components: { Widget },
   data() {
     return {
+      loanding:false,
       errorMessage: null,
+      password:'',
+      alias:''
     };
   },
   methods: {
+    submit(){
+       this.loanding=true;
+    firebase
+        .auth()
+        .signInWithEmailAndPassword(this.$refs.email.value,this.$refs.password.value)
+        .then(data => {
+         // this.$router.replace({ name: "Dashboard" });
+         console.log(data);
+         var verificado=data.user.emailVerified;
+         var id =data.user.uid;
+              if(verificado){
+                 this.loanding=false;
+                   window.localStorage.setItem('authenticated', true);
+                   this.$router.push('/app/inicio').catch(err => {
+              
+                  if (
+                    err.name !== 'NavigationDuplicated' &&
+                    !err.message.includes('Avoided redundant navigation to current location')
+                  ) {
+                    console(err);
+                  }
+              });
+              }    
+              else{
+                alert("Crreo no verificado");
+                console.log("No existe");
+                 this.loanding=false;
+              }      
+        })
+        .catch(err => {
+          this.error = err.message;
+              alert("Error en datos");
+                console.log("No existe");
+                 this.loanding=false;
+        });
+
+    },
+    validateEnter: function(e) {
+      if (e.keyCode === 13) {
+        this.ingresar();
+      } else if (e.keyCode === 50) {
+        //alert('@ was pressed');
+      }      
+      this.log += e.key;
+    },
     login() {
       const email = this.$refs.email.value;
       const password = this.$refs.password.value;
@@ -93,3 +185,4 @@ export default {
   },
 };
 </script>
+<style src="./stilo.scss" scoped lang="scss"></style>

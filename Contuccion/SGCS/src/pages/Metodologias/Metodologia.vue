@@ -1,12 +1,25 @@
 <template>
 
     <div>
+       <div class="navigation-filter float-right">
+          <a href="#"  class="cambia" @click="Grilla"><i class="fa fa-th-list"></i></a>
+          <a href="#"  class="cambia" @click="Card" ><i class="fa fa-th"></i></a>
+      </div>
+ 
        <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogMetodologia=true"> 
             <i class="fa fa-plus-circle"></i> Nuevo
          </b-button>        
       <div>
      <div class="inner-content">    
-      <div >   
+        <div v-if="Vergrilla">
+             <b-table :items="items" :fields="fields"  stacked="sm">   
+              <template v-slot:cell(accion)="item">
+                <b-button variant="primary" @click="Detalle(item.item.id+'-'+item.item.nombre)" >Ver</b-button>
+              </template>
+            </b-table>
+        </div>
+
+      <div v-if="VerCard">   
            <div class="row" id="listaproyectos">             
               <div class="col-3" v-for="item in items" :key="item.key">             
                
@@ -15,7 +28,7 @@
                 <img class="img-fluid" src="../../assets/logometo.png" width="140px" alt="Card image cap">
                 <div class="card-body">               
                   <h4 class="card-title">{{item.nombre}}</h4>   
-                   <b-button type="button"  size="lg" class="m-1 p-2 px-4 btn-xs" @click="Detalle" variant="primary"> 
+                   <b-button type="button"  size="lg" class="m-1 p-2 px-4 btn-xs" @click="Detalle(item.id+'-'+item.nombre)" variant="primary"> 
                   Ver
                 </b-button>
                 </div>
@@ -45,6 +58,8 @@ export default {
           codigo:'',
           nombre:'',
           roomid: '222',
+          Vergrilla:false,
+          VerCard:true,
           roomname: 'mchat',
           nickname: 'juancho',
           items:[],
@@ -52,7 +67,7 @@ export default {
           chats: [],
           errors: [],          
           fields: [
-                    { label:"codigo", key: 'codigo', sortable: false },
+                    { label:"codigo", key: 'id', sortable: false },
                     { label:"Nombre", key: 'nombre', sortable: false },    
                     { label:"Acciones", key: 'accion', sortable: false },
                 ],
@@ -77,8 +92,9 @@ export default {
                fecha: Date(),                  
            });
          },
-       Detalle(){
-          this.$router.push('/app/fases');
+       Detalle(item){
+         // this.$router.push('/app/fases');
+           this.$router.push({name:"fases",params:{item} });
        }, 
        CerrarModal() {
            this.DialogMetodologia = false;             
@@ -86,26 +102,14 @@ export default {
       ListarMetodologia(){
         let me=this;
          axios.get('Backphp/ProcesoMetodologia.php/').then(response => {
-                    
-                      me.items = response.data;
-                  }).catch(function (error) {
+                  me.items = response.data;
+                  //    console.log(response.data);
+                }).catch(function (error) {
                       console.log(error);
-                  }) .finally(() => {
-                     
-            })
-
+              }) .finally(() => {
+           })
        },
-      ListaTodo(){
-        console.log("funcion")
-         axios.get('Backphp/').then(response => {
-                       
-                     console.log(response);
-                  }).catch(function (error) {
-                      console.log(error);
-                  }) .finally(() => {
-                     
-              })
-      },
+    
        Listar(){  
             firebase.database().ref('Metodologia').on('value', (data) => {   
               this.items=[];             
@@ -115,7 +119,15 @@ export default {
                     this.items.push(item)
              });
          });
-       },      
+       },    
+       Grilla(){
+         this.Vergrilla=true;
+         this.VerCard=false;
+       },
+       Card(){
+        this.Vergrilla=false;
+         this.VerCard=true;
+       },  
        onSubmit (evt) {
               evt.preventDefault()
               let newData = firebase.database().ref('chatrooms/'+this.roomid+'/chats').push();

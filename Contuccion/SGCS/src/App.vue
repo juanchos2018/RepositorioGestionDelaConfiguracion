@@ -3,9 +3,22 @@
 </template>
 
 <script>
+
+import firebase from '@/firebase'
 export default {
   name: 'App',
   created() {
+    firebase.auth().onAuthStateChanged(user =>  {
+      if (user) {
+        // User is signed in.
+        console.log(user.displayName)
+        console.log("logueado")
+      } else {
+        // No user is signed in.
+         console.log("no logueado")
+      }
+   });
+
     const currentPath = this.$router.history.current.path;
 
     if (window.localStorage.getItem('authenticated') === 'false') {

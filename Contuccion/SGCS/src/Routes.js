@@ -19,6 +19,12 @@ import Proyecto from '@/pages/Proyecto/Proyecto';
 import ProyectoNuevo from '@/pages/Proyecto/ProyectoNuevo';
 import ProyectoDetalle from '@/pages/Proyecto/ProyectoDetalle';
 import ProyectoMiembros from '@/pages/Proyecto/ProyectoMiembros';
+
+import Solicitud from '@/pages/Solicitud/SolicitudCambio';
+
+
+
+
 Vue.use(Router);
 
 export default new Router({
@@ -42,6 +48,9 @@ export default new Router({
           path: 'inicio',
           name: 'AnalyticsPage',
           component: AnalyticsPage,
+          meta: {
+            requiresAuth: true
+          },
         },
         {
           path: 'publicaciones',
@@ -64,7 +73,7 @@ export default new Router({
           component: Metodologia,
         },
         {
-          path: 'fases',
+          path: 'fases/:item',
           name: 'fases',
           component: Fases,
         },
@@ -89,11 +98,16 @@ export default new Router({
           component: ProyectoMiembros,
         },
         {
-          path: 'proyectodetalle',
+          path: 'proyectodetalle:id_proyecto',
           name: 'proyectodetalle',
           component: ProyectoDetalle,
         },
 
+        {
+          path: 'solicitud',
+          name: 'solicitud',
+          component: Solicitud,
+        },
         {//  path: 'components/comprobantesdetalle/:id',
           path: 'pacienteschat/:id_usuario',
           name: 'pacienteschat',

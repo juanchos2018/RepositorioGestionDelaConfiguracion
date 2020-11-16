@@ -1,15 +1,15 @@
 <template>
-  <b-modal id="modal-cliente" v-model="Show" @hide="CerrarModal"
-  title="Nuevo Metodologia" hide-footer   body-class="myDiv">
+  <b-modal id="modal-fase" v-model="Show" @hide="CerrarModal"
+  title="Nueva Fase" hide-footer  body-class="myDiv" >
 
      <form action="">
        <div class="form-row">   
               
-              <b-form-group id="input-group-3" label="Nombre Metodlogia:" label-for="NroDocumento" class="col-md-8">
+              <b-form-group id="input-group-3" label="Nombre Fase:" class="col-md-8">
                <b-input                  
                   aria-describedby="input-live-help input-live-feedback"
                   class="p-2 px-4 btn-xs "
-                 v-model="nombre">
+                   v-model="nombre">
                </b-input>
              </b-form-group>   
           </div>
@@ -17,13 +17,13 @@
          <hr>
         <div class="float-right" >              
           <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
-          <b-button type="button"  @click="RegistrarMetodologia" variant="primary"  class="p-2 px-4 btn-xs">
+          <b-button type="button"  @click="RegistrarFase" variant="primary"  class="p-2 px-4 btn-xs">
               <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
              <span v-show="!isLoading">Guardar</span>
             </b-button>
         </div>
      </form>
-    
+     {{contador}}
   </b-modal>
 </template>
 
@@ -33,14 +33,15 @@ import firebase from '@/firebase'
 
 import axios from  'axios';
 export default {
-    name: 'metodologia-nueva',
+    name: 'fase-nueva',
+ 
     props:{
-      DialogMetodologia: {       
+      DialogoFase: {       
         type: Boolean,
         required: true,
         default: false
-      },
-      
+      }, idmetodologia: [String, String],
+            
     },
     data() {
         return {
@@ -49,18 +50,12 @@ export default {
           codigo:'',
           nombre:'',            
           isLoading:false,          
-          Show:this.DialogCliente,
-          usu:{
-            codigo_usuario:'5',
-            nombre_usuario:'melisa loca',
-            contra_usuario:'123',
-            estado_usuario:'1'
+          Show:this.DialogoFase,
           }
-        }
     },
     watch: {
-      DialogMetodologia(){
-        this.Show = this.DialogMetodologia
+      DialogoFase(){
+        this.Show = this.DialogoFase
       }
     },
     created () {
@@ -72,15 +67,16 @@ export default {
      
     },
     methods: {
-      RegistrarMetodologia(){         
-          let nombre=this.nombre;         
-          const obj={nombre};
-           axios.post('Backphp/ProcesoMetodologia.php/',obj).then(response => {                       
-              console.log(response);
-               this.Confirmacion();
-              this.ListarMetodologia();
-            //  if(response.status=="200"){
-               
+      RegistrarFase(){         
+          let nombre_fase=this.nombre;      
+          let metodologiaid=this.idmetodologia;    
+          const obj={nombre_fase,metodologiaid};
+           axios.post('Backphp/ProcesoFase.php/',obj).then(response => {                       
+           console.log(response);
+           this.Confirmacion();
+           this.ListarMetodologia(this.idmetodologia)
+          // this.ListarMetodologia();
+            //  if(response.status=="200"){             
                
 
               //}
@@ -89,9 +85,12 @@ export default {
           }) .finally(() => {
               
           })
+      },     
+      ListarFaseDeMetodologia(){
+
       },
-      ListarMetodologia(){
-          this.$emit('Listar-Emit');
+      ListarMetodologia(idmeto){
+          this.$emit('Listar-Fase',idmeto);
       },
       Registrar(){
           let codigo="123";
@@ -108,32 +107,16 @@ export default {
                      
                   })
       },
-        Guardar(){         
+       Guardar(){         
               let newData = firebase.database().ref('Metodologia/').push();
               newData.set({                 
                   codigo: this.codigo,
                   nombre: this.nombre,
                   fecha: Date(),
                   //key:key
-              });
+             });
             
-         },
-         Guardar2(){
-            let me = this;
-             axios.post('insertar_usuario.php?', this.usu,{ headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-                "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
-              }}).then(response => {
-                       
-                     console.log(response);
-                  }).catch(function (error) {
-                      console.log(error);
-                  }) .finally(() => {
-                     
-                  })
-         },
-     
+         },       
          makeToast(msg,color) {
             this.toastCount++
             this.$bvToast.toast(msg, {
@@ -142,8 +125,7 @@ export default {
               autoHideDelay: 3000,
               appendToast: false
             })
-          },
-                    
+          },                    
           CerrarModal(){              
               this.$emit('CerrarModal');
           },

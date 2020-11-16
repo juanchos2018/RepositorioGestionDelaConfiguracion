@@ -9,8 +9,20 @@
         :style="wizardStepStyle"
         v-for="(step, index) of steps" :key="index">
         <span class="wizard__step__line" :class="{'vgw-mobile': isMobile}"></span>
-        <span class="wizard__step__label">{{step.label}}</span>
-        <span class="wizard__step__indicator"></span>
+     <!--   <span class="wizard__step__label"  @click="hola">{{step.label}}</span>-->
+       <b-dropdown class="mx-1 wizard__step__label"   variant="outline-primary" >
+       <template #button-content>
+           <strong>{{step.label}}</strong> 
+        </template>
+        <b-dropdown-item  @click="showModal">Editar</b-dropdown-item>
+        <b-dropdown-item>Eliminar</b-dropdown-item>
+     
+      </b-dropdown>
+        
+        <span class="wizard__step__indicator" 
+        > </span>
+         <br><br> <br>
+         <!--  <b-button variant="primary" >edit</b-button>-->
       </li>
     </ul>
     <span 
@@ -44,13 +56,19 @@
         </a>
       </div>
     </div>
+
+  <a-modal v-model="visible" title="Modal" ok-text="Aceptar" cancel-text="Cancelar" @ok="hideModal">
+      <label for="">Nombre</label>
+      <b-input> </b-input>   
+  </a-modal>
+   
   </div>
 </template>
 
 <script>
 export default {
 
-  name: 'vue-good-wizard',
+  name: 'wizard',
 
   props: {
     steps: {},
@@ -72,11 +90,12 @@ export default {
 
   data () {
     return {
-      currentStep: 0,
+      currentStep: 1,
       isMounted: false,
       resizer: null,
       isMobile: false,
       options: [],
+       visible: false,
     };
   },
   computed: {
@@ -114,6 +133,12 @@ export default {
     }
   },
   methods: {
+    showModal() {
+      this.visible = true;
+    },  
+    hideModal() {
+      this.visible = false;
+    },
     goNext (skipFunction) {
       if (!skipFunction && typeof this.onNext == 'function'){
         if(!this.onNext(this.currentStep)) {
@@ -124,6 +149,13 @@ export default {
       if (this.currentStep < this.steps.length-1) {
         this.currentStep++;
       }
+    },
+    Modificar(){
+
+    },
+    hola(){
+      alert("clcik");
+      console.log("dcdasd");
     },
     goBack (skipFunction) {
       if (!skipFunction && typeof this.onBack == 'function'){

@@ -1,6 +1,14 @@
 <template>
-  <div >
- 
+ <div>
+    <a-steps :current="current" @change="onChange" :style="stepStyle"  type="navigation" >
+      <a-step v-for="item in steps" :key="item.title" :title="item.title"  sub-title="00:00:05"/>
+    </a-steps>
+    <div class="steps-content">
+      {{ steps[current].content }}
+    </div>
+    <div class="steps-action">
+      
+    </div>
   </div>
 </template>
 
@@ -9,60 +17,41 @@ import Widget from '@/components/Widget/Widget';
 import moment from 'moment'
 import firebase from '@/firebase'
 import Vue from 'vue'; 
+import schedulerLite from "./schedulerLite";
+import polyfill from "@/assets/polyfill.js"
 
-
-//import StepTwo from './StepTwo.vue';
 
 
 export default {
   name: 'Dashboard',
-  components: {  },
+  components: {  sc: schedulerLite },
   props: ['items'],
 
   data() {
     return {
       step1: '',
       step2: '',
-      cStep: 1,
-     
-    
-     registrationStep: 2,
-        registrationStepper: [
-          { icon: "folder", far: true, name: "Basic Information" },
-          { icon: "pencil-alt", name: "Personal Data" },
-          { icon: "image", far: true, name: "Terms and Conditions" },
-          { icon: "check", name: "Finish" }
-        ],
-        options: {
-          stepBtn: { color: "info", active: "amber", iconClass: "white-text" },
-          nextBtn: { outline: "info", icon: "chevron-right" },
-          prevBtn: { outline: "info", icon: "chevron-left" },
-          submitBtn: { color: "amber", icon: "check" },
-          lineColor: "amber"
-        },
-
-
+      cStep: 1,  
+       current: 0,
       steps: [
         {
-          label: 'FAse 1',
-          slot: 'page1',
+          title: 'fase 1',
+          content: 'First-content',
         },
         {
-          label: 'FAse 2',
-          slot: 'page2',
+          title: 'fase 2',
+          content: 'Second-content',
         },
         {
-          label: 'FAse 3',
-          slot: 'page3',
+          title: 'fase 3',
+          content: 'Last-content',
         },
-        {
-          label: 'FAse 4',
-          slot: 'page4',
-          options: {
-            nextDisabled: true,
-          }
-        }
       ],
+      stepStyle: {
+        marginBottom: '60px',
+        boxShadow: '0px -1px 0 0 #e8e8e8 inset',
+      },
+   
      
     };
   },
@@ -70,18 +59,16 @@ export default {
     
   },
   methods: {
-    submit() {
-        console.log('submitted');
-      },
-      completeStep(payload) {
-               
-      },
-      isStepActive(payload) {
-                
-      },
-       alert(payload) {
-                alert('end')
-      },
+    next() {
+      this.current++;
+    },
+    prev() {
+      this.current--;
+    },
+   onChange(current) {
+      console.log('onChange:', current);
+      this.current = current;
+    },
      
   },
    
@@ -89,4 +76,46 @@ export default {
   
 };
 </script>
+<style>
 
+.steps-content {
+  margin-top: 16px;
+  border: 1px dashed #e9e9e9;
+  border-radius: 6px;
+  background-color: #fafafa;
+  min-height: 200px;
+  text-align: center;
+  padding-top: 80px;
+}
+
+.steps-action {
+  margin-top: 24px;
+}
+
+
+.sample {
+  width: 10px;
+  height: 10px;
+  margin: 5px;
+  border: 1px solid black;
+}
+
+.cant-res {
+  background-color: #999 !important;
+}
+
+.reserved {
+  background-color: #8f8981 !important;
+}
+ .cambia {
+        color: #999 ;
+        line-height: 40px;
+        margin-left: 10px;
+        font-size: 1.5em;
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        text-align: center;
+        transition: all 0.3s ease;
+       }
+</style>
