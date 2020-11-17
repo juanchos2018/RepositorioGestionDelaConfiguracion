@@ -14,8 +14,8 @@
        <template #button-content>
            <strong>{{step.label}}</strong> 
         </template>
-        <b-dropdown-item  @click="showModal">Editar</b-dropdown-item>
-        <b-dropdown-item>Eliminar</b-dropdown-item>
+        <b-dropdown-item  @click="showModal(step.id_fase,step.metodologiaId)">Editar</b-dropdown-item>
+        <b-dropdown-item @click="MensajeEliminar">Eliminar</b-dropdown-item>
      
       </b-dropdown>
         
@@ -59,13 +59,16 @@
 
   <a-modal v-model="visible" title="Modal" ok-text="Aceptar" cancel-text="Cancelar" @ok="hideModal">
       <label for="">Nombre</label>
-      <b-input> </b-input>   
+      <b-input v-model="nombre_fase"> </b-input>   
   </a-modal>
    
   </div>
 </template>
 
 <script>
+import axios from  'axios';
+import Vue from 'vue';
+Vue.prototype.$eventHub = new Vue();
 export default {
 
   name: 'wizard',
@@ -90,12 +93,15 @@ export default {
 
   data () {
     return {
-      currentStep: 1,
+      currentStep: 0,
       isMounted: false,
       resizer: null,
       isMobile: false,
       options: [],
-       visible: false,
+      id_fase:'',
+      nombre_fase:'',
+      metodologiaId:'',
+      visible: false,
     };
   },
   computed: {
@@ -133,11 +139,16 @@ export default {
     }
   },
   methods: {
-    showModal() {
+    showModal(id_fase,metodologiaId) {
+      this.id_fase=id_fase;
+      this.metodologiaId=metodologiaId;
       this.visible = true;
+     
     },  
     hideModal() {
       this.visible = false;
+      this.EditarFase();
+
     },
     goNext (skipFunction) {
       if (!skipFunction && typeof this.onNext == 'function'){
@@ -150,13 +161,49 @@ export default {
         this.currentStep++;
       }
     },
-    Modificar(){
+    MensajeEliminar(){
+         this.$swal.fire({
+            title: 'Eliminar?',
+            text: "Ya no podras revertir!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, eliminar!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+             this.$swal.fire(
+                'Eliminado!',
+                'Has Eliminado.',
+                'success'
+              )
+            }
+        })
+    },
+    EditarFase(){
+          let nombre_fase=this.nombre_fase;      
+          let id_fase=this.id_fase;    
+          const obj={id_fase,nombre_fase};
+           axios.put('Backphp/ProcesoFase.php/',obj).then(response => {                       
+           console.log(response);
+           this.ListarFases()
+          // this.ListarMetodologia(this.idmetodologia)
+          // this.ListarMetodologia();
+            //  if(response.status=="200"){             
+               
 
+              //}
+          }).catch(function (error) {
+              console.log(error);
+          }) .finally(() => {
+              
+          })
     },
-    hola(){
-      alert("clcik");
-      console.log("dcdasd");
+    ListarFases(){
+        // this.$emit('Listar-Fase',this.metodologiaId);
+          this.$eventHub.$emit('Listar-Fase',this.metodologiaId)
     },
+   
     goBack (skipFunction) {
       if (!skipFunction && typeof this.onBack == 'function'){
         if(!this.onBack(this.currentStep)) {

@@ -12,7 +12,7 @@
     <wizard
       ref="wizard"      
       :steps="items"     
-      @change="onChange"
+    
       @click="click"
       :onNext="nextClicked" 
       :onBack="backClicked">
@@ -27,7 +27,7 @@
     
   <fase-nueva @CerrarModal="CerrarModal" :DialogoFase="DialogoFase"  v-bind:idmetodologia="datos.id_metodologia" v-on:Listar-Fase="ListarFasePorMetodologia"></fase-nueva>
    
-   <elemento-nuevo@CerrarModal="CerrarModal" :DialogoElemento="DialogoElemento"  v-bind:idmetodologia="datos.id_metodologia" ></elemento-nuevo>
+   <elemento-nuevo @CerrarModal="CerrarModal" :DialogoElemento="DialogoElemento"  v-bind:idmetodologia="datos.id_metodologia" ></elemento-nuevo>
    
    </div>
 
@@ -77,7 +77,7 @@ export default {
     },
     created(){
        // this.Listar();   
-
+      this.$eventHub.$on('Listar-Fase', this.ListarFasePorMetodologia);
     },
     mounted(){
       this.GetDatos()
@@ -101,6 +101,7 @@ export default {
           }         
        },
        ListarFasePorMetodologia(id){
+       
         let me=this;
          axios.get('Backphp/ProcesoFase.php/?metodologiaId='+id).then(response => {
                  //me.items.push({slot:'page1',label:response.data.nombre_fase});
@@ -110,7 +111,7 @@ export default {
                   me.detalle.map(function(x){
                   if(x.id==111){
                             me.detalle2.push({nombre:x.nombre});
-                      }
+                    }
                       
                 }); 
                }).catch(function (error) {
@@ -126,7 +127,26 @@ export default {
         
            this.$refs.popover.$emit('open')
        },
-        nextClicked(currentPage) {
+       MensajeEliminar(){
+         this.$swal.fire({
+            title: 'Elminar?',
+            text: "Ya no podras revertir!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+             this.$swal.fire(
+                'Eliminado!',
+                'Has Eliminado.',
+                'success'
+              )
+            }
+          })
+       },
+       nextClicked(currentPage) {
           //siguiente
         console.log('next clicked', currentPage) 
        
