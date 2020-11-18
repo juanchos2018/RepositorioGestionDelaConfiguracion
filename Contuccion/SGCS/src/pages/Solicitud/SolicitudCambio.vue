@@ -1,6 +1,6 @@
 <template>
     <div>
-
+  <b-button variant="primary" @click="GenerarPdf"> Generar Solicitud Pdf </b-button>
        <!--  <pdf src="../../assets/plantillasolictudcambio.pdf"></pdf>-->
         {{currentPage}} / {{pageCount}}
         <pdf

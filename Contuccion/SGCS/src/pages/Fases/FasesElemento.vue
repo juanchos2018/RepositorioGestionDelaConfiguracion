@@ -1,0 +1,137 @@
+<template>
+    <div>
+  <b-modal  v-model="Show" @hide="CerrarModal"
+            title="Nuevo Elemento" hide-footer   body-class="myDiv">
+     <form action="">
+       <div class="form-row">                 
+          <b-form-group  label="Fase :"  class="col-md-12">
+               <a-select   @change="handleChange"  v-model="idfase" >              
+                 <a-select-option v-for="d in fasesmetodologia" :key="d.value">
+                  {{ d.text }}
+              </a-select-option>
+               </a-select>             
+             </b-form-group>                
+          </div>
+          <div class="form-row"> 
+              <b-form-group  label=" Elemento:"  class="col-md-12">
+             <a-select   @change="handleChange"  v-model="id_elemento" >              
+                 <a-select-option v-for="d in elentosConfi" :key="d.value">
+                {{ d.text }}
+              </a-select-option>
+               </a-select>  
+             </b-form-group> 
+          </div>      
+         <hr>
+        <div class="float-right" >              
+          <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
+          <b-button type="button"  variant="primary"  class="p-2 px-4 btn-xs" @click="Registrar">
+              <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
+             <span v-show="!isLoading">Registrar</span>
+            </b-button>
+        </div>
+     </form>    
+  </b-modal> 
+    </div>
+</template> 
+<script>
+import axios from  'axios';
+
+export default {
+  name: 'fases-elemento',
+     props:{
+      DialogoFaseElemento: {       
+        type: Boolean,
+        required: true,
+        default: false,        
+      },idmetodologia: [String, String]            
+    },
+    data(){
+        return{
+             isLoading:false,          
+             Show:this.DialogoFaseElemento, 
+             nombre:'',
+             elentosConfi:[],
+             fasesmetodologia:[],
+             idfase:'',
+             id_elemento:'',
+        }
+    },
+    created(){
+        this.ListarElementos();
+    
+    },
+    watch: {
+       DialogoFaseElemento(){
+        this.Show = this.DialogoFaseElemento
+       }
+    },
+    mounted() {  
+      this.$nextTick(() => {
+           this.ListarFase(this.idmetodologia)
+       });
+     },
+    methods:{
+        handleChange(value) {
+            console.log(`selected ${value}`);
+        },
+        CerrarModal(){              
+            this.$emit('CerrarModal');
+        },
+        ListarElementos(){
+             let me=this;
+                  var elementos=[];
+                  axios.get('Backphp/ProcesoElemento.php/',).then(function(response){                      
+                  elementos=response.data;   
+                  elementos.map(function(x){
+                        me.elentosConfi.push({text: x.nombre,value:x.id_elemento});
+                 });  
+              }).catch(function(error){
+                  console.log(error);
+           });       
+        },
+        ListarFase(d){           
+         let me=this;        
+         var fases=[];
+            axios.get('Backphp/ProcesoFase.php/?metodologiaId='+d).then(response => {               
+                 fases= response.data;                              
+                 fases.map(function(x){
+                    me.fasesmetodologia.push({text: x.nombre_fase,value:x.id_fase});                      
+                  }); 
+               }).catch(function (error) {
+                      console.log(error);
+              }) .finally(() => {
+           })
+        },
+        Registrar(){
+                let faseId=this.idfase;
+                let elementoId=this.id_elemento;                
+                const obj={faseId,elementoId};
+                axios.post('Backphp/ProcesoPlantilla.php/',obj).then(response => {
+                       
+                  console.log(response);
+                  this.Confirmacion();
+                }).catch(function (error) {
+                      console.log(error);
+                }) .finally(() => {
+                     
+            })
+        },
+        Confirmacion(){
+            this.$swal({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Registrado',
+                text:'texto',
+                showConfirmButton: false,
+                timer: 3000
+            })
+         },
+    }
+}
+</script>
+<style scoped>
+  ::v-deep .myDiv {
+    background-color: 	#FFFFFF;
+  }
+
+</style>

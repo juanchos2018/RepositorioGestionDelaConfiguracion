@@ -1,14 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-
 import Layout from '@/components/Layout/Layout';
 import Login from '@/pages/Login/Login';
-
 import ErrorPage from '@/pages/Error/Error';
 // Main
 import AnalyticsPage from '@/pages/Dashboard/Dashboard';
 
-import PacienteChat from '@/pages/Pacientes/PacienteChat';
 import Usuario from '@/pages/Usuario/Usuario';
 import UsuarioTareas from '@/pages/Usuario/UsuarioTareas';
 import Publicaciones from '@/pages/Publicaciones/Publicaciones';
@@ -21,12 +18,9 @@ import ProyectoDetalle from '@/pages/Proyecto/ProyectoDetalle';
 import ProyectoMiembros from '@/pages/Proyecto/ProyectoMiembros';
 
 import Solicitud from '@/pages/Solicitud/SolicitudCambio';
-
-
-
+import Elemento from '@/pages/Elemento/Elemento';
 
 Vue.use(Router);
-
 export default new Router({
   routes: [
     {
@@ -108,11 +102,12 @@ export default new Router({
           name: 'solicitud',
           component: Solicitud,
         },
-        {//  path: 'components/comprobantesdetalle/:id',
-          path: 'pacienteschat/:id_usuario',
-          name: 'pacienteschat',
-          component: PacienteChat
+        {
+          path: 'elemento',
+          name: 'elemento',
+          component: Elemento,
         },
+      
        
       ],
     },

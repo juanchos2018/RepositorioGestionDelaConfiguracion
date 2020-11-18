@@ -1,0 +1,106 @@
+<template>
+     <div>
+      <div>
+         <div class="navigation-filter float-right">
+          <a href="#"  class="cambia" ><i class="fa fa-th-list"></i></a>
+          <a href="#"  class="cambia"  ><i class="fa fa-th"></i></a>
+      </div>
+         <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogoElemento=true"> 
+            <i class="fa fa-plus-circle"></i> Nuevo
+          </b-button>
+          <br>           
+        </div>
+    <div >   
+      <div class="row" id="listaproyectos">             
+       <div class="col-4" v-for="item in items" :key="item.key">  
+              
+        <b-card no-body class="overflow-hidden"  footer-tag="footer">
+            <b-row no-gutters>
+            <b-col md="3">
+                <div class="UserAvatar__IconImage-hmym9w-1 jtNJTZ" >
+                    <center> 
+                    <img src="../../assets/elemento.png" alt="Avatar" class="avatar1"/> 
+                    </center>
+                </div>     
+            </b-col>
+            <b-col md="6">
+                <b-card-body >                   
+                <b-card-title> <h5> {{item.nombre}}</h5> </b-card-title>                    
+                <b-card-text>
+                texto
+                </b-card-text>                
+                </b-card-body>                
+            </b-col>
+            </b-row>            
+                <template #footer  footer-class="myDiv">
+                     <div  style="background-color: white; float:right;">
+                       <b-button variant="success" > <b-icon icon="pencil-square" animation="fade" font-scale="1"></b-icon> </b-button>
+                      <b-button variant="danger" style="margin-left:2px"  @click="MensajeEliminar"> <b-icon icon="trash" animation="fade" font-scale="1"></b-icon> </b-button>
+                     </div>  
+                                        
+                </template>
+         </b-card>
+         <br>
+       </div>
+      </div>
+    </div>
+    
+   <elemento-nuevo @CerrarModal="CerrarModal" :DialogoElemento="DialogoElemento"  v-on:ListarElemento-Emit="ListarElemento"></elemento-nuevo>
+   
+    </div>
+</template>
+
+<script>
+
+import ElementoNuevo from './ElementoNuevo';
+
+import axios from  'axios';
+export default {
+     components: {ElementoNuevo  },
+        data(){
+            return{
+                   DialogoElemento:false,
+                   items:[],  
+            }
+        },
+        created(){
+            this. ListarElemento();
+        },
+        methods:{
+               CerrarModal() {
+                    this.DialogoElemento = false;           
+               },
+               ListarElemento(){
+                    let me=this;
+                    axios.get('Backphp/ProcesoElemento.php/').then(response => {   
+                        console.log(response.data);                         
+                      me.items = response.data;                      
+                  }).catch(function (error) {
+                      console.log(error);
+                  }) .finally(() => {
+                     
+                   })
+              },
+              MensajeEliminar(){
+                    this.$swal.fire({
+                        title: 'Elminar ?',
+                        text: "Ya no podras revertir!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, Eliminar!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                        this.$swal.fire(
+                            'Eliminado!',
+                            'Has Eliminado.',
+                            'success'
+                        )
+                        }
+                    })
+                },
+         }
+}
+</script>
+<style src="./elemento.scss" lang="scss"  />

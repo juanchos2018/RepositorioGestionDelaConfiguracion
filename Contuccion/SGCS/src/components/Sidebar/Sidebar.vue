@@ -27,6 +27,14 @@
             index="metodologia"
             isHeader
         />
+           <NavLink
+            :activeItem="activeItem"
+            header="Elemento"
+            link="/app/elemento"
+            iconName="flaticon-home"
+            index="elemento"
+            isHeader
+        />
 
            <NavLink
             :activeItem="activeItem"

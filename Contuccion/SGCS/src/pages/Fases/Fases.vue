@@ -5,30 +5,29 @@
 <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogoFase=true"> 
             <i class="fa fa-plus-circle"></i> Nueva Fase
           </b-button>
+           <b-button variant="outline-primary" @click="DialogoFaseElemento=true">Agregar Elemento </b-button>
 </div> <br>
 <center><h5>Metodologia </h5> <h5>{{nombremetodologia}}</h5>
 </center>
-
-    <wizard
+  <wizard
       ref="wizard"      
-      :steps="items"     
-    
+      :steps="items"         
       @click="click"
       :onNext="nextClicked" 
       :onBack="backClicked">
      
         <div slot="page1">
-            <h4>Elemtos de Configuracion</h4>  
-             <b-button variant="outline-primary" @click="DialogoElemento=true">Agregar</b-button>
+            <h4>Elemtos de Configuracion</h4>           
              <b-table striped hover :items="detalle2"></b-table>   
         </div>       
-    </wizard> 
+    </wizard>
+   
           
     
   <fase-nueva @CerrarModal="CerrarModal" :DialogoFase="DialogoFase"  v-bind:idmetodologia="datos.id_metodologia" v-on:Listar-Fase="ListarFasePorMetodologia"></fase-nueva>
-   
-   <elemento-nuevo @CerrarModal="CerrarModal" :DialogoElemento="DialogoElemento"  v-bind:idmetodologia="datos.id_metodologia" ></elemento-nuevo>
-   
+   <fases-elemento @CerrarModal="CerrarModal"  :DialogoFaseElemento="DialogoFaseElemento" v-bind:idmetodologia="datos.id_metodologia" > </fases-elemento>
+  
+   {{DialogoFaseElemento}}
    </div>
 
 </template>
@@ -39,9 +38,10 @@ import firebase from '@/firebase'
 import Wizard from './Wizard.vue';
 import { VStepper } from 'vue-stepper-component'
 import FaseNueva from './FaseNueva';
+import FasesElemento from './FasesElemento';
 import ElementoNuevo from '@/pages/Elemento/ElementoNuevo';
 export default {
-     components: { Wizard,VStepper,FaseNueva,ElementoNuevo  },
+     components: { Wizard,VStepper,FaseNueva,FasesElemento },
      
     data(){
         return{
@@ -49,30 +49,14 @@ export default {
             nombremetodologia:'',
             child:'-MKgGmEB0AVCJ0TR_zeX',
             current: 0,
-            pagina:'page1',
-            lista:[ {id:'111',nombre:'pepe',apellido:'loco',slot:'page1',label:'meto 1'},
-                    {id:'222',nombre:'pepe',apellido:'loco',slot:'page1',label:'meto 2'},
-                    {id:'333',nombre:'andres',apellido:'loco',slot:'page1',label:'meto 3'},
-                    {id:'444',nombre:'kiara',apellido:'loco',slot:'page1',label:'metro 4'},
-                    {id:'555',nombre:'iara',apellido:'loco',slot:'page1',label:'meto 5'},
-                    {id:'666',nombre:'iara',apellido:'loco',slot:'page1',label:'meto 6'}
-              ],
-            detalle:[{id:'111',nombre:'pepe',apellido:'loco'},
-                    {id:'111',nombre:'pepe',apellido:'loco'},
-                    {id:'222',nombre:'andres',apellido:'loco'},
-                    {id:'222',nombre:'kiara',apellido:'loco'},
-                    {id:'333',nombre:'iara',apellido:'loco'},
-                    {id:'444',nombre:'iara',apellido:'loco'},
-                    {id:'444',nombre:'iara',apellido:'loco'},
-                    {id:'555',nombre:'iara',apellido:'loco'}
-              ],
-             detalle2:[],
-             datos:{
+            pagina:'page1',    
+            detalle2:[],
+            datos:{
                 id_metodologia:"",
                 nombre:""               
                  },
-             DialogoFase:false,
-             DialogoElemento:false,
+            DialogoFase:false,
+            DialogoFaseElemento:false,         
         }
     },
     created(){
@@ -100,31 +84,31 @@ export default {
             this.ListarFasePorMetodologia(val[0]);  
           }         
        },
-       ListarFasePorMetodologia(id){
-       
+       ListarFasePorMetodologia(id){       
         let me=this;
-         axios.get('Backphp/ProcesoFase.php/?metodologiaId='+id).then(response => {
-                 //me.items.push({slot:'page1',label:response.data.nombre_fase});
+         axios.get('Backphp/ProcesoFase.php/?metodologiaId='+id).then(response => {              
                  me.items = response.data;
-                 console.log(response.data);  
-                 
-                  me.detalle.map(function(x){
-                  if(x.id==111){
-                            me.detalle2.push({nombre:x.nombre});
-                    }
-                      
-                }); 
+                 me.ListarElemtosFase(me.items[0].id_fase);                       
+           
                }).catch(function (error) {
                       console.log(error);
               }) .finally(() => {
            })
        },
-        CerrarModal() {
-           this.DialogoFase = false;             
+       CerrarModal() {
+           this.DialogoFase = false;    
+           this.DialogoFaseElemento = false;           
        },
-       
-       alerta(){
-        
+       ListarElemtosFase(id_fase){
+          let me=this;
+          axios.get('Backphp/ProcesoPlantilla.php/?id_fase='+id_fase).then(response => {                 
+                 me.detalle2 = response.data;                
+               }).catch(function (error) {
+                      console.log(error);
+              }) .finally(() => {
+           })
+       },       
+       alerta(){        
            this.$refs.popover.$emit('open')
        },
        MensajeEliminar(){
@@ -135,7 +119,7 @@ export default {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Si, Eliminar !'
           }).then((result) => {
             if (result.isConfirmed) {
              this.$swal.fire(
@@ -148,34 +132,22 @@ export default {
        },
        nextClicked(currentPage) {
           //siguiente
-        console.log('next clicked', currentPage) 
-       
+        console.log('next clicked', currentPage)        
         let me =this;
-        var code =this.lista[currentPage].id;
-        console.log(this.lista.length);
-        console.log(code);
-        me.detalle2=[];
-            me.detalle.map(function(x){
-               if(x.id==code){
-                        me.detalle2.push({nombre:x.nombre});
-                  }
-                  
-            });       
+        var code =this.items[currentPage+1].id_fase;
+        me.ListarElemtosFase(code);
+      
         return true; //return false if you want to prevent moving to next page
         },
         backClicked(currentPage) {
           //retroceder
            console.log('back clicded', currentPage) 
           let me =this;
-          var code =this.lista[currentPage].id;
-          me.detalle2=[];
-              me.detalle.map(function(x){
-                if(x.id==code){
-                      me.detalle2.push({nombre:x.nombre});
-                }
-                    
-            }); 
-        return true; //return false if you want to prevent moving to previous page
+          var code =this.items[currentPage-1].id_fase;
+          console.log(code);
+          me.ListarElemtosFase(code);
+        
+         return true; //return false if you want to prevent moving to previous page
         },
         enableSave() {
           this.steps[3].options.nextDisabled = false;

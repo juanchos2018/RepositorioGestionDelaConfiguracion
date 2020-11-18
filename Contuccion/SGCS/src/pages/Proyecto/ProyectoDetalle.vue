@@ -10,16 +10,25 @@
     @click="ver"
     />-->
    <div>
+     <b-card   
+        header="Primary" 
+        header-text-variant="white"
+        header-bg-variant="primary"           
+        header-tag="header" footer-tag="footer"> 
+    <template #header>
+        <h6 class="mb-0" style="color:#FFFFFF">Header Slot</h6>
+      </template>
     <a-steps :current="current" @change="onChange" :style="stepStyle"  type="navigation" >
-      <a-step v-for="item in fases" :key="item.title" :title="item.title"  sub-title="00:00:05"/>
+      <a-step v-for="item in fases" :key="item.title" :title="item.title"  />
     </a-steps>
     <div class="steps-content">
-    <!--  {{ steps[current].content }}-->
+    <!--  {{ steps[current].content  sub-title="00:00:05"  }}-->
     <b-button>click</b-button>
     </div>
     <div class="steps-action">
       
     </div>
+      </b-card>
   </div>
     
   </div>
@@ -66,10 +75,7 @@ export default {
       stepStyle: {
         marginBottom: '60px',
         boxShadow: '0px -1px 0 0 #e8e8e8 inset',
-      },
-   
-       
-    
+      },     
     };
   },
   created(){
