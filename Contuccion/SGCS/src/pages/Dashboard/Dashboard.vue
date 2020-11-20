@@ -1,13 +1,31 @@
 <template>
  <div>
-    <a-steps :current="current" @change="onChange" :style="stepStyle"  type="navigation" >
-      <a-step v-for="item in steps" :key="item.title" :title="item.title"  sub-title="00:00:05"/>
-    </a-steps>
-    <div class="steps-content">
-      {{ steps[current].content }}
-    </div>
+   
     <div class="steps-action">
       
+<kanban-board :stages="stages" :blocks="blocks"></kanban-board>
+
+ <kanban-board :stages="stages" :blocks="blocks" @update-block="updateBlock">
+      <div v-for="stage in statuses" :slot="stage" :key="stage">
+        <h2>
+          {{ stage }}
+          <a>+</a>
+        </h2>
+      </div>
+      <div v-for="item in blocks" :slot="item.id" :key="item.id">
+        <div>
+          <strong>id:</strong> {{ item.id }}
+        </div>
+        <div>
+          {{ item.title }}
+        </div>
+      </div>
+      <div v-for="stage in stages" :key="stage" :slot="`footer-${stage}`">
+          <a href="" @click.prevent="() => addBlock(stage)">+ Add new block</a>
+      </div>
+    </kanban-board>
+{{stages}}
+{{blocks}}
     </div>
   </div>
 </template>
@@ -19,8 +37,6 @@ import firebase from '@/firebase'
 import Vue from 'vue'; 
 import schedulerLite from "./schedulerLite";
 import polyfill from "@/assets/polyfill.js"
-
-
 
 export default {
   name: 'Dashboard',
@@ -51,6 +67,35 @@ export default {
         marginBottom: '60px',
         boxShadow: '0px -1px 0 0 #e8e8e8 inset',
       },
+       stages: ['NuevaTarea', 'En-Progreso', 'Termino' ],
+       blocks: [
+            {
+                id: 1,
+                status: 'NuevaTarea',
+                title: 'Welcome'
+            },
+            {
+                id: 2,
+                status: 'NuevaTarea',
+                title: 'to'
+            },
+            {
+                id: 3,
+                status: 'En-Progreso',
+                title: 'the'
+            },
+            {
+                id: 4,
+                status: 'En-Progreso',
+                title: 'danger'
+            },
+            {
+                id: 5,
+                status: 'En-Progreso',
+                title: 'zone'
+            },
+      
+          ]
    
      
     };
@@ -76,6 +121,9 @@ export default {
   
 };
 </script>
+<style lang="scss">
+@import 'node_modules/vue-kanban/src/assets/kanban.scss';
+</style>
 <style>
 
 .steps-content {

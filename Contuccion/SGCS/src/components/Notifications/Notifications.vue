@@ -1,8 +1,9 @@
 <template>
   <section class="notifications navbar-notifications">
+    <!--
     <header class="cardHeader card-header">
       <div class="text-center mb-sm">
-        <strong>You have 13 notifications</strong>
+        <strong>notifications</strong>
       </div>
       <b-button-group id="notification-b-buttons">
         <b-button variant="default" @click="changeNotificationsTab(1)">Notifications</b-button>
@@ -26,6 +27,7 @@
         <i v-else class="la la-refresh" />
       </b-button>
     </footer>
+    -->
   </section>
 </template>
 

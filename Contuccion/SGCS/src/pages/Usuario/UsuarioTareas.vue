@@ -12,9 +12,7 @@
          </b-card>
       </li>
     </ul>
-     </div>
-
-    
+   </div>
   </div>
 </template>
 

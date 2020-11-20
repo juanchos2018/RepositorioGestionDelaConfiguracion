@@ -59,7 +59,7 @@ export default {
               }
  },
  created(){
-      this.Listar();   
+    //  this.Listar();   
     },
  methods:{
        CerrarModal() {
@@ -77,7 +77,6 @@ export default {
        },
        Tareas(){
           this.$router.push('/app/usuariotareas');
-
        }
   }
 

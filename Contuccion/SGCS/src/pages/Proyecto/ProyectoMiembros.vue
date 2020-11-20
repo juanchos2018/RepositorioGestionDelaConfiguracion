@@ -30,9 +30,10 @@
             </b-col>
             </b-row>            
                 <template #footer>
-                     <div class="float:right">
-                       <b-button variant="success" @click="Tareas" > Ver</b-button>
-                       <b-button variant="success" > Eliminar   </b-button>
+                     <div style="float:right">
+                       <b-button variant="success" @click="Tareas" > <b-icon icon="list-task" animation="fade" font-scale="1"></b-icon> </b-button>
+
+                       <b-button variant="success" style="margin-left:5px" > Eliminar   </b-button>
                      </div>                     
                 </template>
          </b-card>

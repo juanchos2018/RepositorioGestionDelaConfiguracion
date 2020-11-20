@@ -88,27 +88,36 @@ export default {
        GetDatos(){
            var id = this.$route.params.id_proyecto
           if(id){         
-            this.MostarFaseMetodolgiaProyecto(id);  
+            this.MostarFaseMetodolgiaProyecto(id); 
+            this.DatosProyecto(id); 
           }  
        },
        MostarFaseMetodolgiaProyecto(id){
           let me=this;
-          axios.get('Backphp/ProcesoProyecto.php/?id_proyecto='+id).then(response => {
-              
+          axios.get('Backphp/ProcesoProyecto.php/?id_proyecto='+id).then(response => {              
                  me.fases = response.data;
-                 console.log(response.data);  
-                  
+                                  
                }).catch(function (error) {
                       console.log(error);
               }) .finally(() => {
            })
        },
        onChange(current) {
-        console.log('onChange:', current);
-        this.current = current;
+         console.log('onChange:', current);
+         this.current = current;
          var code =this.fases[current].id_fase;
          console.log(code);
       },
+      DatosProyecto(id){
+         let me=this;
+          axios.get('Backphp/ProcesoProyecto.php/?id_proyect='+id).then(response => {              
+                // me.fases = response.data;
+                  console.log(response.data);              
+               }).catch(function (error) {
+                      console.log(error);
+              }) .finally(() => {
+           })
+      }
 
   },
    watch: {

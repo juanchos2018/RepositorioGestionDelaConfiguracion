@@ -12,7 +12,7 @@
         <b-card  border-variant="primary" >
             <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
                     <b-dropdown-item @click="Miembros">Miembros</b-dropdown-item>
-                     <b-dropdown-item >Agregar Miembro</b-dropdown-item>
+                     <b-dropdown-item  @click="DialogMiembro=true">Agregar Miembro</b-dropdown-item>
                     <b-dropdown-item @click="Detalle(item.id_proyecto)">Detalle</b-dropdown-item>           
                 </b-dropdown>             
             <b-card-title>{{item.nombre_proyecto}}</b-card-title>  
@@ -28,18 +28,21 @@
             <br>
             </div>
         </div>
-
+ <miembro-nuevo @CerrarModal="CerrarModal"  :DialogMiembro="DialogMiembro" > </miembro-nuevo>
+  
     </div>
 </template>
 <script>
 
 import axios from  'axios';
 import firebase from '@/firebase'
+import MiembroNuevo from '@/pages/Miembro/MiembroNuevo';
 export default {
-    
+     components: { MiembroNuevo },
     data(){
         return{
               items:[],
+              DialogMiembro:false,
         }
     },
     created(){
@@ -77,6 +80,10 @@ export default {
                     this.items.push(item)
              });
          });
+       },
+       CerrarModal() {
+           this.DialogMiembro = false;    
+                  
        },
     }
 }

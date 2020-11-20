@@ -38,7 +38,9 @@ Vue.use(BootstrapVueIcons)
 Vue.component('Widget', Widget);
 Vue.use(require('vue-moment'));
 Vue.filter('moneyfiltro', moneyfiltro)
+import vueKanban from 'vue-kanban'
 
+Vue.use(vueKanban)
 
 
 Vue.config.productionTip = false;

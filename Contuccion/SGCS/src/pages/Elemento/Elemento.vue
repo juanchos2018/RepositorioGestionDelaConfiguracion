@@ -23,7 +23,7 @@
                     </center>
                 </div>     
             </b-col>
-            <b-col md="6">
+            <b-col md="8">
                 <b-card-body >                   
                 <b-card-title> <h5> {{item.nombre}}</h5> </b-card-title>                    
                 <b-card-text>
