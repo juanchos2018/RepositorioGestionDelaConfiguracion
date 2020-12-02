@@ -1,7 +1,6 @@
 <template>
   <div  class="bg-light">
-
-      <h4>Estado de Proyecto</h4>
+    
   <!--  <step-progress-bar
       ref="stepProgressBarCompRef"
        v-bind:totalSteps="stepProgressBarParams.totalSteps"
@@ -9,6 +8,25 @@
       v-bind:stepTitles="stepProgressBarParams.stepTitles"    
     @click="ver"
     />-->
+   <b-card>
+     <div class="container">
+        <div class="row">
+        <h5>Nombre Proyecto  :</h5>
+     <h5>{{ nombreProyecto}}</h5>
+      </div>  
+      <div class="row">
+        <h5>Fecha Inicio : </h5>
+        <h5>{{ fecha_inicio}}</h5>
+      </div>
+      <div class="row"> 
+        <h5>Fecha Termino : </h5>
+        <h5>{{ fecha_termino}}</h5>
+      </div> 
+     </div>  
+
+       
+   </b-card>
+   <br>
    <div>
      <b-card   
         header="Primary" 
@@ -16,7 +34,7 @@
         header-bg-variant="primary"           
         header-tag="header" footer-tag="footer"> 
     <template #header>
-        <h6 class="mb-0" style="color:#FFFFFF">Header Slot</h6>
+        <h6 class="mb-0" style="color:#FFFFFF">{{metodologia}}</h6>
       </template>
     <a-steps :current="current" @change="onChange" :style="stepStyle"  type="navigation" >
       <a-step v-for="item in fases" :key="item.title" :title="item.title"  />
@@ -75,7 +93,14 @@ export default {
       stepStyle: {
         marginBottom: '60px',
         boxShadow: '0px -1px 0 0 #e8e8e8 inset',
-      },     
+      },
+      nombreProyecto:'',
+      id_proyecto:'',
+      fecha_inicio:'',
+      fecha_termino:'',
+      descripcion:'',
+      estado:'',
+      metodologia:''     
     };
   },
   created(){
@@ -112,7 +137,11 @@ export default {
          let me=this;
           axios.get('Backphp/ProcesoProyecto.php/?id_proyect='+id).then(response => {              
                 // me.fases = response.data;
-                  console.log(response.data);              
+                  console.log(response.data);
+                  me.nombreProyecto=response.data[0].nombre_proyecto;  
+                  me.fecha_inicio=response.data[0].fecha_inicio;
+                  me.fecha_termino=response.data[0].fecha_termino;
+                  me.metodologia=response.data[0].nombre_metodologia;            
                }).catch(function (error) {
                       console.log(error);
               }) .finally(() => {

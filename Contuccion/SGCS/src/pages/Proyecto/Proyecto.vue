@@ -1,18 +1,29 @@
 <template>
     <div>
        <div>
-         <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="Nuevo"> 
+       <!--  <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="Nuevo"> 
             <i class="fa fa-plus-circle"></i> Nuevo Proyecto
-          </b-button>
-          <br>           
+          </b-button> -->
+          <div style="width: 200px;  display: inline-block;">
+            <label for="">Buscar</label> 
+            <b-form-input
+                id="input-30" 
+                require
+                class="p-2 px-4 btn-xs"               
+              v-model="search"  >
+          </b-form-input> 
+         </div> 
+          <br>    
+          <br>       
         </div>
-
        <div class="row" >
+          
         <div class="col-4" v-for="item in items" :key="item.key">
         <b-card  border-variant="primary" >
-            <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
-                    <b-dropdown-item @click="Miembros">Miembros</b-dropdown-item>
-                     <b-dropdown-item  @click="DialogMiembro=true">Agregar Miembro</b-dropdown-item>
+            <b-dropdown class="dropdown-icon strong"   variant="#FFFFF" style="float:right;font-weight: 400" right >            
+                     <b-dropdown-item @click="AbrirDialogo(item.id_proyecto)">Nuevo Miembro</b-dropdown-item>
+                    <b-dropdown-item @click="Miembros(item.id_proyecto)">Miembros</b-dropdown-item>
+                   
                     <b-dropdown-item @click="Detalle(item.id_proyecto)">Detalle</b-dropdown-item>           
                 </b-dropdown>             
             <b-card-title>{{item.nombre_proyecto}}</b-card-title>  
@@ -21,14 +32,16 @@
                 Fecha Inicio :  {{item.fecha_inicio}} <br>
                 Fecha Termino:  {{item.fecha_termino}}<br>
                 Estado:  <span class="badge badge-success">{{item.estado}}</span>  <br>
-                Miembros :4
+               
             </b-card-text>
-            <b-card-text class="small text-muted">Ultima Actualizacion hace 3 min</b-card-text>
+            <br>
+            <br>
+          <!--   <b-card-text class="small text-muted">Ultima Actualizacion hace 3 min</b-card-text>-->
             </b-card>
             <br>
             </div>
         </div>
- <miembro-nuevo @CerrarModal="CerrarModal"  :DialogMiembro="DialogMiembro" > </miembro-nuevo>
+        <miembro-nuevo @CerrarModal="CerrarModal"   v-bind:id_proyecto="id_proyecto" :DialogMiembro="DialogMiembro" > </miembro-nuevo>
   
     </div>
 </template>
@@ -38,11 +51,14 @@ import axios from  'axios';
 import firebase from '@/firebase'
 import MiembroNuevo from '@/pages/Miembro/MiembroNuevo';
 export default {
-     components: { MiembroNuevo },
+    components: { MiembroNuevo },
     data(){
         return{
               items:[],
               DialogMiembro:false,
+              id_proyecto:'',
+              pepep:'asdadsasd',
+              search: '',
         }
     },
     created(){
@@ -53,12 +69,18 @@ export default {
              this.$router.push('/app/proyectonuevo');
         },
         Detalle(id_proyecto){
-                console.log(id_proyecto);
+            // console.log(id_proyecto);
              this.$router.push({name:"proyectodetalle",params:{id_proyecto} });
            //this.$router.push('/app/proyectodetalle');   
         },
-        Miembros(){
-             this.$router.push('/app/proyectomiembro'); 
+        Miembros(id_proyecto){
+            // this.$router.push('/app/proyectomiembro'); 
+             this.$router.push({name:"proyectomiembro",params:{id_proyecto} });
+        },
+        AbrirDialogo(id){
+             this.DialogMiembro=true,
+             this.id_proyecto=id;
+
         },
         ListarProyecto(){
              let me=this;

@@ -82,7 +82,7 @@ export default {
   },
 
   created(){
-  firebase.auth().onAuthStateChanged(user =>  {
+    firebase.auth().onAuthStateChanged(user =>  {
       if (user) {
         // User is signed in.
         console.log(user.displayName)

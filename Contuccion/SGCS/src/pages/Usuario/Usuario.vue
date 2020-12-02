@@ -22,8 +22,8 @@
             <b-col md="6">
                 <b-card-body >                   
                 <b-card-title>{{item.nombre}}</b-card-title>                    
-                <b-card-text>
-                   {{item.rol}}
+                <b-card-text> 
+                   {{item.apellido}}
                 </b-card-text>                
                 </b-card-body>                
             </b-col>
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-
+import axios from  'axios';
 import firebase from '@/firebase'
 import UsuarioNuevo from './UsuarioNuevo';
 
@@ -59,11 +59,22 @@ export default {
               }
  },
  created(){
-    //  this.Listar();   
+      this. ListaUsuarios();   
     },
  methods:{
        CerrarModal() {
            this.DialogUsuario = false;             
+       },
+       ListaUsuarios(){
+           let me=this;
+              axios.get('Backphp/ProcesoUsuario.php/').then(response => {
+                    
+                      me.items = response.data;                      
+                  }).catch(function (error) {
+                      console.log(error);
+                  }) .finally(() => {
+                     
+            })
        },
       Listar(){
             firebase.database().ref('Usuario').on('value', (data) => {   

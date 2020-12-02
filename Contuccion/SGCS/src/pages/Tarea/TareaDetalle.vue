@@ -1,33 +1,22 @@
 <template>
-  <b-modal id="modal-cliente" v-model="Show" @hide="CerrarModal"
-  title="Nuevo Miembro" hide-footer   body-class="myDiv">
-
+  <b-modal v-model="Show" @hide="CerrarModal"
+  title="Tarea" hide-footer   body-class="myDiv">
      <form action="">
           <div class="form-row">                 
-          <b-form-group  label="Miembro:"  class="col-md-12">
-
-              
-               <a-select     v-model="id_usuario" >              
-                 <a-select-option v-for="d in usuarios" :key="d.value">
-                  {{ d.text }}
-              </a-select-option>
-               </a-select>             
-             </b-form-group>                
+          <b-form-group  label="Tarea:"  class="col-md-12">
+                        
+            </b-form-group>                
           </div>
           <div class="form-row"> 
-              <b-form-group  label=" Rol:"  class="col-md-12">
-             <a-select    v-model="id_rol" >              
-                 <a-select-option v-for="d in roles" :key="d.value">
-                {{ d.text }}
-              </a-select-option>
-               </a-select>  
+              <b-form-group  label=" Roles:"  class="col-md-12">
+           
              </b-form-group> 
           </div> 
         
          <hr>
         <div class="float-right" >              
           <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
-          <b-button type="button"   variant="primary"  class="p-2 px-4 btn-xs" @click="RegistrarMiembro">
+          <b-button type="button"   variant="primary"  class="p-2 px-4 btn-xs" >
               <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
              <span v-show="!isLoading">Guardar</span>
             </b-button>
@@ -41,13 +30,13 @@
 //DialogMetodologia
 import axios from  'axios';
 export default {
-    name: 'miembro-nuevo',
+    name: 'tarea-detalle',
     props:{
-      DialogMiembro: {       
+      DialogoDetalleTarea: {       
         type: Boolean,
         required: true,
         default: false
-      }, id_proyecto: [String, String],
+      },
       
     },
     data() {
@@ -57,8 +46,7 @@ export default {
           codigo:'',
           nombre:'',            
           isLoading:false,          
-          Show:this.DialogMiembro,
-         
+          Show:this.DialogoDetalleTarea,         
           usuarios:[],
           roles:[],
           id_rol:'',
@@ -67,15 +55,15 @@ export default {
         }
     },
     watch: {
-      DialogMiembro(){
-        this.Show = this.DialogMiembro
+      DialogoDetalleTarea(){
+        this.Show = this.DialogoDetalleTarea
       }
     },
     created () {
     //    this.CantidadMetodologia();
       //  this.codigo=this.CodeMetodologia+""+ this.contador;
-          this.ListarUsuario();
-          this.ListarRoles();
+         // this.ListarUsuario();
+        //  this.ListarRoles();
     },
     computed: {
      

@@ -1,31 +1,32 @@
 <template>
   <b-modal  v-model="Show" @hide="CerrarModal"
-  title="Nuevo Elemento" hide-footer   body-class="myDiv">
+  title="Editar" hide-footer   body-class="myDiv">
      <form action="">
        <div class="form-row">                 
                <b-form-group  label="Codigo Elemento:"  class="col-md-12">
                <b-input                  
                   aria-describedby="input-live-help input-live-feedback"
                   class="p-2 px-4 btn-xs "
-                 v-model="codigo">
+                  disabled
+                  >
                </b-input>
              </b-form-group>                
           </div>
           <div class="form-row"> 
               <b-form-group  label="Nombre Elemento:"  class="col-md-12">
-               <b-input                  
-                  aria-describedby="input-live-help input-live-feedback"
-                  class="p-2 px-4 btn-xs "
-                 v-model="nombre">
-               </b-input>
+                <a-select    v-model="id_rol" >              
+                 <a-select-option v-for="d in roles" :key="d.value">
+                {{ d.text }}
+              </a-select-option>
+               </a-select> 
              </b-form-group> 
           </div>        
          <hr>
         <div class="float-right" >              
           <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
-          <b-button type="button"  @click="RegistrarElemento" variant="primary"  class="p-2 px-4 btn-xs">
+          <b-button type="button"  variant="primary"  class="p-2 px-4 btn-xs">
               <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
-             <span v-show="!isLoading">Registrar</span>
+             <span v-show="!isLoading">Modificar</span>
             </b-button>
         </div>
      </form>    
@@ -36,13 +37,13 @@
 
 import axios from  'axios';
 export default {
-    name: 'elemento-nuevo',
+    name: 'editar-rol',
     props:{
-      DialogoElemento: {       
+      DialogoModificar: {       
         type: Boolean,
         required: true,
         default: false
-      },
+      }
       
     },
     data() {
@@ -52,48 +53,54 @@ export default {
           codigo:'',
           nombre:'',            
           isLoading:false,          
-          Show:this.DialogoElemento,
+          Show:this.DialogoModificar,
+          roles:[],
+          id_rol:'',
+
           
         }
     },
     watch: {
-      DialogoElemento(){
-        this.Show = this.DialogoElemento
+      DialogoModificar(){
+        this.Show = this.DialogoModificar
       }
     },
     created () {    
-
+          this.ListarRoles();
     },
     computed: {
      
     },
     methods: {
-      RegistrarElemento(){         
-          let nombre=this.nombre;
-          let codigo_elemento=this.codigo;           
-          const obj={codigo_elemento,nombre};
-          axios.post('Backphp/ProcesoElemento.php/',obj).then(response => {                       
+       ListarRoles(){
+             let me=this;
+                  var elementos=[];
+                  axios.get('Backphp/ProcesoRol.php/',).then(function(response){                      
+                  elementos=response.data;   
+                  elementos.map(function(x){
+                        me.roles.push({text: x.nombre,value:x.id_rol});
+                 });  
+              }).catch(function(error){
+                  console.log(error);
+           });       
+       },  
+      ModificarRol(){         
+          let id_elemento=this.id_elemento;
+          let nombre=this.nombre;           
+          const obj={id_elemento,nombre};
+          axios.put('Backphp/ProcesoElemento.php/',obj).then(response => {                       
               console.log(response);
                 this.ListarElemetos();
                this.Confirmacion();
-             
-           
           }).catch(function (error) {
               console.log(error);
-          }) .finally(() => {
-              
-          })
-      },
-      ListarElemetos(){
-        this.$emit('ListarElemento-Emit');
-      },
-      ListarMetodologia(){
-          this.$emit('Listar-Emit');
-      },
-       CerrarModal(){              
+          }) .finally(() => {              
+         })
+      },   
+      CerrarModal(){              
               this.$emit('CerrarModal');
-       },
-       CantidadMetodologia(){  
+      },
+      CantidadMetodologia(){  
             firebase.database().ref('Metodologia').on('value', (data) => {   
               var  array=[];             
               data.forEach((doc) => {
@@ -108,11 +115,11 @@ export default {
           this.$swal({
               position: 'top-end',
               icon: 'success',
-              title: 'Registrado',
-              text:'se ha registrado con exito',
+              title: 'Modificado',
+              text:'se ha modificado con exito',
               showConfirmButton: false,
               timer: 3000
-            })
+          })
        },
     }
 };

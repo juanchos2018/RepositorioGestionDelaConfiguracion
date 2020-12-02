@@ -185,4 +185,4 @@ export default {
   },
 };
 </script>
-<style src="./stilo.scss" scoped lang="scss"></style>
+<style src="./stilo.scss" scoped lang="scss" ></style>

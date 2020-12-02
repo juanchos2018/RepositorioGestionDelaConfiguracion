@@ -5,7 +5,8 @@
   <div class="wrap">
    <Header   v-bind:ru="ru"  v-bind:name="nomb" />
     <v-touch class="content" @swipe="handleSwipe" :swipe-options="{direction: 'horizontal'}">
-      <breadcrumb-history></breadcrumb-history>
+   <!--   <breadcrumb-history></breadcrumb-history>
+      -->
       <transition name="router-animation">
         <router-view />
       </transition>
@@ -53,8 +54,7 @@ export default {
         this.toggleSidebar();
         this.changeSidebarActive(null);
       }
-    },
-   
+    },  
 
   },
   computed: {

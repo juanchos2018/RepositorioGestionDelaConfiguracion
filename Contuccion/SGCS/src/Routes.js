@@ -8,7 +8,7 @@ import AnalyticsPage from '@/pages/Dashboard/Dashboard';
 
 import Usuario from '@/pages/Usuario/Usuario';
 import UsuarioTareas from '@/pages/Usuario/UsuarioTareas';
-import Publicaciones from '@/pages/Publicaciones/Publicaciones';
+
 import Metodologia from '@/pages/Metodologias/Metodologia';
 import Registro from '@/pages/Registro/Registro';
 import Fases from '@/pages/Fases/Fases';
@@ -19,6 +19,7 @@ import ProyectoMiembros from '@/pages/Proyecto/ProyectoMiembros';
 
 import Solicitud from '@/pages/Solicitud/SolicitudCambio';
 import Elemento from '@/pages/Elemento/Elemento';
+import MiembroTareas from '@/pages/Miembro/MiembroTareas';
 
 Vue.use(Router);
 export default new Router({
@@ -46,18 +47,19 @@ export default new Router({
             requiresAuth: true
           },
         },
-        {
-          path: 'publicaciones',
-          name: 'publicaciones',
-          component: Publicaciones,
-        },
+        
         {
           path: 'usuario',
           name: 'usuario',
           component: Usuario,
         },
         {
-          path: 'usuariotareas',
+          path: 'miembrotareas:id_proyecto',
+          name: 'miembrotareas',
+          component: MiembroTareas,
+        },
+        {
+          path: 'usuariotareas:id_proyecto',
           name: 'usuariotareas',
           component: UsuarioTareas,
         },
@@ -87,7 +89,7 @@ export default new Router({
           component: ProyectoNuevo,
         },
         {
-          path: 'proyectomiembro',
+          path: 'proyectomiembro:id_proyecto',
           name: 'proyectomiembro',
           component: ProyectoMiembros,
         },
@@ -107,7 +109,16 @@ export default new Router({
           name: 'elemento',
           component: Elemento,
         },
-      
+        {
+          path: 'components/agregar',
+          name: 'nuevo',
+          component: ProyectoNuevo,
+        },
+        {
+          path: 'components/listar',
+          name: 'listar',
+          component: Proyecto,
+        },
        
       ],
     },

@@ -2,12 +2,7 @@
     <div>
   <b-button variant="primary" @click="GenerarPdf"> Generar Solicitud Pdf </b-button>
        <!--  <pdf src="../../assets/plantillasolictudcambio.pdf"></pdf>-->
-        {{currentPage}} / {{pageCount}}
-        <pdf
-            src="https://www.uma.es/ejemplo-grupo-de-investigacion/navegador_de_ficheros/repositorio-grupos-de-investigacion/descargar/documentaci%C3%B3n%20becas%20junta/documento%20de%20prueba.pdf"
-            @num-pages="pageCount = $event"
-            @page-loaded="currentPage = $event"
-        ></pdf>
+      
         <b-button variant="primary" @click="GenerarPdf"> GenerarPdf </b-button>
     </div>
 </template>

@@ -10,14 +10,21 @@
         v-for="(step, index) of steps" :key="index">
         <span class="wizard__step__line" :class="{'vgw-mobile': isMobile}"></span>
      <!--   <span class="wizard__step__label"  @click="hola">{{step.label}}</span>-->
-       <b-dropdown class="mx-1 wizard__step__label"   variant="outline-primary" >
+    <!--   <b-dropdown class="mx-1 wizard__step__label"   variant="outline-primary" >
        <template #button-content>
            <strong>{{step.label}}</strong> 
         </template>
         <b-dropdown-item  @click="showModal(step.id_fase,step.metodologiaId)">Editar</b-dropdown-item>
-        <b-dropdown-item @click="MensajeEliminar">Eliminar</b-dropdown-item>
-     
-      </b-dropdown>
+        <b-dropdown-item @click="MensajeEliminar">Eliminar</b-dropdown-item>     
+      </b-dropdown>-->
+    
+       <a-dropdown-button @click="handleButtonClick(index)" >
+      <strong> {{step.label}}</strong>  
+      <a-menu slot="overlay">
+        <a-menu-item key="1" @click="showModal(step.id_fase,step.metodologiaId)"> <a-icon type="edit" />Editar </a-menu-item>
+        <a-menu-item key="2" @click="MensajeEliminar"> <a-icon type="delete" />Remover </a-menu-item>
+        </a-menu>
+    </a-dropdown-button>
         
         <span class="wizard__step__indicator" 
         > </span>
@@ -57,9 +64,17 @@
       </div>
     </div>
 
-  <a-modal v-model="visible" title="Modal" ok-text="Aceptar" cancel-text="Cancelar" @ok="hideModal">
+  <a-modal v-model="visible" title="Modal" ok-text="Aceptar" cancel-text="Cancelar" >
       <label for="">Nombre</label>
-      <b-input v-model="nombre_fase"> </b-input>   
+      <b-input v-model="nombre_fase"> </b-input> 
+       <template slot="footer">
+        <a-button key="back" @click="hideModal">
+          Cancelar
+        </a-button>
+        <a-button key="submit" type="primary"  @click="EditarFase">
+          Editar
+        </a-button>
+      </template>  
   </a-modal>
    
   </div>
@@ -144,7 +159,8 @@ export default {
       this.metodologiaId=metodologiaId;
       this.visible = true;
      
-    },  
+   },  
+   
     hideModal() {
       this.visible = false;
       this.EditarFase();
@@ -153,12 +169,14 @@ export default {
     goNext (skipFunction) {
       if (!skipFunction && typeof this.onNext == 'function'){
         if(!this.onNext(this.currentStep)) {
+            console.log('back clicded ssss', this.currentStep) 
           //returned false. don't do anything
           return;
         }
       }
       if (this.currentStep < this.steps.length-1) {
         this.currentStep++;
+       //  console.log('aumentea', this.currentStep) 
       }
     },
     MensajeEliminar(){
@@ -203,16 +221,26 @@ export default {
         // this.$emit('Listar-Fase',this.metodologiaId);
           this.$eventHub.$emit('Listar-Fase',this.metodologiaId)
     },
-   
+    handleButtonClick(skipFunction){
+       // this.currentStep=item
+     //  RecibeStep
+    //  this.$emit('RecibeStep',item);
+       
+      // console.log(item);
+      // this.currentStep++
+
+    },   
     goBack (skipFunction) {
       if (!skipFunction && typeof this.onBack == 'function'){
         if(!this.onBack(this.currentStep)) {
           //returned false. don't do anything
+          // console.log('back clicded ssss', this.currentStep) 
           return;
         }
       }
       if (this.currentStep > 0) {
         this.currentStep--;
+         console.log('bretrocede', this.currentStep) 
       }
     },
 
@@ -221,6 +249,7 @@ export default {
         && step < this.steps.length
         && step >= 0) {
         this.currentStep = step;
+         
       } 
     },
     

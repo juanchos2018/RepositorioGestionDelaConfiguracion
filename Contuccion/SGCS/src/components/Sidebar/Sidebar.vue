@@ -29,13 +29,13 @@
         />
            <NavLink
             :activeItem="activeItem"
-            header="Elemento"
+            header="ECS"
             link="/app/elemento"
             iconName="flaticon-home"
             index="elemento"
             isHeader
         />
-
+<!--
            <NavLink
             :activeItem="activeItem"
             header="Proyecto"
@@ -44,16 +44,18 @@
             index="proyecto"
             isHeader
            
-        />
-        <!--
-        <NavLink
-            :activeItem="activeItem"
-            header="Usuario"
-            link="/app/usuario"
-            iconName="flaticon-network"
-            index="usuario"
-             isHeader           
         />-->
+          <NavLink
+            :activeItem="activeItem"
+            header="Proyectos"
+            link="/app/proyecto"
+            iconName="flaticon-network"
+            index="proyecto"
+            :childrenLinks="[
+              { header: 'Agregar', link: '/app/components/agregar' },
+              { header: 'Listar', link: '/app/components/listar' }
+            ]"
+        />
          <NavLink
             :activeItem="activeItem"
             header="Solicitud"
@@ -64,6 +66,15 @@
         />
       
         
+           <NavLink
+            :activeItem="activeItem"
+            header="Usuario"
+            link="/app/usuario"
+            iconName="flaticon-network"
+            index="usuario"
+            isHeader
+           
+        />
       
          
       </ul>

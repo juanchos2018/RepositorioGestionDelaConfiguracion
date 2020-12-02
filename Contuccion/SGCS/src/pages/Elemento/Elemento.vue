@@ -1,16 +1,28 @@
 <template>
      <div>
-      <div>
+     
          <div class="navigation-filter float-right">
-          <a href="#"  class="cambia" ><i class="fa fa-th-list"></i></a>
-          <a href="#"  class="cambia"  ><i class="fa fa-th"></i></a>
-      </div>
+        <!--  <a href="#"  class="cambia" ><i class="fa fa-th-list"></i></a>
+          <a href="#"  class="cambia"  ><i class="fa fa-th"></i></a>-->
+        </div>
          <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogoElemento=true"> 
             <i class="fa fa-plus-circle"></i> Nuevo
           </b-button>
-          <br>           
-        </div>
+
+           <div style="width: 200px;float; float: right; display: inline-block;">
+            <label for="">Buscar</label> 
+            <b-form-input
+                id="input-30" 
+                require
+                class="p-2 px-4 btn-xs"               
+              v-model="search"  >
+          </b-form-input> 
+         </div>  
+          <br>  
+          <br>         
+        
     <div >   
+        <br>
       <div class="row" id="listaproyectos">             
        <div class="col-4" v-for="item in items" :key="item.key">  
               
@@ -34,10 +46,9 @@
             </b-row>            
                 <template #footer  footer-class="myDiv">
                      <div  style="background-color: white; float:right;">
-                       <b-button variant="success" > <b-icon icon="pencil-square" animation="fade" font-scale="1"></b-icon> </b-button>
-                      <b-button variant="danger" style="margin-left:2px"  @click="MensajeEliminar"> <b-icon icon="trash" animation="fade" font-scale="1"></b-icon> </b-button>
-                     </div>  
-                                        
+                       <b-button variant="success" v-b-tooltip.hover title="Editar" > <b-icon icon="pencil-square" animation="fade" font-scale="1" @click="AbrirModalEditar(item.id_elemento)"></b-icon> </b-button>
+                      <b-button variant="danger" style="margin-left:2px"  @click="MensajeEliminar" v-b-tooltip.hover title="Eliminar"> <b-icon icon="trash" animation="fade" font-scale="1"></b-icon> </b-button>
+                     </div>                                          
                 </template>
          </b-card>
          <br>
@@ -46,6 +57,7 @@
     </div>
     
    <elemento-nuevo @CerrarModal="CerrarModal" :DialogoElemento="DialogoElemento"  v-on:ListarElemento-Emit="ListarElemento"></elemento-nuevo>
+   <elemento-editar @CerrarModal="CerrarModal" :DialogoModificar="DialogoModificar" v-bind:id_elemento="id_elemento"  v-on:ListarElemento-Emit="ListarElemento"></elemento-editar>
    
     </div>
 </template>
@@ -53,14 +65,18 @@
 <script>
 
 import ElementoNuevo from './ElementoNuevo';
+import ElementoEditar from './ElementoEditar';
 
 import axios from  'axios';
 export default {
-     components: {ElementoNuevo  },
+     components: {ElementoNuevo,ElementoEditar  },
         data(){
             return{
                    DialogoElemento:false,
-                   items:[],  
+                   DialogoModificar:false,
+                   items:[],
+                   id_elemento:'',  
+                   search: '',
             }
         },
         created(){
@@ -68,7 +84,12 @@ export default {
         },
         methods:{
                CerrarModal() {
-                    this.DialogoElemento = false;           
+                    this.DialogoElemento = false;
+                    this.DialogoModificar = false;           
+               },
+               AbrirModalEditar(id){
+                     this.id_elemento=id;   
+                     this.DialogoModificar = true;         
                },
                ListarElemento(){
                     let me=this;
@@ -80,8 +101,8 @@ export default {
                   }) .finally(() => {
                      
                    })
-              },
-              MensajeEliminar(){
+                },
+                MensajeEliminar(){
                     this.$swal.fire({
                         title: 'Elminar ?',
                         text: "Ya no podras revertir!",
@@ -103,4 +124,4 @@ export default {
          }
 }
 </script>
-<style src="./elemento.scss" lang="scss"  />
+<style src="./elemento.scss" lang="scss" scoped  />

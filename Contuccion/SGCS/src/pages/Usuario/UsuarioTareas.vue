@@ -1,8 +1,51 @@
 <template>
   <div >
     <h5>Tareas de usuario</h5>
-  <br>
-      <div class="timeline-wrapper"> 
+          <b-card   
+            header="Primary" 
+            header-text-variant="white"
+            header-bg-variant="primary"           
+            header-tag="header" footer-tag="footer"> 
+        <template #header>
+            <h6 class="mb-0" style="color:#FFFFFF">Header Slot</h6>
+          </template>
+        <a-steps :current="current" @change="onChange" :style="stepStyle"  type="navigation" >
+          <a-step v-for="item in fases" :key="item.title" :title="item.title"  />
+        </a-steps>
+          <b-button variant="primary" >Agregar</b-button>
+        <div   class="row" >        
+        <!--  {{ steps[current].content  sub-title="00:00:05"  }}-->
+        <div class="col-4" v-for="item in tareas" :key="item.key" style="margin-top:10px">  
+            <b-card class="overflow-hidden"  footer-tag="footer">
+                <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
+                    <b-dropdown-item >OPpcion 1</b-dropdown-item>
+                    <b-dropdown-item >OPpcion 1</b-dropdown-item>
+                    <b-dropdown-item >OPpcion 1</b-dropdown-item>           
+                </b-dropdown>   
+            <b-row no-gutters>
+              <b-card-title> <h5> tarea de algo</h5> </b-card-title>   
+            <b-col md="8">
+                <b-card-body >               
+                              
+                <b-card-text>
+                texto
+                </b-card-text>                
+                </b-card-body>                
+            </b-col>
+            </b-row>            
+                <template #footer  footer-class="myDiv">
+                     <div  style="background-color: white; float:right;">                     
+                      <b-badge variant="danger">12/12/12</b-badge>
+                     </div>                                          
+                </template>
+         </b-card>
+         
+        </div>
+        </div>
+      
+          </b-card>
+ 
+      <!--<div class="timeline-wrapper"> 
         <ul class="StepProgress"> 
       <li  v-for="schedule in schedules" :key="schedule.key"  class="StepProgress-item"  >
         <div class="bold time"> {{schedule.start}}   </div> 
@@ -12,7 +55,7 @@
          </b-card>
       </li>
     </ul>
-   </div>
+   </div>-->
   </div>
 </template>
 
@@ -20,6 +63,7 @@
 import Widget from '@/components/Widget/Widget';
 import moment from 'moment'
 import firebase from '@/firebase'
+import axios from  'axios';
 
 function formatDate(date) {
     var d = new Date(date),
@@ -34,64 +78,97 @@ var today=formatDate(Date.now())
 
 export default {
   name: 'usuario-tarea',
-  components: {
-    Widget,  
-  },
+  components: {    Widget,   },
   props: ['items'],
 
   data() {
-    return {
-     
-        d : new Date(),
-        valor:'',
-        moment: moment,
-        now: new Date().getTime(),
-        schedules:[],
-        range:{
-           // start: `${this.addZero(this.d.getHours())}:${this.addZero(this.d.getMinutes())}`,
-            //end: `${this.addZero(this.d.getHours())}:${vm.addZero(this.d.getMinutes())}`
-        },
-        description: '',
-        title:'',
-        t: '1em',
-    
-    };
-  },
-  created(){
-      this.Listar();
-  },
-  methods: {
-      addZero(i) {
-      if (i < 10) {
-        i = "0" + i;
+        return {
+        
+            d : new Date(),
+            valor:'',
+            moment: moment,
+            now: new Date().getTime(),
+            schedules:[],
+            range:{
+              // start: `${this.addZero(this.d.getHours())}:${this.addZero(this.d.getMinutes())}`,
+                //end: `${this.addZero(this.d.getHours())}:${vm.addZero(this.d.getMinutes())}`
+            },
+            description: '',
+            title:'',
+            t: '1em',
+            current: 0,
+            fases:[],
+            stepStyle: {
+            marginBottom: '10px',
+            boxShadow: '0px -1px 0 0 #e8e8e8 inset',
+            tareas:[],
+            tareasAcabadas:[]
+            
+          },   
+        
+        };
+      },
+      created(){
+         this.Listar();
+      },
+      mounted() {
+          this.GetDatos();
+      },
+      methods: {
+         GetDatos(){
+            var item = this.$route.params.id_proyecto
+              if(item){        
+                  this.MostarFaseMetodolgiaProyecto(item);  
+                
+              }   
+          },
+           MostarFaseMetodolgiaProyecto(id){
+              let me=this;
+              axios.get('Backphp/ProcesoProyecto.php/?id_proyecto='+id).then(response => {              
+                    me.fases = response.data;
+                                  
+               }).catch(function (error) {
+                      console.log(error);
+              }) .finally(() => {
+              })
+          },
+          addZero(i) {
+          if (i < 10) {
+            i = "0" + i;
+          }
+          return i;
+          },
+          addSchedule(){
+            var vm = this 
+            var obj={};
+            var  fecha=moment.date;
+            console.log(fecha);
+              obj.start=today;
+            
+              obj.description=vm.description;
+              obj.title = vm.title
+              vm.schedules.push(Object.assign({}, obj))
+          },
+          Listar(){
+              var vm = this
+                  firebase.database().ref('Tareas').on('value', (data) => {   
+                    this.tareas=[];             
+                        data.forEach((doc) => {
+                          var item = doc.val()
+                          item.key = doc.key  
+                          this.tareas.push(item)
+                        //  vm.schedules.push(Object.assign({}, obj))
+                  });
+              });
+           },  
+           onChange(current) {
+              console.log('onChange:', current);
+              this.current = current;
+              var code =this.fases[current].id_fase;
+              console.log(code);
+            },
+        
       }
-      return i;
-    },
-     addSchedule(){
-      var vm = this 
-      var obj={};
-      var  fecha=moment.date;
-      console.log(fecha);
-        obj.start=today;
-       
-        obj.description=vm.description;
-        obj.title = vm.title
-        vm.schedules.push(Object.assign({}, obj))
-    },
-    Listar(){
-         var vm = this
-            firebase.database().ref('Tareas').on('value', (data) => {   
-              this.items=[];             
-                  data.forEach((doc) => {
-                    var item = doc.val()
-                    item.key = doc.key  
-                    this.schedules.push(item)
-                  //  vm.schedules.push(Object.assign({}, obj))
-             });
-         });
-       },  
-    
-  }
 };
 </script>
 

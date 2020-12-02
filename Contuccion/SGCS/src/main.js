@@ -22,9 +22,10 @@ import 'firebase/auth';
 import VueGoodWizard from 'vue-good-wizard';
 import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
+import VueApexCharts from 'vue-apexcharts'
+
+Vue.use(VueApexCharts)
 Vue.use(Antd);
-
-
 Vue.use(VueGoodWizard);
 Vue.use(VueSchedulerLite)
 

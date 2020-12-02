@@ -25,4 +25,4 @@ export default {
 </script>
 
 
-<style src="./fases.scss" lang="scss"  />
+<style src="./fases.scss" lang="scss" scoped />

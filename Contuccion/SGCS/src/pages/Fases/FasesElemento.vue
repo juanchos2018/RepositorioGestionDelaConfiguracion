@@ -26,7 +26,7 @@
           <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
           <b-button type="button"  variant="primary"  class="p-2 px-4 btn-xs" @click="Registrar">
               <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
-             <span v-show="!isLoading">Registrar</span>
+             <span v-show="!isLoading">Crear Elemento</span>
             </b-button>
         </div>
      </form>    

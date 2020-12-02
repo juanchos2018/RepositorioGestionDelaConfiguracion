@@ -1,33 +1,44 @@
 <template>
     <div>   
+  <div >
+  <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogoFase=true"> 
+              <i class="fa fa-plus-circle"></i> Nueva Fase
+            </b-button>
+            <b-button variant="outline-primary" @click="DialogoFaseElemento=true">  <i class="fa fa-plus-circle"></i> ECS </b-button>
+  </div> <br>
+  <h4> Fases de la Metodologia  <strong>  {{nombremetodologia}}</strong>  </h4> 
+  <br>
 
-<div >
-<b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogoFase=true"> 
-            <i class="fa fa-plus-circle"></i> Nueva Fase
-          </b-button>
-           <b-button variant="outline-primary" @click="DialogoFaseElemento=true">Agregar Elemento </b-button>
-</div> <br>
-<center><h5>Metodologia </h5> <h5>{{nombremetodologia}}</h5>
-</center>
   <wizard
       ref="wizard"      
       :steps="items"         
       @click="click"
       :onNext="nextClicked" 
-      :onBack="backClicked">
+      :onBack="backClicked"
+      v-on:RecibeStep="RecibeStep"   >
      
-        <div slot="page1">
-            <h4>Elemtos de Configuracion</h4>           
-             <b-table striped hover :items="detalle2"></b-table>   
+       <div slot="page1">
+          <h4>Elementos de Configuración</h4>       
+          <div style="width: 200px;float; float: right; display: inline-block;">
+            <label for="">Buscar</label> 
+            <b-form-input
+                id="input-30" 
+                require
+                class="p-2 px-4 btn-xs"               
+              >
+          </b-form-input> 
+         </div>   
+         br     
+           <b-table striped hover :items="detalle2" :fields="fields">
+            <template v-slot:cell(acciones)="data">                      
+                 <b-button variant="primary" size="sm" @click="Remover(data.item.id_elemento)" ><b-icon icon="trash" animation="fade" font-scale="1"></b-icon> </b-button>
+              </template>  
+            </b-table>   
         </div>       
-    </wizard>
-   
-          
-    
+    </wizard> 
   <fase-nueva @CerrarModal="CerrarModal" :DialogoFase="DialogoFase"  v-bind:idmetodologia="datos.id_metodologia" v-on:Listar-Fase="ListarFasePorMetodologia"></fase-nueva>
    <fases-elemento @CerrarModal="CerrarModal"  :DialogoFaseElemento="DialogoFaseElemento" v-bind:idmetodologia="datos.id_metodologia" > </fases-elemento>
-  
-   {{DialogoFaseElemento}}
+    
    </div>
 
 </template>
@@ -51,6 +62,11 @@ export default {
             current: 0,
             pagina:'page1',    
             detalle2:[],
+             fields: [
+                         { label:"Id", key: 'id_elemento', sortable: false },
+                         { label:"Nombre Elemento", key: 'nombre', sortable: false },  
+                         { label:"Acciones", key: 'acciones', sortable: false },
+                ],
             datos:{
                 id_metodologia:"",
                 nombre:""               
@@ -67,7 +83,7 @@ export default {
       this.GetDatos()
     },
     methods:{
-        click(){
+       click(){
             alert("clikc");
         },
        onChange(current) {
@@ -130,21 +146,29 @@ export default {
             }
           })
        },
+       Remover(id){
+
+       },
        nextClicked(currentPage) {
           //siguiente
-        console.log('next clicked', currentPage)        
+       //  console.log('next clicked', currentPage)        
         let me =this;
         var code =this.items[currentPage+1].id_fase;
-        me.ListarElemtosFase(code);
-      
+        me.ListarElemtosFase(code);      
         return true; //return false if you want to prevent moving to next page
+        },
+        RecibeStep(e){
+          console.log("REcibinedo step")
+           console.log(e);
+        //   this.backClicked(e)
+           // return true;
         },
         backClicked(currentPage) {
           //retroceder
-           console.log('back clicded', currentPage) 
+       //    console.log('back clicded', currentPage) 
           let me =this;
           var code =this.items[currentPage-1].id_fase;
-          console.log(code);
+        //  console.log(code);
           me.ListarElemtosFase(code);
         
          return true; //return false if you want to prevent moving to previous page
@@ -161,4 +185,4 @@ export default {
 </script>
 
 
-<style src="./fases.scss" lang="scss"  />
+<style src="./fases.scss" lang="scss"  scoped />
