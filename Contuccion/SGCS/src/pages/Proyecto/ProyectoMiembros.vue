@@ -1,14 +1,25 @@
 <template>
     <div>
+      <h4>Miembros</h4>
       <div>
         <!--
          <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" > 
             <i class="fa fa-plus-circle"></i> Nuevo Miembro
           </b-button>-->
-          <br>           
+           <div style="width: 200px;  display: inline-block;">
+            <label for="">Buscar</label> 
+            <b-form-input
+                id="input-30" 
+                require
+                class="p-2 px-4 btn-xs"               
+              v-model="search"  >
+          </b-form-input> 
+         </div> 
+          <br>       
+          <br>    
         </div>
     <div >   
-      <h4>Miembros</h4>
+      
       <div class="row" >             
        <div class="col-4" v-for="item in items" :key="item.key">  
               
@@ -69,7 +80,7 @@ export default {
           // this.Listar();   
           },
       mounted(){
-       //     this.GetDatos()
+          this.GetDatos()
           },
       methods:{
 

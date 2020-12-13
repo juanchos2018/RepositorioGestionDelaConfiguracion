@@ -4,7 +4,7 @@
     <div class="row">
      <div class="col-5" v-for="item in agrupados" :key="item.key">    
           <Widget class="h-100 mb-6"  title="<h5> <span class='fw-semi-bold'>Proyecto </span></h5>"  close collapse customHeader>
-      <h5>{{item.nombre_proyecto}}</h5>
+        <h5>{{item.nombre_proyecto}}</h5>
         <VueApexCharts width="350"  type="donut" :options="chartOptions"  :series="agrupados[item.index].series"  @dataPointSelection="dataPointSelectionHandler" @click="Detalle(item.id_proyecto)" ></VueApexCharts>
    
       </Widget>
@@ -13,6 +13,8 @@
     </div>
 
 <!--
+
+  agrupados[item.index].charOptions
       <b-row>
         <b-col lg="4" sm="6" xs="12">
         <Widget class="h-100 mb-4"  title="<h5> <span class='fw-semi-bold'>Preventas de Vendedores</span></h5>"  close collapse customHeader>
@@ -110,7 +112,7 @@ export default {
         treeData:'',
        agrupados:[],
        ArrayOptions:[],
-       chartOptions: { labels: ['Nuevo','Termiando','Proceso'] },
+       chartOptions: { labels: ["Nuevo", "Proceso", "Terminado"] },
         proyectos:[],
       expandedKeys: ['0-0', '0-0-0', '0-0-0-0'],
   
@@ -217,12 +219,15 @@ export default {
         };
       },
       created(){
-        this.ListarPrueba();
-        this.ListaAgrupada();
+      //  this.ListarPrueba();
+      //  this.ListaAgrupada();
       //    this.ListarPlantilla();
        //  this.ListarMetodologia();
         // this.ListarFases();      
-        this. ListarProyecto();
+     //   this. ListarProyecto();
+
+     this.ListarListaTareas();
+     this.ListaDeProyectos();
       },
       mounted(){
           /*
@@ -275,7 +280,7 @@ export default {
               axios.get('Backphp/ProcesoProyecto.php/?prueba='+prueba).then(response => {                    
                      me.proyectos = response.data; 
                       let result = [] 
-                     response.data.forEach(element => {
+                      response.data.forEach(element => {
                     //   me.latitulosbels2.push({label:element.nombreproyecto})
                         me.latitulosbels2.push([element.nombreproyecto])
                      });
@@ -292,6 +297,18 @@ export default {
                      
             })
            },
+           ListarListaTareas(){
+                      let me=this;
+                     
+                        axios.get('Backphp/ProcesoConsulta.php/').then(response => {   
+                          me.ArrayOptions=response.data;                       
+                           // console.log(response.data)      
+                           }).catch(function (error) {
+                                console.log(error);
+                           }) .finally(() => {
+                              
+                      })
+           },
            ListarPrueba(){
                        let me=this;
                        let result = []
@@ -305,12 +322,35 @@ export default {
                            }) .finally(() => {
                               
                       })
-                },
-                ListaAgrupada(){
+            },
+           ListaDeProyectos(){
+                  let me=this;
+                 
+                  axios.get('Backphp/ProcesoProyecto.php/').then(response => {                              
+                        me.agrupados = response.data;  
+                        console.log(response.data);
+                        for(var i=0;i< me.ArrayOptions.length ;i++){
+                            for  (var e=0;e< me.agrupados.length ;e++){
+                                if(me.ArrayOptions[i].id_proyecto==me.agrupados[e].id_proyecto){   
+                                      me.agrupados[e].series.push(parseInt(me.ArrayOptions[i].cantidad))
+                                    //   me.agrupados[e].labels.push(me.ArrayOptions[i].estado_tarea)
+                                        // me.chartOptions.labels.push([me.ArrayOptions[i].estado_tarea]);
+                                     
+                                   } 
+                               }                    
+                           }  
+                        }).catch(function (error) {
+                            console.log(error);
+                      }) .finally(() => {
+                          
+                 })
+           }, 
+           ListaAgrupada(){
                       let me=this;
                       var id="1";
                         axios.get('Backphp/ProcesoPrueba.php/?id='+id).then(response => {                              
                            me.agrupados = response.data;  
+                           console.log(response.data);
                            for(var i=0;i< me.ArrayOptions.length ;i++){
                                 for  (var e=0;e< me.agrupados.length ;e++){
                                       if(me.ArrayOptions[i].id_proyecto==me.agrupados[e].id_proyecto){   

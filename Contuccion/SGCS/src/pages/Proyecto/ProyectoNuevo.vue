@@ -62,7 +62,29 @@
         </a-select>   
        </b-form-group>       
     </div>
-  
+    <b-form-tags v-model="seleccionados" no-outer-focus class="mb-2">
+      <template v-slot="{ tags }">       
+        <ul
+          id="my-custom-tags-list"
+          class="list-unstyled d-inline-flex flex-wrap mb-0"
+          aria-live="polite"
+          aria-atomic="false"
+          aria-relevant="additions removals"
+        >         
+          <b-card
+            v-for="tag in tags"
+            :key="tag"
+            :id="`my-custom-tags-tag_${tag.replace(/\s/g, '_')}_`"
+            tag="li"
+            class="mt-1 mr-1"
+            body-class="py-1 pr-2 text-nowrap"
+          >
+            <strong>{{ tag }}</strong>           
+          </b-card>
+        </ul>
+      </template>
+    </b-form-tags>
+    
     <div class="form-row">
       <div class="col-md-12">
         <!--
@@ -80,14 +102,14 @@
               </template>
             </b-table>
             </div>  -->    
-             <b-card no-body>
+      <b-card no-body>
       <b-tabs card  justified   active-nav-item-class="font-weight-bold text-uppercase text-success">        
-        <b-tab v-for="item in fases" :key="item.title" :title="item.title" v-model="tabIndex" active>
+        <b-tab v-for="item in fases" :key="item.title" :title="item.title" v-model="tabIndex" >
        <h5>Elementos de configuracion</h5>
            <b-table striped hover :items="fases[item.index].tabla" :fields="fields2"  >
               <template  v-slot:cell(acciones)="row">
-                <b-form-checkbox                 
-                  @input="onPreviewClick(row.index,row.item.id,row.item.NombreElemento)"
+                <b-form-checkbox    @change="onPreviewClick(row.index,row.item.id,row.item.NombreElemento,item.id_fase)"            
+                 
                 ></b-form-checkbox>
               </template>
             </b-table>
@@ -103,18 +125,29 @@
       </div>      
     </div>
       
-     <b-button type="button"  @click="RegistrarMeotodoloiga" variant="primary"  class="p-2 px-4 btn-xs">
+     <b-button type="button"  @click="RegistrarProyecto" variant="primary"  class="p-2 px-4 btn-xs">
              Crear Proyecto
       </b-button>
     
-    {{seleccionados}}
+     <b-button type="button"  @click="Registrar" variant="primary"  class="p-2 px-4 btn-xs">
+             Agregar
+      </b-button>
+   
+    <br>
+    
+     <br>
+     {{seleccionados}}
+     <br>
+     {{idseleccionados}}
+     {{idseleccionadosfases}}
+   
     </div>
 </template>
 <script>
 import axios from  'axios';
 import firebase from '@/firebase'
 export default {
-    
+//el usuaariio jefe tiene que llenarse cuando haga login
     data(){
         return{
            tabIndex: 0,
@@ -125,11 +158,13 @@ export default {
            fecha_fin:'',
            metodologia:'',
            metodologiaId:'',
+           usuariojefeId:'1',
            metodologias:[],
            plantillaelemento:[],
+           listaFases:[],
+           listaElementos:[],
            TodasPlantillas:[],
-           fases:[],
-        
+           fases:[],        
           selected: [],
           elementos:{nombre:''},
           step1: '',
@@ -137,23 +172,23 @@ export default {
           cStep: 1,  
           current: 0, 
           seleccionados:[],
+          idseleccionados:[],
+          idseleccionadosfases:[],
           stepStyle: {
           marginBottom: '20px',
           boxShadow: '0px -1px 0 0 #e8e8e8 inset',
            },
           fields: [
-                  { label:"Acciones", key: 'acciones', sortable: false },
+                   { label:"Acciones", key: 'acciones', sortable: false },
                    { label:"Id", key: 'id_elemento', sortable: false },
                    { label:"Nombre Elemento", key: 'nombre', sortable: false }, 
-                    { label:"elegir", key: 'elegir', sortable: false } 
+                   { label:"elegir", key: 'elegir', sortable: false } 
                   
              ],
             fields2: [
                   { label:"Acciones", key: 'acciones', sortable: false },
                    { label:"Id", key: 'id', sortable: false },
-                   { label:"Nombre Elemento", key: 'NombreElemento', sortable: false }, 
-                 
-                  
+                   { label:"Nombre Elemento", key: 'NombreElemento', sortable: false },   
              ],
         tabs: [],
         tablas:{
@@ -171,32 +206,58 @@ export default {
     methods:{
        VER(){
       console.log("Click");
-    },
+      },
        newTab() {
         this.tabs.push(this.tabCounter++)
         },
-          RegistrarMeotodoloiga(){          
+
+        Registrar(){
+          var lista=this.listaFases;
+          var cronogramaId ="1";
+          var nombre ="fase 1";
+          const obj1={cronogramaId,nombre};
+          this.listaElementos=[];
+          for(var i =0;i<this.seleccionados.length ;i++){
+            this.listaElementos.push({nombre:this.seleccionados[i],id:this.idseleccionados[i]});
+          }
+         // const obj={lista};
+       //   axios.post('Backphp/ProcesoCronograma.php/',obj1).then(response => {                       
+           //       console.log(response);
+                 
+           //     }).catch(function (error) {
+           //           console.log(error);
+           //     }) .finally(() => {                     
+           //   })
+        },
+        RegistrarProyecto(){       
+          
+          this.listaElementos=[];
+          //lenar aqui el id de la fase 
+         for(var i =0;i<this.seleccionados.length ;i++){
+            //  this.listaElementos.push({id:this.idseleccionados[i],nombre:this.seleccionados[i]});
+             this.listaElementos.push({id:this.idseleccionados[i],nombre:this.seleccionados[i],id_fase:this.idseleccionadosfases[i]});
+          }
           let codigo=this.codigo;
           let nombre=this.nombre_proyecto;
           let fechaini=this.fecha_inicio;
           let fechater=this.fecha_fin;
           let descripcion=this.descripcion;
+          let usuariojefeId=this.usuariojefeId;
           let estado="activo";
           let metodologia=this.metodologiaId;  
-          const obj={codigo,nombre,fechaini,fechater,descripcion,estado,metodologia};
-           axios.post('Backphp/ProcesoProyecto.php/',obj).then(response => {
-                       
+          var lista=this.listaFases;
+          var ListaElementos=this.listaElementos;
+          const obj={codigo,nombre,fechaini,fechater,descripcion,estado,metodologia,usuariojefeId,lista,ListaElementos};
+          axios.post('Backphp/ProcesoProyecto.php/',obj).then(response => {                       
                   console.log(response);
                   this. Confirmacion();
                 }).catch(function (error) {
                       console.log(error);
-                }) .finally(() => {
-                     
+                }) .finally(() => {                     
               })
-
           },
           handleChange(value) {
-            console.log(`selected ${value}`);
+         //   console.log(`selected ${value}`);
               this.MostarFaseMetodolgia(value);
           },
           ListarMetodologias(){
@@ -236,13 +297,20 @@ export default {
               })
           },
           MostarFaseMetodolgia(id){
-              let me=this;
+                let me=this;
+                me.Limpiar();
                 axios.get('Backphp/ProcesoMetodologia.php/?id_meto='+id).then(response => {              
-                    me.fases = response.data;                   
+                    me.fases = response.data;
+                    me.listaFases=[];
+                   console.log(response.data)
+                    response.data.forEach(item=>{
+                        me.listaFases.push({nombre: item.nombre_fase,id_fase:item.id_fase});   
+                      });               
+
                         for(var i=0;i< me.fases.length ;i++){
                           for  (var e=0;e< me.TodasPlantillas.length ;e++){
                               if(me.fases[i].id_fase==me.TodasPlantillas[e].id_fase){   
-                                  me.fases[i].tabla.push({ NombreElemento:me.TodasPlantillas[e].nombre,id:me.TodasPlantillas[e].id_elemento})
+                                  me.fases[i].tabla.push({ NombreElemento:me.TodasPlantillas[e].nombre,id:me.TodasPlantillas[e].id_elemento,id_fase: me.fases[i].id_fase})
                               } 
                           }                    
                         }  
@@ -253,7 +321,7 @@ export default {
                   }) .finally(() => {
               })
           },
-           onChange(current) {
+          onChange(current) {
               console.log('onChange:', current);
               this.current = current;
               var code =this.fases[current].id_fase;
@@ -280,55 +348,39 @@ export default {
                   console.log(error);
               });
           },
-           onPreviewClick(data, id, nombre) {
-               console.log(id);   
-          //  this.seleccionados.push({id:id,nombre:item});
-         //   if( this.seleccionados.length==0){
-         //   this.seleccionados.push({id:id,nombre:item});
-         //   }
-         //   else{
-                var existe=null;
-                this.seleccionados.forEach(item=>{                   
-                   if  (item.id==id || item.nombre==nombre){                                      
-                        existe=true;                      
-                      }else{
-                        existe=false;    
-                      }
-                 })  
-
-              //    for(var i =0;i<this.seleccionados.length;i++){
-                   //   if  (this.seleccionados[i].id==id){
-                                      
-                     //   existe=true;
-                      
-                    //  }else{
-                     //   existe=false;
-                                            
-
-                  //    }
-                 // }
-                if(existe==true){
-                //  this.seleccionados.splice(data, 1);
-                //  this.seleccionados.splice(this.seleccionados.indexOf(data), 1);
-                  this.Quitar(data);
-                  
-                }else{
-                 // this.seleccionados.push({id:id,nombre:item});
-                  this.agregar(id,nombre);
-               
-                }
-               // existe=null;
-                console.log(existe);  
-        
+           onPreviewClick(data, id, nombre,id_fase) {
+           //  console.log(data,id,nombre);
+           //  console.log("id_Fase",id_fase);  
+               var existe=null;            
+                if(this.Verificar(id,nombre)){                
+                  this.Quitar(id,nombre,id_fase);                  
+                }else{                
+                  this.agregar(id,nombre,id_fase);   
+                }        
             },
-            agregar(id,item){
-                  this.seleccionados.push({id:id,nombre:item});
+            Verificar(id,nombre){           
+               for(var i =0;i< this.seleccionados.length;i++){
+                 if (this.seleccionados[i]==nombre){
+                    return true;  
+                 }
+               }  
+              return false;
             },
-            Quitar(data){
-               this.seleccionados.splice(this.seleccionados.indexOf(data), 1);
-               // console.log("Biorrar")
-               // console.log(item)
-              //  this.seleccionados.splice(data, 1);
+            agregar(id,nombre,id_fase){
+                  this.seleccionados.push(nombre);
+                  this.idseleccionados.push(id);
+                  this.idseleccionadosfases.push(id_fase);
+                //  this.value.push(nombre);
+            },
+            Quitar(id,nombre,id_fase){             
+               this.seleccionados.splice(this.seleccionados.indexOf(nombre), 1);
+               this.idseleccionados.splice(this.idseleccionados.indexOf(id), 1);
+               this.idseleccionadosfases.splice(this.idseleccionadosfases.indexOf(id_fase),1);              
+            },
+            Limpiar(){
+              this.seleccionados=[];
+              this.idseleccionados=[];
+              this.idseleccionadosfases=[];
             }
     }
 }

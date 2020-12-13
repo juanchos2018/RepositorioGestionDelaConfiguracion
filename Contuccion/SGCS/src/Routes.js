@@ -20,7 +20,7 @@ import ProyectoMiembros from '@/pages/Proyecto/ProyectoMiembros';
 import Solicitud from '@/pages/Solicitud/SolicitudCambio';
 import Elemento from '@/pages/Elemento/Elemento';
 import MiembroTareas from '@/pages/Miembro/MiembroTareas';
-
+import TareaElemento from '@/pages/Tarea/TareaElemento';
 Vue.use(Router);
 export default new Router({
   routes: [
@@ -46,8 +46,7 @@ export default new Router({
           meta: {
             requiresAuth: true
           },
-        },
-        
+        },        
         {
           path: 'usuario',
           name: 'usuario',
@@ -118,6 +117,11 @@ export default new Router({
           path: 'components/listar',
           name: 'listar',
           component: Proyecto,
+        },
+        {
+          path: 'components/tarealemento:datos',
+          name: 'tarealemento',
+          component: TareaElemento,
         },
        
       ],

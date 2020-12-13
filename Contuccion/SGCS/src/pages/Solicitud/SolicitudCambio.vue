@@ -4,6 +4,7 @@
        <!--  <pdf src="../../assets/plantillasolictudcambio.pdf"></pdf>-->
       
         <b-button variant="primary" @click="GenerarPdf"> GenerarPdf </b-button>
+        
     </div>
 </template>
 

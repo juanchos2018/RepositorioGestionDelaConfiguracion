@@ -1,7 +1,6 @@
 <template>
   <b-modal id="modal-cliente" v-model="Show" @hide="CerrarModal"
   title="Nuevo Usuario" hide-footer   body-class="myDiv " >
-
      <form action="">
        <div class="form-row">   
              <b-form-group id="input-group-3" label="Nombre:" label-for="NroDocumento" class="col-md-12">
@@ -56,7 +55,7 @@
 <script>
 import firebase from '@/firebase'
 import axios from  'axios';
-//DialogMetodologia
+//DialogMetodologia|
 export default {
     name: 'usuario-nuevo',
     props:{
@@ -115,9 +114,9 @@ export default {
           const obj={nombre,apellido,correo,password,id_tipo_usuario};
            axios.post('Backphp/ProcesoUsuario.php/',obj).then(response => {
                        
-                  console.log(response);
-                //  this. Confirmacion();
-                   this.ListarTipoUsuario();
+                //  console.log(response);
+                   this. Confirmacion();
+                   this.ListarUsuarios();
                 }).catch(function (error) {
                       console.log(error);
                 }) .finally(() => {
@@ -135,19 +134,21 @@ export default {
               });
             
           },     
-         makeToast(msg,color) {
-            this.toastCount++
-            this.$bvToast.toast(msg, {
-              title: 'Mensaje Cliente',
-              variant:color,
-              autoHideDelay: 3000,
-              appendToast: false
-            })
+         Confirmacion(){
+            this.$swal({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Registrado',
+                text:'texto',
+                showConfirmButton: false,
+                timer: 3000
+              })
           },
-                    
+          ListarUsuarios(){
+             this.$emit('Listar-Emit-Usuario');
+           },
           CerrarModal(){
-              //this.DialogCliente=false
-              //this.Show
+              //this.DialogCliente=false            
               this.$emit('CerrarModal');
           }
     }

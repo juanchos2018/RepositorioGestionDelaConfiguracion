@@ -36,6 +36,7 @@
     "vue-good-wizard": "^1.4.1",
     "vue-kanban": "^1.8.0",
     "vue-moment": "^4.1.0",
+    "vue-multilevel-accordion": "^1.0.8",
     "vue-pdf": "^4.2.0",
     "vue-router": "^3.3.4",
     "vue-scheduler-lite": "^1.0.7",

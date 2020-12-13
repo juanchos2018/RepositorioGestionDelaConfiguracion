@@ -39,7 +39,7 @@
       </div>
     </div>
 
-         <usuario-nuevo @CerrarModal="CerrarModal" :DialogUsuario="DialogUsuario"></usuario-nuevo>
+         <usuario-nuevo @CerrarModal="CerrarModal" :DialogUsuario="DialogUsuario" v-on:Listar-Emit-Usuario="ListaUsuarios" ></usuario-nuevo>
     
     </div>
 </template>
@@ -88,7 +88,8 @@ export default {
        },
        Tareas(){
           this.$router.push('/app/usuariotareas');
-       }
+       },
+       
   }
 
 }

@@ -24,8 +24,7 @@
     <div >   
         <br>
       <div class="row" id="listaproyectos">             
-       <div class="col-4" v-for="item in items" :key="item.key">  
-              
+       <div class="col-4" v-for="item in filteredList" :key="item.key">                
         <b-card no-body class="overflow-hidden"  footer-tag="footer">
             <b-row no-gutters>
             <b-col md="3">
@@ -121,7 +120,14 @@ export default {
                         }
                     })
                 },
-         }
+        },
+         computed: {
+            filteredList() {
+                return this.items.filter(post => {
+                return post.nombre.toLowerCase().includes(this.search.toLowerCase())
+               })
+      }
+    },
 }
 </script>
 <style src="./elemento.scss" lang="scss" scoped  />
