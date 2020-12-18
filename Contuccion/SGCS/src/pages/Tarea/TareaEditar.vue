@@ -1,6 +1,6 @@
 <template>
   <b-modal  v-model="Show" @hide="CerrarModal"
-      title="Tarea Nueva" hide-footer   body-class="myDiv">
+      title="Editar Tarea" hide-footer   body-class="myDiv">
      <form action="">
        <div class="form-row">                 
                <b-form-group  label="Nombre Tarea:"  class="col-md-12">
@@ -12,16 +12,16 @@
              </b-form-group>                
           </div>
              <div class="form-row">                 
-               <b-form-group  label="Justificacion:"  class="col-md-12">
+               <b-form-group  label="Porcentaje Avance:"  class="col-md-12">
                <b-input                  
                   aria-describedby="input-live-help input-live-feedback"
                   class="p-2 px-4 btn-xs "
-                 v-model="nombre_tarea">
+                  type="number">
                </b-input>
              </b-form-group>                
           </div>
           <div class="form-row"> 
-               <b-form-group  label="Fecha Inicio"  class="col-md-6">
+               <b-form-group  label="Url Evidencia"  class="col-md-12">
                         <b-form-input                                          
                           type="date"
                           class="p-2 px-4 btn-xs" 
@@ -29,28 +29,13 @@
                           v-model="fecha_inicio" >
                         </b-form-input>
                    </b-form-group> 
-                    <b-form-group  label="Fecha Fin"  class="col-md-6">
-                          <b-form-input                       
-                          type="date"
-                          class="p-2 px-4 btn-xs" 
-                          required          
-                        v-model="fecha_termino">
-                      </b-form-input>
-                </b-form-group> 
+                
           </div>  
-          <div class="form-row">
-                   <b-form-group   label="Responsble :" class="col-md-12">           
-                           <a-select  style="width: 100%"  v-model="id_miembro"  >              
-                           <a-select-option v-for="d in miembros" :key="d.value">
-                                    {{ d.text }}
-                           </a-select-option>
-                           </a-select>   
-                     </b-form-group>  
-          </div>     
+          
          <hr>
         <div class="float-right" >              
           <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
-          <b-button type="button"  @click="RegistrarTarea"  variant="primary"  class="p-2 px-4 btn-xs">
+          <b-button type="button"   variant="primary"  class="p-2 px-4 btn-xs">
               <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
              <span v-show="!isLoading">Crear Tarea</span>
             </b-button>
@@ -63,13 +48,13 @@
 
 import axios from  'axios';
 export default {
-    name: 'tarea-nueva',  
+    name: 'tarea-editar',  
     props:{
-      DialogoTarea: {       
+      DialogoTareaEditar: {       
         type: Boolean,
         required: true,
         default: false
-      },miembros:{type:Array},id_version:[String,String]
+      }
       
     },
     data() {
@@ -79,7 +64,7 @@ export default {
           codigo:'',
           nombre:'',            
           isLoading:false,          
-          Show:this.DialogoTarea,
+          Show:this.DialogoTareaEditar,
           id_miembro:'',
           nombre_tarea:'',
           fecha_inicio:'',
@@ -90,8 +75,8 @@ export default {
         }
     },
     watch: {
-      DialogoTarea(){
-        this.Show = this.DialogoTarea
+      DialogoTareaEditar(){
+        this.Show = this.DialogoTareaEditar
       }
     },
     created () {    

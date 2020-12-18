@@ -16,7 +16,7 @@ if($method=="GET"){
     else{
         $vector=array();
         $api=new ClsFase();
-        $vector=$api->getMetodologias();
+        $vector=$api->getFases();
         $json=json_encode($vector);
         echo $json;
     }
@@ -32,9 +32,9 @@ if ($method=="POST"){
 }   
 if ($method=="PUT"){
     $json=null;
-    $data=json_decode(file_get_contents("php://input"),true);    
-    $nombre_fase=$data['nombre_fase'];
-    $id_fase=$data['id_fase']; 
+    $data=json_decode(file_get_contents("php://input"),true);   
+    $id_fase=$data['id_fase'];  
+    $nombre_fase=$data['nombre_fase'];   
     $api=new ClsFase();
     $json=$api->EditarFase($id_fase,$nombre_fase);
     echo $json;

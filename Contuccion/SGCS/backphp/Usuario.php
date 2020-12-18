@@ -24,7 +24,7 @@ class ClsUsuario{
       
         $conexion=new Conexion();
         $db=$conexion->getConexion();
-        $sql="INSERT INTO proyecto (nombre,apellido,correo,password,tiposusuarioId)  VALUES (:nombre,:apellido,:correo,:password,:tiposusuarioId)";
+        $sql="INSERT INTO usuario (nombre,apellido,correo,password,tiposusuarioId)  VALUES (:nombre,:apellido,:correo,:password,:tiposusuarioId)";
        
         $consulta=$db->prepare($sql);       
         $consulta->bindParam(':nombre',$nombre);

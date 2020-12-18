@@ -30,3 +30,12 @@ if ($method=="POST"){
     $json=$api->setElemento($codigo_elemento,$nombre);
     echo $json;
 }   
+if ($method=="PUT"){
+    $json=null;
+    $data=json_decode(file_get_contents("php://input"),true);  
+    $id_elemento=$data['id_elemento'];   
+    $nombre=$data['nombre'];  
+    $api=new ClsElemento();
+    $json=$api->EditarElemento($id_elemento,$nombre);
+    echo $json;
+}   

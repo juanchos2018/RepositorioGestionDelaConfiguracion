@@ -4,11 +4,10 @@ class Conexion{
 
     public function getConexion(){
         $hostname="localhost";
-        $database="sgcs";
+        $database="sistemagc";
         $username="root";
         $password="";
-
-        $db=new PDO("mysql:host=$hostname;dbname=$database;",$username,$password);
+        $db=new PDO("mysql:host=$hostname;dbname=$database;charset=utf8",$username,$password);
         return $db;
     }
 }

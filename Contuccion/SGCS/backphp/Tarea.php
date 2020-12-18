@@ -2,22 +2,7 @@
 
 class ClsTarea{
 
-    public function getProyectos(){
-        $vector=array();
-        $conexion=new Conexion();
-        $db=$conexion->getConexion();
-        $sql="SELECT * FROM proyecto ";
-        $consulta=$db->prepare($sql);
-        $consulta->execute();
-        while($fila=$consulta->fetch()){
-              $vector[]=array(
-                "id_proyecto"=>$fila['id_proyecto'],
-                "codigo_proyecto"=>$fila['codigo_proyecto'],
-                "nombre_proyecto"=>$fila['nombre_proyecto'],
-                );           
-        }
-        return $vector;
-    }   
+     
     public function getFaseMetodologiaProyecto($id_proyecto){
         $vector=array();
         $conexion=new Conexion();
@@ -52,8 +37,46 @@ class ClsTarea{
         $consulta->bindParam(':fecha',$fecha);      
         $consulta->execute();
 
-        return '{"msg":"Agreado proyecto"}';
+        return '{"msg":"Agreado proyecto"}';     			
+    }
+    public function getTareaVersion($id_version){
+        $vector=array();
+        $conexion=new Conexion();
+        $db=$conexion->getConexion();
+        $sql="SELECT t.id_tarea,t.verionID, t.fecha_inicio,t.fecha_termino,t.descripcion,t.urlevidencia,t.estado FROM tarea_ecs AS t
+        WHERE t.verionID=".$id_version;
+        $consulta=$db->prepare($sql);
+        $consulta->execute();
+        while($fila=$consulta->fetch()){
+              $vector[]=array(
+                "id_tarea"=>$fila['id_tarea'],
+                "verionID"=>$fila['verionID'],
+                "fecha_inicio"=>$fila['fecha_inicio'],
+                "fecha_termino"=>$fila['fecha_termino'],
+                "descripcion"=>$fila['descripcion'],
+                "urlevidencia"=>$fila['urlevidencia'],  
+                "estado"=>$fila['estado'],   );           
+        }
+        return $vector;
+    }   
+   
+    public function setTareas($verionID,$miembroresponsableID,$fecha_inicio,$fecha_termino,$descripcion,$porcentajeavance,$urlevidencia,$estado){
       
+        $conexion=new Conexion();
+        $db=$conexion->getConexion();
+        $sql="INSERT INTO tarea_ecs (verionID,miembroresponsableID,fecha_inicio,fecha_termino,descripcion,porcentajeavance,urlevidencia,estado)  VALUES (:verionID,:miembroresponsableID,:fecha_inicio,:fecha_termino,:descripcion,:porcentajeavance,:urlevidencia,:estado)";
+       
+        $consulta=$db->prepare($sql);
+        $consulta->bindParam(':verionID',$verionID);
+        $consulta->bindParam(':miembroresponsableID',$miembroresponsableID);
+        $consulta->bindParam(':fecha_inicio',$fecha_inicio);   
+        $consulta->bindParam(':fecha_termino',$fecha_termino);   
+        $consulta->bindParam(':descripcion',$descripcion);    
+        $consulta->bindParam(':porcentajeavance',$porcentajeavance);    
+        $consulta->bindParam(':urlevidencia',$urlevidencia);   
+        $consulta->bindParam(':estado',$estado); 
+        $consulta->execute();
+        return '{"msg":"Agreado proyecto"}';     
 			
     }
 

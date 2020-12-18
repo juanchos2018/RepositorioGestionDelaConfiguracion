@@ -71,7 +71,7 @@
                <a-list-item slot="renderItem" slot-scope="item">
                   <a-card style="width: 100%">  
                     <div style="float:right">
-                        <b-button @click="Tarea(item.id_version,item.miembroresponsableID)"> Tarea </b-button>
+                        <b-button @click="Tarea(item.id_version,item.miembroresponsableID)"> Seleccionar </b-button>
                     </div>
                    <div style="  display: flex;align-items: center;">
                      <b-icon icon="play-fill"></b-icon>  <h5 style="margin-left:5px">Version {{ item.version }}</h5>

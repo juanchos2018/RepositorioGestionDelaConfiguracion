@@ -23,7 +23,7 @@ if($method=="GET"){
     else{
         $vector=array();
         $api=new ClsPlantilla();
-        $vector=$api->getProyectos();
+        $vector=$api->getPlantilla();
         $json=json_encode($vector);
         echo $json;
     }

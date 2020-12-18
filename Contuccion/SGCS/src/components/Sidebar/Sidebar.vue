@@ -59,7 +59,7 @@
          <NavLink
             :activeItem="activeItem"
             header="Solicitud"
-            link="/app/solicitud"
+            link="/app/solicitudnueva"
             iconName="flaticon-network"
             index="solicitud"
              isHeader           
@@ -72,6 +72,16 @@
             link="/app/usuario"
             iconName="flaticon-network"
             index="usuario"
+            isHeader
+           
+        />
+          
+           <NavLink
+            :activeItem="activeItem"
+            header="MisTareas"
+            link="/app/tareausuario"
+            iconName="flaticon-network"
+            index="tareausuario"
             isHeader
            
         />

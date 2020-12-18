@@ -18,9 +18,12 @@ import ProyectoDetalle from '@/pages/Proyecto/ProyectoDetalle';
 import ProyectoMiembros from '@/pages/Proyecto/ProyectoMiembros';
 
 import Solicitud from '@/pages/Solicitud/SolicitudCambio';
+import SolicitudNueva from '@/pages/SolicitudCambio/SolicitudNueva';
+import SolicitudLista from '@/pages/SolicitudCambio/SolicitudLista';
 import Elemento from '@/pages/Elemento/Elemento';
 import MiembroTareas from '@/pages/Miembro/MiembroTareas';
 import TareaElemento from '@/pages/Tarea/TareaElemento';
+import TareaUsuario from '@/pages/Tarea/TareaUsuario';
 Vue.use(Router);
 export default new Router({
   routes: [
@@ -104,6 +107,16 @@ export default new Router({
           component: Solicitud,
         },
         {
+          path: 'solicitudnueva',
+          name: 'solicitudnueva',
+          component: SolicitudNueva,
+        },
+        {
+          path: 'solicitudlista',
+          name: 'solicitudlista',
+          component: SolicitudLista,
+        },
+        {
           path: 'elemento',
           name: 'elemento',
           component: Elemento,
@@ -122,6 +135,11 @@ export default new Router({
           path: 'components/tarealemento:datos',
           name: 'tarealemento',
           component: TareaElemento,
+        },
+        {
+          path: 'tareausuario',
+          name: 'tareausuario',
+          component: TareaUsuario,
         },
        
       ],

@@ -27,7 +27,7 @@ if ($method=="POST"){
     $data=json_decode(file_get_contents("php://input"),true);
     $codigo=$data['codigo'];
     $nombre=$data['nombre'];
-    $contra=$data['contra'];
+    $contra=$data['contra'];-
     $estado=$data['estado'];
     $api=new Api();
     $json=$api->addUsuario($codigo,$nombre,$contra,$estado);

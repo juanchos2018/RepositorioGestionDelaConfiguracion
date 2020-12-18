@@ -6,19 +6,21 @@ class ClsPlantilla{
         $vector=array();
         $conexion=new Conexion();
         $db=$conexion->getConexion();
-        $sql="SELECT * FROM proyecto ";
+        $sql="SELECT  ele.id_elemento, ele.nombre,fa.id_fase,fa.nombre_fase  FROM plantillaelementoconfiguracion AS pla
+        INNER JOIN elementoconfiguracion AS ele
+        ON pla.elementoId=ele.id_elemento
+        INNER JOIN fase AS fa
+        ON pla.faseId=fa.id_fase";
         $consulta=$db->prepare($sql);
         $consulta->execute();
         while($fila=$consulta->fetch()){
               $vector[]=array(
-                "id_proyecto"=>$fila['id_proyecto'],
-                "codigo_proyecto"=>$fila['codigo_proyecto'],
-                "nombre_proyecto"=>$fila['nombre_proyecto'],
-                "fecha_inicio"=>$fila['fecha_inicio'],
-                "fecha_termino"=>$fila['fecha_termino'],
-                "descripcion"=>$fila['descripcion'],
-                "estado"=>$fila['estado'],
-                "metodologiaId"=>$fila['metodologiaId']);           
+                "id_elemento"=>$fila['id_elemento'],
+                "nombre"=>$fila['nombre'],
+                "id_fase"=>$fila['id_fase'],
+                "nombre_fase"=>$fila['nombre_fase'],
+                "title"=>$fila['nombre'],
+               );           
         }
         return $vector;
     }   
@@ -26,7 +28,7 @@ class ClsPlantilla{
         $vector=array();
         $conexion=new Conexion();
         $db=$conexion->getConexion();
-        $sql="SELECT  fa.id_fase,fa.nombre_fase,el.nombre  FROM  plantillaelementoconfiguracion AS pla
+        $sql="SELECT  fa.id_fase,fa.nombre_fase,el.id_elemento,el.nombre  FROM  plantillaelementoconfiguracion AS pla
         INNER JOIN fase AS fa 
         ON pla.faseId=fa.id_fase
         INNER JOIN elementoconfiguracion AS el
@@ -37,7 +39,8 @@ class ClsPlantilla{
         while($fila=$consulta->fetch()){
             $vector[]=array(   
                 "id_fase"=>$fila['id_fase'],       
-                "nombre_fase"=>$fila['nombre_fase'],               
+                "nombre_fase"=>$fila['nombre_fase'],   
+                "id_elemento"=>$fila['id_elemento'],              
                 "nombre"=>$fila['nombre']);            
         }
         return $vector;

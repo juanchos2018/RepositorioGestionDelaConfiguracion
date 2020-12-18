@@ -4,21 +4,46 @@ class ClsFase{
 
     public function getFases(){
         $vector=array();
+        $children=array();
         $conexion=new Conexion();
         $db=$conexion->getConexion();
+
+        $sql1="SELECT  ele.id_elemento, ele.nombre,fa.id_fase,fa.nombre_fase  FROM plantillaelementoconfiguracion AS pla
+        INNER JOIN elementoconfiguracion AS ele
+        ON pla.elementoId=ele.id_elemento
+        INNER JOIN fase AS fa
+        ON pla.faseId=fa.id_fase";
+        $consulta1=$db->prepare($sql1);
+        $consulta1->execute();
+        while($fila=$consulta1->fetch()){
+              $children[]=array(
+                "id_elemento"=>$fila['id_elemento'],
+                "nombre"=>$fila['nombre'],
+                "id_fase"=>$fila['id_fase'],
+                "key"=>$fila['id_fase'],
+                "nombre_fase"=>$fila['nombre_fase'],
+                "title"=>$fila['nombre'],
+               );           
+        }
+
+
         $sql="SELECT * FROM fase ";
         $consulta=$db->prepare($sql);
         $consulta->execute();
         while($fila=$consulta->fetch()){
             $vector[]=array(
+                "metodologiaId"=>$fila['metodologiaId'],
                 "id_fase"=>$fila['id_fase'],
-                "nombre_fase"=>$fila['nombre_fase']);         
+                "nombre_fase"=>$fila['nombre_fase'],
+                "title"=>$fila['nombre_fase'],
+                "children"=>$children);         
         }
         return $vector;
     }
    
     public function getFaseMetodologia($id){
         $vector=array();
+      
         $conexion=new Conexion();
         $db=$conexion->getConexion();
         $int = (int)$id;
@@ -33,10 +58,13 @@ class ClsFase{
                 "nombre_fase"=>$fila['nombre_fase'],
                 "metodologiaId"=>$fila['metodologiaId'],
                 "slot"=>$page,
-                "label"=>$fila['nombre_fase']);            
+                "label"=>$fila['nombre_fase'],
+               );            
         }
         return $vector;
     }
+
+  
 
     public function SetFase($nombre_fase,$metodologiaid){
       
@@ -52,8 +80,7 @@ class ClsFase{
     public function EditarFase($id_fase, $nombre_fase){
       
         $conexion=new Conexion();
-        $db=$conexion->getConexion();
-       // $sql="UPDATE fase SET    nombre_fase=.$nombre_fase.' '.   WHERE id_fase=".$id_fase;
+        $db=$conexion->getConexion();      
         $sql = "UPDATE fase SET nombre_fase=:nombre_fase WHERE id_fase=:id_fase";
         $consulta=$db->prepare($sql);         
         $consulta->bindParam(':nombre_fase',$nombre_fase); 

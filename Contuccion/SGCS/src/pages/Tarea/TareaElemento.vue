@@ -27,7 +27,7 @@
                 content-class="mt-3" >
                 <b-tab title="Tareas" active>
                     <div class="float-right">
-                        <b-button @click="AbrirModal"> Agregar </b-button>
+                        <b-button @click="AbrirModal"> Agregar Tarea </b-button>
                     </div>
                <div class="row" >             
                     <div class="col-4" v-for="item in tareasversion" :key="item.key">                

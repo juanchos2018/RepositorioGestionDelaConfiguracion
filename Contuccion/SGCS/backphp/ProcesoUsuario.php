@@ -25,11 +25,11 @@ if ($method=="POST"){
     $json=null;
     $data=json_decode(file_get_contents("php://input"),true);    
     $nombre=$data['nombre'];   
-    $nombre=$data['nombre'];   
-    $nombre=$data['nombre'];   
-    $nombre=$data['nombre'];   
-    $nombre=$data['nombre'];
+    $apellido=$data['apellido'];   
+    $correo=$data['correo'];   
+    $password=$data['password'];   
+    $id_tipo_usuario=$data['id_tipo_usuario'];
     $api=new ClsUsuario();
-    $json=$api->setUsuario($nombre);
+    $json=$api->setUsuario($nombre,$apellido,$correo,$password,$id_tipo_usuario);
     echo $json;
 }   

@@ -59,7 +59,7 @@
            		   	 <i class="fas fa-user"></i>
            		   </div>
            		   <div class="div">
-           		   		<input  ref="email" required type="text" name="alias"  placeholder="Usuario" >
+           		   		<input  ref="email" required type="text" name="email"  placeholder="Correo" >
            		   </div>
            		</div>
            		<div class="input-div pass">
@@ -67,7 +67,7 @@
            		    	<i class="fas fa-lock"></i>
            		   </div>
            		   <div class="div">
-           		    	<input  ref="password" v-model="password" required type="password" name="password"   v-on:keyup="validateEnter" placeholder="Contraseña">
+           		    <input  ref="password" v-model="password" required type="password" name="password"   v-on:keyup="validateEnter" placeholder="Contraseña">
 				   </div>
             	</div>   
               <b-button type="submit" style="padding: 10px 10px 10px;                            
@@ -91,7 +91,7 @@
 <script>
 import Widget from '@/components/Widget/Widget';
 import firebase from '@/firebase'
-
+import axios from  'axios';
 export default {
   name: 'LoginPage',
   components: { Widget },
@@ -104,6 +104,26 @@ export default {
     };
   },
   methods: {
+    Loguear(){
+     
+           let  correo =this.$refs.email.value;
+           let  password =this.$refs.password.value;
+           const obj={correo}
+            axios.get('Backphp/ProcesoLogin.php/?correo='+correo+'&password='+password).then(response => {   
+                 console.log(response.data);                 
+                 window.localStorage.setItem('authenticated', true);
+                 this.$router.push('/app/inicio').catch(err => {         
+                  if ( err.name !== 'NavigationDuplicated' && !err.message.includes('Avoided redundant navigation to current location')) {                     
+                      console.log(err);
+                     }
+                 });
+                             
+              }).catch(function (error) {
+                      console.log(error);
+             }) .finally(() => {
+                     
+            })
+    },
     submit(){
        this.loanding=true;
     firebase
@@ -123,7 +143,7 @@ export default {
                     err.name !== 'NavigationDuplicated' &&
                     !err.message.includes('Avoided redundant navigation to current location')
                   ) {
-                    console(err);
+                    console.log(err);
                   }
               });
               }    

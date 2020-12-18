@@ -31,5 +31,38 @@ class ClsElemento{
       
 			
     }
+    public function EditarElemento($id_elemento, $nombre){
+      
+        $conexion=new Conexion();
+        $db=$conexion->getConexion();     
+        $sql = "UPDATE elementoconfiguracion SET nombre=:nombre WHERE id_elemento=:id_elemento";
+        $consulta=$db->prepare($sql);      
+        $consulta->bindParam(':id_elemento',$id_elemento);   
+        $consulta->bindParam(':nombre',$nombre);         
+        $consulta->execute();      
+        return '{"msg":"editado Fase"}';
+    }
+    public function getElemtosFase($id_fase){
+        // Esto todavbia no poner we :V
+        $vector=array();
+        $conexion=new Conexion();
+        $db=$conexion->getConexion();
+        $int = (int)$id;
+        $code=18;
+        $sql="SELECT * FROM fase where metodologiaId=".$id;
+        $consulta=$db->prepare($sql);
+        $consulta->execute();
+        $page="page1";
+        while($fila=$consulta->fetch()){
+            $vector[]=array(
+                "id_fase"=>$fila['id_fase'],
+                "nombre_fase"=>$fila['nombre_fase'],
+                "metodologiaId"=>$fila['metodologiaId'],
+                "slot"=>$page,
+                "label"=>$fila['nombre_fase']);            
+        }
+        return $vector;
+    }
+
 
 }
