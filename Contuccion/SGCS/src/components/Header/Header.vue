@@ -7,28 +7,21 @@
         </a>
         <a class="fs-lg d-lg-none" href="#" @click="switchSidebarMethod">
           <i class="la la-bars la-lg" />
-        </a>
-        <img src="../../assets/logo/logo1.png" width="5%" style=" height: auto"  alt="">
+        </a>    
          <div class="site-branding-text d-md-down-none">
-            <h5 class="site-title"  style="font-size:1.30vw;" > <strong> {{name}} </strong></h5>
-            <p class="site-description" style="font-size:1.0vw; color:#808080" > {{ru}}</p>
+            <h5 class="site-title"  style="font-size:1.30vw; margin-left:15px" > <strong> Gestion de la Configuración </strong></h5>
+            <p class="site-description" style="font-size:1.0vw; color:#808080" ></p>
           </div>
-
-      </b-nav-item>
-      
+      </b-nav-item>      
     </b-nav>
-  
-    <a class="navbarBrand d-md-none" style="font-size:3vw;" >     
-      &nbsp;
-      {{name}}
-      &nbsp;
-      </a>
+
+    
     <b-nav class="ml-auto">  
       <!--   
       <b-nav-item href="#"> 
          <span style="font-size:1.0vw;" >{{NombreUsuario}}</span>       
        </b-nav-item> -->
-    <b-nav-item-dropdown
+      <b-nav-item-dropdown
             class="notificationsMenu d-md-down-none mr-2"
             menu-class="notificationsWrapper py-0 animate__animated animate__animated-fast animate__fadeIn"
             right>
@@ -46,14 +39,9 @@
         <template slot="button-content">
           <i class="la la-cog px-2" />
         </template>
-
-
-        <b-dropdown-item><i class="la la-user" /> Mi Cuenta</b-dropdown-item>
-        <b-dropdown-divider />
-        <b-dropdown-item>User</b-dropdown-item>
-      
-        <b-dropdown-divider />
-        <b-dropdown-item-button @click="CerrarSesion">
+        <b-dropdown-item><i class="la la-user" /> {{NombreUsuario}}</b-dropdown-item>
+        <b-dropdown-divider />   
+        <b-dropdown-item-button @click="logout">
           <i class="la la-sign-out" /> Salir
         </b-dropdown-item-button>
       </b-nav-item-dropdown>
@@ -71,12 +59,18 @@ export default {
   props:['name','ru'],
    data() {
     return {
-       NombreUsuario:'pepep',
+       NombreUsuario:'',
+       nameusu:'',
        Token:''
       
     };
   },
  components: { Notifications },
+   mounted() {
+    if(localStorage.nombre) this.NombreUsuario = localStorage.nombre;
+     // this.datosUsuario=decode(this.Token)     
+     // this.NombreUsuario=this.datosUsuario.Nombre;
+  },
   computed: {
     ...mapState('layout', ['sidebarClose', 'sidebarStatic']),
   },
@@ -86,13 +80,15 @@ export default {
       if (user) {
         // User is signed in.
         console.log(user.displayName)
-        this.NombreUsuario=user.displayName;
+        this.nameusu=user.displayName;
         console.log("logueado")
       } else {
         // No user is signed in.
          console.log("no logueado")
       }
       });
+     //   this.NombreUsuario=  this.$store.state.nombreUsuario
+     //   console.log("hieader"+this.$store.state.nombreUsuario)
   },
   methods: {
     ...mapActions('layout', ['toggleSidebar', 'switchSidebar', 'changeSidebarActive']),
@@ -119,7 +115,9 @@ export default {
       }
     },
     logout() {
+      this.$session.destroy();
       window.localStorage.setItem('authenticated', false);
+      window.localStorage.clear();
       this.$router.push('/login');
     },
     CerrarSesion(){

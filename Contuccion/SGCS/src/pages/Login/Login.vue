@@ -51,7 +51,7 @@
 			<img src="../../assets/loginsvg.svg">
 		</div>
 		<div class="login-content">
-			<form @submit.prevent="submit">
+			<form @submit.prevent="Loguear">
 				<img src="../../assets/avatar.svg">
 				<h2 class="title">Bienvenido</h2>
            		<div class="input-div one">
@@ -110,14 +110,19 @@ export default {
            let  password =this.$refs.password.value;
            const obj={correo}
             axios.get('Backphp/ProcesoLogin.php/?correo='+correo+'&password='+password).then(response => {   
-                 console.log(response.data);                 
+                // console.log(response.data);  
+            //  this.$router.push({ name: 'AnalyticsPage' })   
+               this.$session.start()
+                this.$store.dispatch("guardarDatos",response.data[0].nombre)      
+                this.$store.dispatch("guardarTipo",response.data[0].id_tipo)    
+                this.$store.dispatch("guardarTipoUsuario",response.data[0].tiposusuario)         
                  window.localStorage.setItem('authenticated', true);
                  this.$router.push('/app/inicio').catch(err => {         
                   if ( err.name !== 'NavigationDuplicated' && !err.message.includes('Avoided redundant navigation to current location')) {                     
                       console.log(err);
                      }
                  });
-                             
+                   
               }).catch(function (error) {
                       console.log(error);
              }) .finally(() => {
@@ -126,7 +131,7 @@ export default {
     },
     submit(){
        this.loanding=true;
-    firebase
+       firebase
         .auth()
         .signInWithEmailAndPassword(this.$refs.email.value,this.$refs.password.value)
         .then(data => {
@@ -156,8 +161,8 @@ export default {
         .catch(err => {
           this.error = err.message;
               alert("Error en datos");
-                console.log("No existe");
-                 this.loanding=false;
+               console.log("No existe");
+               this.loanding=false;
         });
 
     },
@@ -175,14 +180,14 @@ export default {
 
       if (email.length !== 0 && password.length !== 0) {
         window.localStorage.setItem('authenticated', true);
-        this.$router.push('/app/dashboard').catch(err => {
+        this.$router.push('/app/inicio').catch(err => {
     // Ignore the vuex err regarding  navigating to the page they are already on.
             if (
               err.name !== 'NavigationDuplicated' &&
               !err.message.includes('Avoided redundant navigation to current location')
             ) {
               // But print any other errors to the console
-              console(err);
+              console.log(err);
             }
           });
       }
@@ -190,17 +195,17 @@ export default {
   },
   created() {
     if (window.localStorage.getItem('authenticated') === 'true') {
-      this.$router.push('/app/main/analytics').catch(err => {
+      this.$router.push('/app/inicio').catch(err => {
     // Ignore the vuex err regarding  navigating to the page they are already on.
             if (
               err.name !== 'NavigationDuplicated' &&
               !err.message.includes('Avoided redundant navigation to current location')
             ) {
               // But print any other errors to the console
-              console(err)
+              console.log(err)
              
             }
-          });
+       });
     }
   },
 };

@@ -2,11 +2,11 @@
 
     <div>
       
-       <div class="navigation-filter float-right">
-         <!--  <a href="#"  class="cambia" ><i class="fa fa-th-list"></i></a>
-          <a href="#"  class="cambia"  ><i class="fa fa-th"></i></a>-->
+       <div class="navigation-filter float-right" style="margin-top:20px">
+           <a href="#" @click="Grilla" class="cambia" ><i class="fa fa-th-list"></i></a>
+          <a href="#"   @click="Card" class="cambia"  ><i class="fa fa-th"></i></a>
       </div>
-       <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogMetodologia=true"> 
+       <b-button type="button"  class="m-1 p-2 px-4 btn-xs"   style="margin-top:20px" variant="primary" @click="DialogMetodologia=true"> 
             <i class="fa fa-plus-circle"></i> Nueva Metodologia
          </b-button>         
          <div style="width: 200px;float; float: right; display: inline-block;">
@@ -23,17 +23,15 @@
          <br>
      <div class="inner-content">    
         <div v-if="Vergrilla">
-             <b-table :items="items" :fields="fields"  stacked="sm">   
+             <b-table :items="filteredList" :fields="fields"  stacked="sm">   
               <template v-slot:cell(accion)="item">
                 <b-button variant="primary" @click="Detalle(item.item.id+'-'+item.item.nombre)" >Ver</b-button>
               </template>
             </b-table>
        </div>
-
       <div v-if="VerCard">   
            <div class="row" >             
-              <div class="col-3" v-for="item in filteredList" :key="item.key"  >            
-               
+              <div class="col-3" v-for="item in filteredList" :key="item.key"  >               
                <b-card text-variant="primary"   border-variant="primary"   header-bg-variant="primary"  header-text-variant="white" header="Metodologia" class="text-center">
                
                 <img class="img-fluid" src="../../assets/logometo.png" width="140px" alt="Card image cap">
@@ -169,9 +167,7 @@ export default {
        },
        AbrirModalEditar(id){
          this.id_metodologia=id;
-         this.DialogoModificar=true;
-
-         
+         this.DialogoModificar=true;         
        }
     }
 

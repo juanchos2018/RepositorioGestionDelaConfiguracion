@@ -23,14 +23,25 @@ import SolicitudLista from '@/pages/SolicitudCambio/SolicitudLista';
 import Elemento from '@/pages/Elemento/Elemento';
 import MiembroTareas from '@/pages/Miembro/MiembroTareas';
 import TareaElemento from '@/pages/Tarea/TareaElemento';
+import TareaElementoMiembro from '@/pages/Tarea/TareaElementoMiembro';
 import TareaUsuario from '@/pages/Tarea/TareaUsuario';
+import store from './store/index'
+
 Vue.use(Router);
-export default new Router({
+
+//export default new Router({
+  
+var router = new Router({
+  mode: 'history',
+  base: process.env.BASE_URL,
   routes: [
     {
       path: '/login',
       name: 'Login',
       component: Login,
+      meta : {
+        libre: true
+      }
     },
     {
       path: '/error',
@@ -46,14 +57,17 @@ export default new Router({
           path: 'inicio',
           name: 'AnalyticsPage',
           component: AnalyticsPage,
-          meta: {
-            requiresAuth: true
-          },
+          meta :{
+            libre: true  
+          }         
         },        
         {
           path: 'usuario',
           name: 'usuario',
           component: Usuario,
+          meta :{
+            Administrador :true,          
+          }
         },
         {
           path: 'miembrotareas:id_proyecto',
@@ -69,38 +83,45 @@ export default new Router({
           path: 'metodologia',
           name: 'metodologias',
           component: Metodologia,
+          meta :{
+            Administrador :true,      
+            Jefe:true     
+          }
         },
         {
           path: 'fases/:item',
           name: 'fases',
           component: Fases,
+          meta :{
+            Administrador :true,    
+            Jefe:true       
+          }
         },
         {
           path: 'registro',
           name: 'registro',
           component: Registro,
         },
-        {
-          path: 'proyecto',
-          name: 'proyecto',
-          component: Proyecto,
-        },
-        {
-          path: 'proyectonuevo',
-          name: 'proyectonuevo',
-          component: ProyectoNuevo,
-        },
+        
+        
         {
           path: 'proyectomiembro:id_proyecto',
           name: 'proyectomiembro',
           component: ProyectoMiembros,
+          meta :{
+            Administrador :true,     
+            Jefe:true      
+          }
         },
         {
           path: 'proyectodetalle:id_proyecto',
           name: 'proyectodetalle',
           component: ProyectoDetalle,
+          meta :{
+            Administrador :true,   
+            Jefe:true       
+          }
         },
-
         {
           path: 'solicitud',
           name: 'solicitud',
@@ -120,29 +141,79 @@ export default new Router({
           path: 'elemento',
           name: 'elemento',
           component: Elemento,
+          meta :{
+            Administrador :true,    
+            Jefe:true       
+          }
         },
         {
           path: 'components/agregar',
           name: 'nuevo',
           component: ProyectoNuevo,
+          meta :{
+            Administrador :true,    
+            Jefe:true       
+          }
         },
         {
           path: 'components/listar',
           name: 'listar',
           component: Proyecto,
+          meta :{
+            Administrador :true,    
+            Jefe:true       
+          }
         },
         {
           path: 'components/tarealemento:datos',
           name: 'tarealemento',
           component: TareaElemento,
+          meta :{
+            Administrador :true,          
+          }
         },
         {
           path: 'tareausuario',
           name: 'tareausuario',
           component: TareaUsuario,
+          meta :{
+            Miembro :true,          
+          }
         },
+        {
+          path: 'tareaselemento:id_responsable',
+          name: 'tareaselemento',
+          component: TareaElementoMiembro,
+          meta :{
+            Miembro :true,          
+          }
+        },
+       
        
       ],
     },
   ],
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.libre)){
+    next()
+  } else if (store.state.tipousuario== 'Administrador'){
+    if (to.matched.some(record => record.meta.Administrador)){
+      next()
+    }
+  }else if (store.state.tipousuario== 'Jefe'){
+    if (to.matched.some(record => record.meta.Jefe)){
+      next()
+    }
+  }else if (store.state.tipousuario== 'Miembro'){
+    if (to.matched.some(record => record.meta.Miembro)){
+      next()
+    }
+  } else{
+    next({
+      name: 'Login'
+    })
+  }
+})
+export default router

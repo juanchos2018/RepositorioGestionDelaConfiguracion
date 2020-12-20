@@ -1,9 +1,9 @@
 <template>
      <div>
      
-         <div class="navigation-filter float-right">
-        <!--  <a href="#"  class="cambia" ><i class="fa fa-th-list"></i></a>
-          <a href="#"  class="cambia"  ><i class="fa fa-th"></i></a>-->
+         <div class="navigation-filter float-right" style="margin-top:20px">
+           <a href="#" @click="Grilla" class="cambia" ><i class="fa fa-th-list"></i></a>
+          <a href="#"   @click="Card" class="cambia"  ><i class="fa fa-th"></i></a>
         </div>
          <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogoElemento=true"> 
             <i class="fa fa-plus-circle"></i> Nuevo
@@ -22,8 +22,16 @@
           <br>         
         
     <div >   
-        <br>
-      <div class="row" id="listaproyectos">             
+      <br>
+        <div v-if="Vergrilla">
+             <b-table :items="filteredList" :fields="fields"  stacked="sm">   
+              <template v-slot:cell(accion)="item">
+                <b-button variant="primary" @click="Detalle(item.item.id+'-'+item.item.nombre)" >Ver</b-button>
+              </template>
+            </b-table>
+       </div>
+      <div v-if="VerCard">   
+      <div class="row" >             
        <div class="col-4" v-for="item in filteredList" :key="item.key">                
         <b-card no-body class="overflow-hidden"  footer-tag="footer">
             <b-row no-gutters>
@@ -53,6 +61,7 @@
          <br>
        </div>
       </div>
+     </div>
     </div>
     
    <elemento-nuevo @CerrarModal="CerrarModal" :DialogoElemento="DialogoElemento"  v-on:ListarElemento-Emit="ListarElemento"></elemento-nuevo>
@@ -76,6 +85,13 @@ export default {
                    items:[],
                    id_elemento:'',  
                    search: '',
+                   Vergrilla:false,
+                   VerCard:true,
+                   fields: [
+                    { label:"codigo", key: 'id_elemento', sortable: false },
+                    { label:"Nombre", key: 'nombre', sortable: false },    
+                    { label:"Acciones", key: 'accion', sortable: false },
+                ],
             }
         },
         created(){
@@ -120,7 +136,15 @@ export default {
                         }
                     })
                 },
-        },
+                Grilla(){
+                        this.Vergrilla=true;
+                        this.VerCard=false;
+                 },
+                Card(){
+                        this.Vergrilla=false;
+                        this.VerCard=true;
+                 },  
+          },
          computed: {
             filteredList() {
                 return this.items.filter(post => {

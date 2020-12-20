@@ -28,11 +28,16 @@
               >
           </b-form-input> 
          </div>   
-         br     
+         
            <b-table striped hover :items="detalle2" :fields="fields">
             <template v-slot:cell(acciones)="data">                      
                  <b-button variant="primary" size="sm" @click="Remover(data.item.id_elemento)" ><b-icon icon="trash" animation="fade" font-scale="1"></b-icon> </b-button>
               </template>  
+                 <template #empty>
+                  <div class="text-center text-muted">
+                  Lista   Vacia                                                                                                                                                                                            
+                  </div>
+                </template>
             </b-table>   
         </div>       
     </wizard> 

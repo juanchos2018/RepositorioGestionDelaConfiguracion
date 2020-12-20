@@ -10,10 +10,10 @@
     />-->
    <b-card>
      <div class="container">
-          <b-progress :value="50" variant="info" striped :animated="animate" class="mt-2"></b-progress>
+        <b-progress :value="50" variant="info" striped :animated="animate" class="mt-2"></b-progress>
         <div class="row">
         <h5>Nombre Proyecto  :</h5>
-     <h5>{{ nombreProyecto}}</h5>
+     <h4>{{ nombreProyecto}}</h4>
       </div>  
       <div class="row">
         <h5>Fecha Inicio : </h5>
@@ -54,7 +54,8 @@
         sort-icon-left
         :fields="fields"
         responsive="sm"
-        v-model="currentItems">
+        v-model="currentItems"
+         show-empty>
          <template v-slot:cell(nombre_elemento)="{ detailsShowing, item }">
             <b-button variant="outline-primary" style="margin-right:10px"  @click="toggleDetails(item)"> 
                 <div v-if="detailsShowing">
@@ -71,7 +72,7 @@
                <a-list-item slot="renderItem" slot-scope="item">
                   <a-card style="width: 100%">  
                     <div style="float:right">
-                        <b-button @click="Tarea(item.id_version,item.miembroresponsableID)"> Seleccionar </b-button>
+                        <b-button class="m-1 p-2 px-4 btn-xs float-right"   variant="primary"  @click="Tarea(item.id_version,item.miembroresponsableID)"> Seleccionar </b-button>
                     </div>
                    <div style="  display: flex;align-items: center;">
                      <b-icon icon="play-fill"></b-icon>  <h5 style="margin-left:5px">Version {{ item.version }}</h5>
@@ -84,6 +85,13 @@
             <b-button type="button"  class="m-1 p-2 px-4 btn-xs float-right" @click="NuevaVersion(data.item.id_cronograma_elemento,data.item.nombre_elemento)" variant="primary" > 
             <i class="fa fa-plus-circle"></i> Agregar Version
           </b-button>
+          </template>
+
+            <template v-slot: empty = "scope"> 
+            <h4> Lista Vacioa </h4> 
+          </template> 
+          <template v-slot: emptyfiltered = "scope"> 
+            <h4> No hay Nada</h4> 
           </template>
       </b-table>
     <!-- <a-collapse accordion>
@@ -165,7 +173,7 @@
                   </div>
               </form>    
         </b-modal>    
-        {{nombre_fase}}
+      
   </div>
 </template>
 
@@ -259,9 +267,15 @@ export default {
        MostarFaseMetodolgiaProyecto(id){
           let me=this;
           axios.get('Backphp/ProcesoProyecto.php/?id_proyecto='+id).then(response => {              
-                 me.fases = response.data;                                  
+                 me.fases = response.data;    
+             //    console.log(response.data);      
+                  me.ElentosFaseProyecto(me.id_proyecto, me.fases[0].id_fase);                        
                }).catch(function (error) {
                       console.log(error);
+                 //     this.current = current;
+                //    var code =this.fases[current].id_fase;
+                 //   this.nombre_fase =this.fases[current].nombre_fase;
+                
               }) .finally(() => {
            })
        },
@@ -269,7 +283,7 @@ export default {
            let me=this;
           axios.get('Backphp/ProcesoProyecto.php/?parametro1='+id_proyecto+'&id_fase='+id_fase).then(response => {              
                me.elementosConfi = response.data;    
-               console.log(response.data);                              
+          //     console.log(response.data);                              
                }).catch(function (error) {
                       console.log(error);
               }) .finally(() => {
@@ -282,6 +296,9 @@ export default {
          this.nombre_fase =this.fases[current].nombre_fase;
          this.ElentosFaseProyecto(this.id_proyecto,code);
       //   console.log( this.nombre_fase);
+       },
+       MostrarPrimero(){
+
        },
        DatosProyecto(id){
          let me=this;
@@ -325,7 +342,7 @@ export default {
 
         const obj={elemntoconfiguracionID,version,fecha_inicio,fecha_termino,miembroresponsableID};
         axios.post('Backphp/ProcesoVersion.php/',obj).then(response => {                       
-              console.log(response);
+           //   console.log(response);
               
               this.Confirmacion();             
            
@@ -386,7 +403,7 @@ export default {
        
          this.$router.push({name:"tarealemento" ,params:{datos} });         
        },
-        Confirmacion(){
+       Confirmacion(){
             this.$swal({
                 position: 'top-end',
                 icon: 'success',

@@ -62,7 +62,7 @@
         </a-select>   
        </b-form-group>       
     </div>
-    <b-form-tags v-model="seleccionados" no-outer-focus class="mb-2">
+    <b-form-tags v-model="seleccionados" no-outer-focus class="mb-2"   >
       <template v-slot="{ tags }">       
         <ul
           id="my-custom-tags-list"
@@ -73,13 +73,14 @@
         >         
           <b-card
             v-for="tag in tags"
-            :key="tag"
+            :key="tag"            
             :id="`my-custom-tags-tag_${tag.replace(/\s/g, '_')}_`"
             tag="li"
             class="mt-1 mr-1"
+            bg-variant="primary"
             body-class="py-1 pr-2 text-nowrap"
           >
-            <strong>{{ tag }}</strong>           
+         <h5 style="color:white" >  {{ tag }}  </h5>           
           </b-card>
         </ul>
       </template>
@@ -105,16 +106,14 @@
       <b-card no-body>
       <b-tabs card  justified   active-nav-item-class="font-weight-bold text-uppercase text-success">        
         <b-tab v-for="item in fases" :key="item.title" :title="item.title" v-model="tabIndex" >
-       <h5>Elementos de configuracion</h5>
+       <h5>Elementos de configuración</h5>
            <b-table striped hover :items="fases[item.index].tabla" :fields="fields2"  >
               <template  v-slot:cell(acciones)="row">
                 <b-form-checkbox    @change="onPreviewClick(row.index,row.item.id,row.item.NombreElemento,item.id_fase)"            
-                 
                 ></b-form-checkbox>
               </template>
             </b-table>
-        </b-tab>      
-      
+        </b-tab>   
         <template #empty>
           <div class="text-center text-muted">
            Lista   Vacia                                                                                                                                                                                            
@@ -128,18 +127,13 @@
      <b-button type="button"  @click="RegistrarProyecto" variant="primary"  class="p-2 px-4 btn-xs">
              Crear Proyecto
       </b-button>
-    
+    <!--
      <b-button type="button"  @click="Registrar" variant="primary"  class="p-2 px-4 btn-xs">
              Agregar
-      </b-button>
+      </b-button>-->
    
     <br>
     
-     <br>
-     {{seleccionados}}
-     <br>
-     {{idseleccionados}}
-     {{idseleccionadosfases}}
    
     </div>
 </template>

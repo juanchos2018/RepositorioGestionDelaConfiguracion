@@ -10,34 +10,29 @@
                  v-model="nombre_tarea">
                </b-input>
              </b-form-group>                
-          </div>
-             <div class="form-row">                 
-               <b-form-group  label="Porcentaje Avance:"  class="col-md-12">
-               <b-input                  
-                  aria-describedby="input-live-help input-live-feedback"
-                  class="p-2 px-4 btn-xs "
-                  type="number">
-               </b-input>
+          </div>         
+
+            <div class="form-row">                 
+               <b-form-group  label="Porcentaje Avance:"  class="col-md-12">            
+                  <b-form-input type="range" min="0" max="100" v-model="rango"></b-form-input>
+                {{rango}}            
              </b-form-group>                
           </div>
           <div class="form-row"> 
                <b-form-group  label="Url Evidencia"  class="col-md-12">
-                        <b-form-input                                          
-                          type="date"
+                        <b-form-input 
                           class="p-2 px-4 btn-xs" 
                           required          
-                          v-model="fecha_inicio" >
+                          v-model="urlevidencia" >
                         </b-form-input>
-                   </b-form-group> 
-                
-          </div>  
-          
+                   </b-form-group>                 
+          </div>            
          <hr>
         <div class="float-right" >              
           <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
           <b-button type="button"   variant="primary"  class="p-2 px-4 btn-xs">
               <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
-             <span v-show="!isLoading">Crear Tarea</span>
+             <span v-show="!isLoading"> Registra Avance</span>
             </b-button>
         </div>
      </form>    
@@ -70,6 +65,8 @@ export default {
           fecha_inicio:'',
           fecha_termino:'',
           miembroreponsableID:'',
+          urlevidencia:'',
+          rango:'',
          // miembros:[],
           
         }

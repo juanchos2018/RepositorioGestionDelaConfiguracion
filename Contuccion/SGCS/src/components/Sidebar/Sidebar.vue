@@ -67,6 +67,7 @@
       
         
            <NavLink
+            v-if="esAdministrador"
             :activeItem="activeItem"
             header="Usuario"
             link="/app/usuario"
@@ -77,6 +78,7 @@
         />
           
            <NavLink
+           v-if="esMiembro"
             :activeItem="activeItem"
             header="MisTareas"
             link="/app/tareausuario"
@@ -135,6 +137,13 @@ export default {
       sidebarOpened: state => !state.sidebarClose,
       activeItem: state => state.sidebarActiveElement,
     }),
+
+    esAdministrador(){
+      return this.$store.state.tipousuario =='Administrador';
+    },
+     esMiembro(){
+      return  this.$store.state.tipousuario =='Miembro';
+    },
   },
 };
 </script>

@@ -35,10 +35,9 @@
     <span slot="title0010" style="color: #1890ff">sss</span>
   </a-tree>
   -->
-  {{agrupados}}
+ 
   <br>
-option
-  {{chartOptions}}
+
     <div class="steps-action">
       <!--
 <kanban-board :stages="stages" :blocks="blocks"></kanban-board>
@@ -61,7 +60,7 @@ option
       <div v-for="stage in stages" :key="stage" :slot="`footer-${stage}`">
           <a href="" @click.prevent="() => addBlock(stage)">+ Add new block</a>
       </div>
-    </kanban-board>-->    
+    </kanban-board> 
     <b-button @click="Agregar">agregar</b-button>
      <b-button @click="Agregar2">agregar 2</b-button>
     
@@ -72,14 +71,10 @@ option
       <p>Fases</p>
       {{puntos}}
 
-      {{puntos2}}
+      {{puntos2}}-->   
 
 <br>
-<hr>
-<p>
-platilla
-  {{plantilla}}
-</p>
+
     </div>
   </div>
 </template>
