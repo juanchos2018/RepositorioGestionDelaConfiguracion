@@ -83,8 +83,7 @@ export default {
           const obj={usuario_miembroid:usuario_miembroid,rolId:rolId,proyectoId:proyectoId};
            axios.post('Backphp/ApiWeb/Miembro.php/',obj).then(response => {                       
               console.log(response);
-               this.Confirmacion();
-                     
+               this.Confirmacion();                     
           }).catch(function (error) {
               console.log(error);
           }) .finally(() => {
@@ -119,9 +118,9 @@ export default {
                   console.log(error);
            });       
        },         
-        CerrarModal(){              
+       CerrarModal(){              
               this.$emit('CerrarModal');
-        },       
+       },       
        Confirmacion(){
           this.$swal({
               position: 'top-end',

@@ -336,14 +336,14 @@ export default {
        },
        ListaVersiones(id_elemento){
             let me=this;
-              axios.get('Backphp/ProcesoVersion.php/?id_elemento='+id_elemento).then(response => {
+              axios.get('Backphp/ApiWeb/Version.php/?id_elemento='+id_elemento).then(response => {
                        me.listaversiones = response.data; 
                      //  console.log(response.data);                     
                   }).catch(function (error) {
                       console.log(error);
                   }) .finally(() => {
                      
-            })
+           })
        },
        ListaMiembros(id){
          let me=this;

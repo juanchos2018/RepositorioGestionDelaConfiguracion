@@ -24,7 +24,7 @@
          <hr>
         <div class="float-right" >              
           <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
-          <b-button type="button"  variant="primary"  class="p-2 px-4 btn-xs">
+          <b-button type="button"  variant="primary"  @click="ModificarRol" class="p-2 px-4 btn-xs">
               <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
              <span v-show="!isLoading">Guardar Cambios</span>
             </b-button>
@@ -43,7 +43,7 @@ export default {
         type: Boolean,
         required: true,
         default: false
-      }
+      },id: [String, String]
       
     },
     data() {
@@ -55,9 +55,8 @@ export default {
           isLoading:false,          
           Show:this.DialogoModificar,
           roles:[],
-          id_rol:'',
-
-          
+          id_rol:'',   
+             
         }
     },
     watch: {
@@ -75,8 +74,8 @@ export default {
        ListarRoles(){
              let me=this;
                   var elementos=[];
-                  axios.get('Backphp/ProcesoRol.php/',).then(function(response){                      
-                  elementos=response.data;   
+                  axios.get('Backphp/ApiWeb/Rol.php/',).then(function(response){                      
+                  elementos=response.data.data;   
                   elementos.map(function(x){
                         me.roles.push({text: x.nombre,value:x.id_rol});
                  });  
@@ -84,13 +83,13 @@ export default {
                   console.log(error);
            });       
        },  
-      ModificarRol(){         
-          let id_elemento=this.id_elemento;
-          let nombre=this.nombre;           
-          const obj={id_elemento,nombre};
-          axios.put('Backphp/ProcesoElemento.php/',obj).then(response => {                       
+      ModificarRol(){    
+          let rolId=this.id_rol;       
+          let id=this.id;                 
+          const obj={rolId,id};
+          axios.put('Backphp/ApiWeb/Miembro.php/',obj).then(response => {                       
               console.log(response);
-                this.ListarElemetos();
+              //  this.ListarElemetos();
                this.Confirmacion();
           }).catch(function (error) {
               console.log(error);
@@ -98,20 +97,9 @@ export default {
          })
       },   
       CerrarModal(){              
-              this.$emit('CerrarModal');
-      },
-      CantidadMetodologia(){  
-            firebase.database().ref('Metodologia').on('value', (data) => {   
-              var  array=[];             
-              data.forEach((doc) => {
-                    var item = doc.val()
-                    item.key = doc.key  
-                    array.push(item)
-             });
-             this.contador=array.length+1;
-         });
-       }, 
-       Confirmacion(){
+           this.$emit('CerrarModal');
+      },     
+      Confirmacion(){
           this.$swal({
               position: 'top-end',
               icon: 'success',

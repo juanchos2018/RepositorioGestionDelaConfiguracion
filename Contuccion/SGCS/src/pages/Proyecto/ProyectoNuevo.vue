@@ -107,8 +107,7 @@
       </b-tabs>
     </b-card>  
       </div>      
-    </div>
-      
+    </div>      
      <b-button type="button"  @click="RegistrarProyecto" variant="primary"  class="p-2 px-4 btn-xs">
          Crear Proyecto
       </b-button>
@@ -184,18 +183,7 @@ export default {
     methods:{      
        newTab() {
         this.tabs.push(this.tabCounter++)
-        },
-     /*   Registrar(){
-          var lista=this.listaFases;
-          var cronogramaId ="1";
-          var nombre ="fase 1";
-          const obj1={cronogramaId,nombre};
-          this.listaElementos=[];
-          for(var i =0;i<this.seleccionados.length ;i++){
-              this.listaElementos.push({nombre:this.seleccionados[i],id:this.idseleccionados[i]});
-          }       
-        },
-        */
+        },   
         RegistrarProyecto(){  
           this.listaElementos=[];         
          for(var i =0;i<this.seleccionados.length ;i++){           
@@ -244,7 +232,7 @@ export default {
                 }).catch(function (error) {
                       console.log(error);
                 }) .finally(() => {                     
-              });
+             });
           },
           ListarMetodologias(){
                   let me=this;
@@ -280,12 +268,11 @@ export default {
                       });               
                       for(var i=0;i< me.fases.length ;i++){
                           for  (var e=0;e< me.TodasPlantillas.length ;e++){
-                              if(me.fases[i].id_fase==me.TodasPlantillas[e].id_fase){   
+                              if(me.fases[i].id_fase==me.TodasPlantillas[e].faseId){   
                                   me.fases[i].tabla.push({ NombreElemento:me.TodasPlantillas[e].nombre,id:me.TodasPlantillas[e].id_elemento,id_fase: me.fases[i].id_fase})
                               } 
                           }                    
                         }  
-
                       }).catch(function (error) {
                           console.log("ERrro");
                           console.log(error);
@@ -311,7 +298,7 @@ export default {
           }, 
           ListarTodasPlantillas(){
                   let me=this;                 
-                  axios.get('Backphp/ProcesoPlantilla.php/',).then(function(response){                      
+                  axios.get('Backphp/ApiWeb/PlantillaElemento.php/',).then(function(response){                      
                   me.TodasPlantillas=response.data;    
                 // console.log(response.data);  
               }).catch(function(error){

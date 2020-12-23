@@ -8,7 +8,7 @@
                 id="input-30" 
                 require
                 class="p-2 px-4 btn-xs"               
-              v-model="search"  >
+               >
           </b-form-input> 
          </div> 
           <br>       
@@ -40,7 +40,7 @@
                      <div style="float:right">
                        <b-button variant="success" @click="Tareas(item.proyectoId+'-'+item.usuario_miembroid)" > <b-icon icon="list-task" animation="fade" font-scale="1"></b-icon> </b-button>
 
-                       <b-button variant="success" style="margin-left:5px" v-b-tooltip.hover title="Editar" @click="AbrirDialogo" >    <b-icon icon="pencil-square" animation="fade" font-scale="1" ></b-icon>   </b-button>
+                       <b-button variant="success" style="margin-left:5px" v-b-tooltip.hover title="Editar" @click="AbrirDialogo(item.id)" >    <b-icon icon="pencil-square" animation="fade" font-scale="1" ></b-icon>   </b-button>
                      </div>                     
                 </template>
          </b-card>
@@ -48,7 +48,7 @@
        </div>
       </div>
     </div>  
-      <editar-rol @CerrarModal="CerrarModal"    :DialogoModificar="DialogoModificar" > </editar-rol>
+      <editar-rol @CerrarModal="CerrarModal"   :DialogoModificar="DialogoModificar"  v-bind:id="id" > </editar-rol>
    
     </div>
 </template>
@@ -66,10 +66,11 @@ export default {
               items:[],
               DialogUsuario:false,
               DialogoModificar:false,
+              id:'',
              }
       },
       created(){
-          // this.Listar();   
+        
           },
       mounted(){
           this.GetDatos()
@@ -78,19 +79,18 @@ export default {
           GetDatos(){
             var item = this.$route.params.id_proyecto
               if(item){        
-                  this.ListarMiembrosProyecto(item);  
-                 
+                  this.ListarMiembrosProyecto(item);                   
               }   
           },
-          AbrirDialogo(){
+          AbrirDialogo(id){
+            this.id=id;
             this.DialogoModificar=true;  
+
           },
           ListarMiembrosProyecto(id){
               let me=this;
-                axios.get('Backphp/ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {  
-                        
-                      me.items = response.data;                                     
-                     // console.log(response.data);
+                axios.get('Backphp/ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {                         
+                      me.items = response.data;          
                     }).catch(function (error) {
                             console.log(error);
                     }) .finally(() => {
@@ -100,8 +100,7 @@ export default {
                 this.DialogUsuario = false;
                 this.DialogoModificar=false;             
             },          
-             Tareas(id_proyecto){
-              //  this.$router.push('/app/usuariotareas');
+             Tareas(id_proyecto){              
                 this.$router.push({name:"miembrotareas",params:{id_proyecto} });
             }
     }
