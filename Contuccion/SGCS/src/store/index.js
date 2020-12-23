@@ -21,7 +21,8 @@ export default new Vuex.Store({
     nombreUsuario:'',
     idUsuario:'',
     id_tipo:'',
-    tipousuario:''
+    tipousuario:'',
+    id_usuario:''
   },
   getters: {
     user(state){
@@ -47,6 +48,9 @@ export default new Vuex.Store({
     },
     settipoUsuario(state,tipousuario){
       state.tipousuario=tipousuario
+    },
+    setid_usuario(state,id_usuario){
+      state.id_usuario=id_usuario
     },
   },
 
@@ -79,7 +83,10 @@ export default new Vuex.Store({
       commit("settipoUsuario",tiposusuario)      
       localStorage.setItem("tipousuario", tiposusuario)
     },
-
+    guardarIdUsuario({commit},id_usuario){   
+      commit("setid_usuario",id_usuario)      
+      localStorage.setItem("id_usuario", id_usuario)
+    },
     guardarToken({commit},token){
       commit("setToken", token)
       commit("setUsuario", decode(token))

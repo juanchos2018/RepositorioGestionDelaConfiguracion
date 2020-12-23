@@ -1,12 +1,8 @@
 <template>
     <div>
       <h4>Miembros</h4>
-      <div>
-        <!--
-         <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" > 
-            <i class="fa fa-plus-circle"></i> Nuevo Miembro
-          </b-button>-->
-           <div style="width: 200px;  display: inline-block;">
+      <div>      
+        <div style="width: 200px;  display: inline-block;">
             <label for="">Buscar</label> 
             <b-form-input
                 id="input-30" 
@@ -18,8 +14,7 @@
           <br>       
           <br>    
         </div>
-    <div >   
-      
+    <div >         
       <div class="row" >             
        <div class="col-4" v-for="item in items" :key="item.key">  
               
@@ -60,8 +55,6 @@
 
 <script>
 
-import firebase from '@/firebase'
-
 import axios from  'axios';
 import EditarRol from '@/pages/Miembro/EditarRol';
 
@@ -73,7 +66,6 @@ export default {
               items:[],
               DialogUsuario:false,
               DialogoModificar:false,
-
              }
       },
       created(){
@@ -83,24 +75,22 @@ export default {
           this.GetDatos()
           },
       methods:{
-
           GetDatos(){
             var item = this.$route.params.id_proyecto
               if(item){        
                   this.ListarMiembrosProyecto(item);  
-                 // alert(item);
-              }   else{
-               // alert("nada")
-              }      
+                 
+              }   
           },
           AbrirDialogo(){
             this.DialogoModificar=true;  
           },
           ListarMiembrosProyecto(id){
               let me=this;
-              axios.get('Backphp/ProcesoMiembro.php/?id_proyecto='+id).then(response => {              
+                axios.get('Backphp/ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {  
+                        
                       me.items = response.data;                                     
-                      console.log(response.data);
+                     // console.log(response.data);
                     }).catch(function (error) {
                             console.log(error);
                     }) .finally(() => {
@@ -109,21 +99,8 @@ export default {
             CerrarModal() {
                 this.DialogUsuario = false;
                 this.DialogoModificar=false;             
-            },
-            Listar(){
-                  firebase.database().ref('Usuario').on('value', (data) => {   
-                    this.items=[];             
-                        data.forEach((doc) => {
-                          var item = doc.val()
-                          item.key = doc.key  
-                          this.items.push(item)
-                  });
-              });
-            },
-            ListarMetodologias(){
-
-            },
-            Tareas(id_proyecto){
+            },          
+             Tareas(id_proyecto){
               //  this.$router.push('/app/usuariotareas');
                 this.$router.push({name:"miembrotareas",params:{id_proyecto} });
             }

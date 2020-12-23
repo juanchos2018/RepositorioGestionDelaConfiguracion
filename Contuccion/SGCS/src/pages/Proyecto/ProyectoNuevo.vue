@@ -87,22 +87,7 @@
     </b-form-tags>
     
     <div class="form-row">
-      <div class="col-md-12">
-        <!--
-        <a-steps :current="current" @change="onChange" :style="stepStyle"  type="navigation" >
-          <a-step v-for="item in fases" :key="item.title" :title="item.title"  />
-        </a-steps>
-          <div>   
-             <b-form-checkbox size="sm">Small</b-form-checkbox> 
-             <b-table striped hover :items="plantillaelemento" :fields="fields" >
-              <template  v-slot:cell(acciones)="row">
-                <b-form-checkbox
-                  v-model="row.item.check"
-                  @input="onPreviewClick($event, row.index, row.item.nombre)"
-                ></b-form-checkbox>
-              </template>
-            </b-table>
-            </div>  -->    
+      <div class="col-md-12">       
       <b-card no-body>
       <b-tabs card  justified   active-nav-item-class="font-weight-bold text-uppercase text-success">        
         <b-tab v-for="item in fases" :key="item.title" :title="item.title" v-model="tabIndex" >
@@ -125,16 +110,13 @@
     </div>
       
      <b-button type="button"  @click="RegistrarProyecto" variant="primary"  class="p-2 px-4 btn-xs">
-             Crear Proyecto
+         Crear Proyecto
       </b-button>
-    <!--
-     <b-button type="button"  @click="Registrar" variant="primary"  class="p-2 px-4 btn-xs">
-             Agregar
-      </b-button>-->
-   
-    <br>
-    
-   
+      <br>
+
+{{listaenviar}}
+    <br>   <hr>
+   {{Listacronogramafase}}
     </div>
 </template>
 <script>
@@ -168,6 +150,8 @@ export default {
           seleccionados:[],
           idseleccionados:[],
           idseleccionadosfases:[],
+          Listacronogramafase:[],
+          listaenviar:[],
           stepStyle: {
           marginBottom: '20px',
           boxShadow: '0px -1px 0 0 #e8e8e8 inset',
@@ -197,38 +181,24 @@ export default {
       this.ListarTodasPlantillas();
      
     },
-    methods:{
-       VER(){
-      console.log("Click");
-      },
+    methods:{      
        newTab() {
         this.tabs.push(this.tabCounter++)
         },
-
-        Registrar(){
+     /*   Registrar(){
           var lista=this.listaFases;
           var cronogramaId ="1";
           var nombre ="fase 1";
           const obj1={cronogramaId,nombre};
           this.listaElementos=[];
           for(var i =0;i<this.seleccionados.length ;i++){
-            this.listaElementos.push({nombre:this.seleccionados[i],id:this.idseleccionados[i]});
-          }
-         // const obj={lista};
-       //   axios.post('Backphp/ProcesoCronograma.php/',obj1).then(response => {                       
-           //       console.log(response);
-                 
-           //     }).catch(function (error) {
-           //           console.log(error);
-           //     }) .finally(() => {                     
-           //   })
+              this.listaElementos.push({nombre:this.seleccionados[i],id:this.idseleccionados[i]});
+          }       
         },
-        RegistrarProyecto(){       
-          
-          this.listaElementos=[];
-          //lenar aqui el id de la fase 
-         for(var i =0;i<this.seleccionados.length ;i++){
-            //  this.listaElementos.push({id:this.idseleccionados[i],nombre:this.seleccionados[i]});
+        */
+        RegistrarProyecto(){  
+          this.listaElementos=[];         
+         for(var i =0;i<this.seleccionados.length ;i++){           
              this.listaElementos.push({id:this.idseleccionados[i],nombre:this.seleccionados[i],id_fase:this.idseleccionadosfases[i]});
           }
           let codigo=this.codigo;
@@ -242,43 +212,52 @@ export default {
           var lista=this.listaFases;
           var ListaElementos=this.listaElementos;
           const obj={codigo,nombre,fechaini,fechater,descripcion,estado,metodologia,usuariojefeId,lista,ListaElementos};
-          axios.post('Backphp/ProcesoProyecto.php/',obj).then(response => {                       
-                  console.log(response);
+          axios.post('Backphp/ApiWeb/Proyecto.php/',obj).then(response => {                       
+                 console.log(response);
+                  this.Listacronogramafase=response.data;
                   this. Confirmacion();
+                  this.AgregarCronogramaElemento();
                 }).catch(function (error) {
                       console.log(error);
                 }) .finally(() => {                     
               })
           },
-          handleChange(value) {
-         //   console.log(`selected ${value}`);
+          handleChange(value) {      
               this.MostarFaseMetodolgia(value);
           },
+          AgregarCronogramaElemento(){
+               var lista=[];        
+               for(var i =0;i<this.seleccionados.length ;i++){            
+                  lista.push({id:this.idseleccionados[i],nombre:this.seleccionados[i],id_fase:this.idseleccionadosfases[i]});
+               }
+               for(var i =0;i<lista.length ;i++){     
+                 for (var e =0;e<this.Listacronogramafase.length;e++){
+                   if(lista[i].id_fase==this.Listacronogramafase[e].id_fase){
+                      this.listaenviar.push({id:lista[i].id,nombre:lista[i].nombre,id_fase:this.Listacronogramafase[e].id_fase,id_cronograma_fase:this.Listacronogramafase[e].id_cronograma_fase});
+                   }
+                 }
+               }
+              var listacronogramaelemento=this.listaenviar;
+              const obj={listacronogramaelemento}
+              axios.post('Backphp/ApiWeb/CronogramaElemento.php/',obj).then(response => {  
+                  this.Limpiar();
+                }).catch(function (error) {
+                      console.log(error);
+                }) .finally(() => {                     
+              });
+          },
           ListarMetodologias(){
-              let me=this;
+                  let me=this;
                   var tipoDcumento=[];
-                  axios.get('Backphp/ProcesoMetodologia.php/',).then(function(response){                      
-                  tipoDcumento=response.data;    
-                //  console.log(response.data);              
-                  tipoDcumento.map(function(x){
-                        me.metodologias.push({text: x.nombre,value:x.id});
+                  axios.get('Backphp/ApiWeb/Metodologia.php/').then(response => {     
+                    console.log(response.data)                               
+                    tipoDcumento=response.data.data; 
+                    tipoDcumento.map(function(x){
+                    me.metodologias.push({text: x.nombre,value:x.id_metodologia});
                  });  
               }).catch(function(error){
                   console.log(error);
               });
-          },
-          Guardar(){         
-              let newData = firebase.database().ref('Proyectos/').push();
-              newData.set({                 
-                  nombre_proyecto: this.nombre_proyecto,
-                  descripcion: this.descripcion,
-                  fecha_inicio:this.fecha_inicio,
-                  fecha_fin: this.fecha_fin,
-                  metodologia:'Rup'
-                
-                  //key:key
-              });
-            
           },
           Confirmacion(){
             this.$swal({
@@ -293,15 +272,13 @@ export default {
           MostarFaseMetodolgia(id){
                 let me=this;
                 me.Limpiar();
-                axios.get('Backphp/ProcesoMetodologia.php/?id_meto='+id).then(response => {              
+                axios.get('Backphp/ApiWeb/Metodologia.php/?id_meto='+id).then(response => {              
                     me.fases = response.data;
-                    me.listaFases=[];
-                   console.log(response.data)
+                    me.listaFases=[];                 
                     response.data.forEach(item=>{
                         me.listaFases.push({nombre: item.nombre_fase,id_fase:item.id_fase});   
                       });               
-
-                        for(var i=0;i< me.fases.length ;i++){
+                      for(var i=0;i< me.fases.length ;i++){
                           for  (var e=0;e< me.TodasPlantillas.length ;e++){
                               if(me.fases[i].id_fase==me.TodasPlantillas[e].id_fase){   
                                   me.fases[i].tabla.push({ NombreElemento:me.TodasPlantillas[e].nombre,id:me.TodasPlantillas[e].id_elemento,id_fase: me.fases[i].id_fase})
@@ -318,16 +295,15 @@ export default {
           onChange(current) {
               console.log('onChange:', current);
               this.current = current;
-              var code =this.fases[current].id_fase;
-             // this.MostarFaseMetodolgiaProyecto(code);
+              var code =this.fases[current].id_fase;           
               console.log("id fase= "+code);
               this.ListarElemtosFase(code);
           },
           ListarElemtosFase(id_fase){
               let me=this;
-              axios.get('Backphp/ProcesoPlantilla.php/?id_fase='+id_fase).then(response => {                 
+              axios.get('Backphp/ApiWeb/PlantillaElemento.php/?faseId='+id_fase).then(response => {                 
                     me.plantillaelemento = response.data;     
-                       /// console.log(response.data);           
+                             
                   }).catch(function (error) {
                           console.log(error);
                   }) .finally(() => {
@@ -364,7 +340,7 @@ export default {
                   this.seleccionados.push(nombre);
                   this.idseleccionados.push(id);
                   this.idseleccionadosfases.push(id_fase);
-                //  this.value.push(nombre);
+               
             },
             Quitar(id,nombre,id_fase){             
                this.seleccionados.splice(this.seleccionados.indexOf(nombre), 1);
@@ -375,6 +351,7 @@ export default {
               this.seleccionados=[];
               this.idseleccionados=[];
               this.idseleccionadosfases=[];
+              this.listaenviar=[];
             }
     }
 }

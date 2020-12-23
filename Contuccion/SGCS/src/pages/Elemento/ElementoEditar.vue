@@ -72,11 +72,12 @@ export default {
     methods: {
       ModificarElemento(){         
           let id_elemento=this.id_elemento;
+          let codigo_elemento="E13";
           let nombre=this.nombre;           
-          const obj={id_elemento,nombre};
-          axios.put('Backphp/ProcesoElemento.php/',obj).then(response => {                       
-              console.log(response);
-                this.ListarElemetos();
+          const obj={id_elemento,codigo_elemento,nombre};
+          axios.put('Backphp/ApiWeb/Elemento.php/',obj).then(response => {                      
+     
+               this.ListarElemetos();
                this.Confirmacion();
           }).catch(function (error) {
               console.log(error);
@@ -91,19 +92,8 @@ export default {
       },
       CerrarModal(){              
               this.$emit('CerrarModal');
-      },
-      CantidadMetodologia(){  
-            firebase.database().ref('Metodologia').on('value', (data) => {   
-              var  array=[];             
-              data.forEach((doc) => {
-                    var item = doc.val()
-                    item.key = doc.key  
-                    array.push(item)
-             });
-             this.contador=array.length+1;
-         });
-       }, 
-       Confirmacion(){
+      },  
+      Confirmacion(){
           this.$swal({
               position: 'top-end',
               icon: 'success',

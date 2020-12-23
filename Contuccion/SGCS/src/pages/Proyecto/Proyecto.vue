@@ -1,16 +1,13 @@
 <template>
     <div>
-       <div>
-       <!--  <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="Nuevo"> 
-            <i class="fa fa-plus-circle"></i> Nuevo Proyecto
-          </b-button> -->
+       <div>      
           <div style="width: 200px;  display: inline-block;">
             <label for="">Buscar</label> 
             <b-form-input
                 id="input-30" 
                 require
                 class="p-2 px-4 btn-xs"               
-              v-model="search"  >
+                v-model="search"  >
           </b-form-input> 
          </div> 
           <br>    
@@ -48,7 +45,6 @@
 <script>
 
 import axios from  'axios';
-import firebase from '@/firebase'
 import MiembroNuevo from '@/pages/Miembro/MiembroNuevo';
 export default {
     components: { MiembroNuevo },
@@ -56,8 +52,7 @@ export default {
         return{
               items:[],
               DialogMiembro:false,
-              id_proyecto:'',
-              pepep:'asdadsasd',
+              id_proyecto:'',            
               search: '',
         }
     },
@@ -69,43 +64,28 @@ export default {
              this.$router.push('/app/proyectonuevo');
         },
         Detalle(id_proyecto){
-            // console.log(id_proyecto);
-             this.$router.push({name:"proyectodetalle",params:{id_proyecto} });
-           //this.$router.push('/app/proyectodetalle');   
+           
+             this.$router.push({name:"proyectodetalle",params:{id_proyecto} });            
         },
         Miembros(id_proyecto){
-            // this.$router.push('/app/proyectomiembro'); 
+           
              this.$router.push({name:"proyectomiembro",params:{id_proyecto} });
         },
         AbrirDialogo(id){
              this.DialogMiembro=true,
              this.id_proyecto=id;
-
         },
         ListarProyecto(){
              let me=this;
-              axios.get('Backphp/ProcesoProyecto.php/').then(response => {
-                    
+              axios.get('Backphp/ApiWeb/Proyecto.php/').then(response => {                    
                       me.items = response.data;                      
                   }).catch(function (error) {
                       console.log(error);
-                  }) .finally(() => {
-                     
+                }) .finally(() => {                     
             })
-        },
-        Listar(){
-            firebase.database().ref('Proyectos').on('value', (data) => {   
-              this.items=[];             
-                  data.forEach((doc) => {
-                    var item = doc.val()
-                    item.key = doc.key  
-                    this.items.push(item)
-             });
-         });
-       },
+        },        
        CerrarModal() {
-           this.DialogMiembro = false;    
-                  
+           this.DialogMiembro = false;  
        },
     }
 }

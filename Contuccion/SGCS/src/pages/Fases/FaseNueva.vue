@@ -1,6 +1,6 @@
 <template>
   <b-modal id="modal-fase" v-model="Show" @hide="CerrarModal"
-  title="Nueva Fase" hide-footer  body-class="myDiv" >
+      title="Nueva Fase" hide-footer  body-class="myDiv" >
      <form action="">
        <div class="form-row">                 
               <b-form-group id="input-group-3" label="Nombre Fase:" class="col-md-12">
@@ -24,13 +24,10 @@
 </template>
 
 <script>
-import firebase from '@/firebase'
-//DialogMetodologia
 
 import axios from  'axios';
 export default {
-    name: 'fase-nueva',
- 
+    name: 'fase-nueva', 
     props:{
       DialogoFase: {       
         type: Boolean,
@@ -55,9 +52,7 @@ export default {
       }
     },
     created () {
-    //    this.CantidadMetodologia();
-      //  this.codigo=this.CodeMetodologia+""+ this.contador;
-
+    
     },
     computed: {
      
@@ -65,78 +60,25 @@ export default {
     methods: {
       RegistrarFase(){         
           let nombre_fase=this.nombre;      
-          let metodologiaid=this.idmetodologia;    
-          const obj={nombre_fase,metodologiaid};
-           axios.post('Backphp/ProcesoFase.php/',obj).then(response => {                       
-           console.log(response);
+          let metodologiaId=this.idmetodologia;    
+          const obj={nombre_fase,metodologiaId};
+           axios.post('Backphp/ApiWeb/Fase.php/',obj).then(response => {
            this.Confirmacion();
-           this.ListarMetodologia(this.idmetodologia)
-          // this.ListarMetodologia();
-            //  if(response.status=="200"){             
-               
-
-              //}
+           this.ListarFases(this.idmetodologia)
+         
           }).catch(function (error) {
               console.log(error);
           }) .finally(() => {
               
-          })
-      },     
-      ListarFaseDeMetodologia(){
-
-      },
-      ListarMetodologia(idmeto){
+         })
+      },  
+      ListarFases(idmeto){
           this.$emit('Listar-Fase',idmeto);
       },
-      Registrar(){
-          let codigo="123";
-          let nombre="juanchos";
-          let contra="123123123123";
-          let estado="1";
-          const obj={codigo,nombre,contra,estado};
-           axios.post('Backphp/',obj).then(response => {
-                       
-                     console.log(response);
-                  }).catch(function (error) {
-                      console.log(error);
-                  }) .finally(() => {
-                     
-                  })
+      CerrarModal(){              
+          this.$emit('CerrarModal');
       },
-       Guardar(){         
-              let newData = firebase.database().ref('Metodologia/').push();
-              newData.set({                 
-                  codigo: this.codigo,
-                  nombre: this.nombre,
-                  fecha: Date(),
-                  //key:key
-             });
-            
-         },       
-         makeToast(msg,color) {
-            this.toastCount++
-            this.$bvToast.toast(msg, {
-              title: 'Mensaje Cliente',
-              variant:color,
-              autoHideDelay: 3000,
-              appendToast: false
-            })
-          },                    
-          CerrarModal(){              
-              this.$emit('CerrarModal');
-          },
-          CantidadMetodologia(){  
-            firebase.database().ref('Metodologia').on('value', (data) => {   
-              var  array=[];             
-              data.forEach((doc) => {
-                    var item = doc.val()
-                    item.key = doc.key  
-                    array.push(item)
-             });
-             this.contador=array.length+1;
-         });
-       }, 
-       Confirmacion(){
+      Confirmacion(){
           this.$swal({
               position: 'top-end',
               icon: 'success',
@@ -145,7 +87,7 @@ export default {
               showConfirmButton: false,
               timer: 3000
             })
-       },
+      },
     }
 };
 </script>

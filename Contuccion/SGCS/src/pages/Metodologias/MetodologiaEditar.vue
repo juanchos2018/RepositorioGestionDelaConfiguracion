@@ -2,15 +2,7 @@
   <b-modal  v-model="Show" @hide="CerrarModal"
   title="Editar Metodologia" hide-footer   body-class="myDiv">
      <form action="">
-       <div class="form-row">                 
-           <!--    <b-form-group  label="Codigo Metodologia:"   class="col-md-12">
-               <b-input                  
-                  aria-describedby="input-live-help input-live-feedback"
-                  class="p-2 px-4 btn-xs "
-                  disabled
-                  v-model="id_metodologia">
-               </b-input>
-             </b-form-group>      -->          
+       <div class="form-row">   
           </div>
           <div class="form-row"> 
               <b-form-group  label="Nombre Metodologia:"  class="col-md-12">
@@ -32,7 +24,6 @@
      </form>    
   </b-modal>
 </template>
-
 <script>
 
 import axios from  'axios';
@@ -53,9 +44,7 @@ export default {
           codigo:'',
           nombre:'',            
           isLoading:false,          
-          Show:this.DialogoModificar,
-
-          
+          Show:this.DialogoModificar,          
         }
     },
     watch: {
@@ -74,9 +63,8 @@ export default {
           let id_metodologia=this.id_metodologia;
           let nombre=this.nombre;           
           const obj={id_metodologia,nombre};
-          axios.put('Backphp/ProcesoMetodologia.php/',obj).then(response => {                       
-               console.log(response);
-                this. ListarMetodologia()();
+          axios.put('Backphp/ApiWeb/Metodologia.php/',obj).then(response => { 
+               this.ListarMetodologia();
                this.Confirmacion();
           }).catch(function (error) {
               console.log(error);
@@ -91,23 +79,12 @@ export default {
       },
       CerrarModal(){              
               this.$emit('CerrarModal');
-      },
-      CantidadMetodologia(){  
-            firebase.database().ref('Metodologia').on('value', (data) => {   
-              var  array=[];             
-              data.forEach((doc) => {
-                    var item = doc.val()
-                    item.key = doc.key  
-                    array.push(item)
-             });
-             this.contador=array.length+1;
-         });
-       }, 
-       Confirmacion(){
+      },     
+      Confirmacion(){
           this.$swal({
               position: 'top-end',
               icon: 'success',
-              title: 'Registrado',
+              title: 'Modificado',
               text:'texto',
               showConfirmButton: false,
               timer: 3000

@@ -72,69 +72,23 @@ export default {
      
     },
     methods: {
-      RegistrarMetodologia(){         
+      RegistrarMetodologia(){
           let nombre=this.nombre;         
           const obj={nombre};
-           axios.post('Backphp/ProcesoMetodologia.php/',obj).then(response => {                       
+           axios.post('Backphp/ApiWeb/Metodologia.php/',obj).then(response => {                       
               console.log(response);
-               this.Confirmacion();
-              this.ListarMetodologia();
-            //  if(response.status=="200"){
-               
-               
-
-              //}
+              this.Confirmacion();
+              this.ListarMetodologia();           
           }).catch(function (error) {
               console.log(error);
           }) .finally(() => {
               
           })
-      },
+      },   
       ListarMetodologia(){
           this.$emit('Listar-Emit');
-      },
-      Registrar(){
-          let codigo="123";
-          let nombre="juanchos";
-          let contra="123123123123";
-          let estado="1";
-          const obj={codigo,nombre,contra,estado};
-           axios.post('Backphp/',obj).then(response => {
-                       
-                     console.log(response);
-                  }).catch(function (error) {
-                      console.log(error);
-                  }) .finally(() => {
-                     
-                  })
-      },
-        Guardar(){         
-              let newData = firebase.database().ref('Metodologia/').push();
-              newData.set({                 
-                  codigo: this.codigo,
-                  nombre: this.nombre,
-                  fecha: Date(),
-                  //key:key
-              });
-            
-         },
-         Guardar2(){
-            let me = this;
-             axios.post('insertar_usuario.php?', this.usu,{ headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-                "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
-              }}).then(response => {
-                       
-                     console.log(response);
-                  }).catch(function (error) {
-                      console.log(error);
-                  }) .finally(() => {
-                     
-                  })
-         },
-     
-         makeToast(msg,color) {
+      },     
+      makeToast(msg,color) {
             this.toastCount++
             this.$bvToast.toast(msg, {
               title: 'Mensaje Cliente',
@@ -142,22 +96,10 @@ export default {
               autoHideDelay: 3000,
               appendToast: false
             })
-          },
-                    
-          CerrarModal(){              
+       },
+        CerrarModal(){              
               this.$emit('CerrarModal');
-          },
-          CantidadMetodologia(){  
-            firebase.database().ref('Metodologia').on('value', (data) => {   
-              var  array=[];             
-              data.forEach((doc) => {
-                    var item = doc.val()
-                    item.key = doc.key  
-                    array.push(item)
-             });
-             this.contador=array.length+1;
-         });
-       }, 
+       },      
        Confirmacion(){
           this.$swal({
               position: 'top-end',

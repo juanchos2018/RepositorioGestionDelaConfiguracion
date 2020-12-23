@@ -80,8 +80,9 @@ export default {
         ListarElementos(){
              let me=this;
                   var elementos=[];
-                  axios.get('Backphp/ProcesoElemento.php/',).then(function(response){                      
-                  elementos=response.data;   
+                  axios.get('Backphp/ApiWeb/Elemento.php/').then(response => {  
+              //    axios.get('Backphp/ProcesoElemento.php/',).then(function(response){                      
+                  elementos=response.data.data;   
                   elementos.map(function(x){
                         me.elentosConfi.push({text: x.nombre,value:x.id_elemento});
                  });  
@@ -89,10 +90,11 @@ export default {
                   console.log(error);
            });       
         },
-        ListarFase(d){           
+        ListarFase(metodologiaId){           
          let me=this;        
          var fases=[];
-            axios.get('Backphp/ProcesoFase.php/?metodologiaId='+d).then(response => {               
+           axios.get('Backphp/ApiWeb/Fase.php/?metodologiaId='+metodologiaId).then(response => {  
+         //   axios.get('Backphp/ProcesoFase.php/?metodologiaId='+d).then(response => {               
                  fases= response.data;                              
                  fases.map(function(x){
                     me.fasesmetodologia.push({text: x.nombre_fase,value:x.id_fase});                      
@@ -106,8 +108,7 @@ export default {
                 let faseId=this.idfase;
                 let elementoId=this.id_elemento;                
                 const obj={faseId,elementoId};
-                axios.post('Backphp/ProcesoPlantilla.php/',obj).then(response => {
-                       
+                axios.post('Backphp/ApiWeb/PlantillaElemento.php/',obj).then(response => {                       
                   console.log(response);
                   this.Confirmacion();
                 }).catch(function (error) {

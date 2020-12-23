@@ -169,7 +169,8 @@ var router = new Router({
           name: 'tarealemento',
           component: TareaElemento,
           meta :{
-            Administrador :true,          
+            Administrador :true,     
+            Jefe:true      
           }
         },
         {

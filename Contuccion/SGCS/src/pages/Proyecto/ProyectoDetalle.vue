@@ -94,16 +94,7 @@
             <h4> No hay Nada</h4> 
           </template>
       </b-table>
-    <!-- <a-collapse accordion>
-       v-for="item in elementosConfi" :key="item.key"
-      <a-collapse-panel :header="item.nombre_elemento" @click="DatosElemento(item.nombre_elemento)">
-        <div class="float-right">
-           <b-button type="button"  class="m-1 p-2 px-4 btn-xs" @click="NuevaVersion" variant="primary" > 
-            <i class="fa fa-plus-circle"></i> Agregar Version
-          </b-button>
-        </div>     
-      </a-collapse-panel>  
-     </a-collapse>-->
+   
     </div>
    </b-card>
   </div>
@@ -193,8 +184,7 @@ export default {
   data() {
     return {
      animate: true,
-     fases:[],
- 
+     fases:[], 
      datatoslista: [
           {
             title: 'VErsion  1',
@@ -266,24 +256,18 @@ export default {
        },
        MostarFaseMetodolgiaProyecto(id){
           let me=this;
-          axios.get('Backphp/ProcesoProyecto.php/?id_proyecto='+id).then(response => {              
-                 me.fases = response.data;    
-             //    console.log(response.data);      
+          axios.get('Backphp/ApiWeb/Proyecto.php/?id_proyecto='+id).then(response => {              
+                 me.fases = response.data;                  
                   me.ElentosFaseProyecto(me.id_proyecto, me.fases[0].id_fase);                        
                }).catch(function (error) {
-                      console.log(error);
-                 //     this.current = current;
-                //    var code =this.fases[current].id_fase;
-                 //   this.nombre_fase =this.fases[current].nombre_fase;
-                
+                      console.log(error);  
               }) .finally(() => {
            })
        },
        ElentosFaseProyecto(id_proyecto,id_fase){
            let me=this;
-          axios.get('Backphp/ProcesoProyecto.php/?parametro1='+id_proyecto+'&id_fase='+id_fase).then(response => {              
-               me.elementosConfi = response.data;    
-          //     console.log(response.data);                              
+          axios.get('Backphp/ApiWeb/Proyecto.php/?parametro1='+id_proyecto+'&id_fase='+id_fase).then(response => {              
+               me.elementosConfi = response.data;  
                }).catch(function (error) {
                       console.log(error);
               }) .finally(() => {
@@ -296,38 +280,19 @@ export default {
          this.nombre_fase =this.fases[current].nombre_fase;
          this.ElentosFaseProyecto(this.id_proyecto,code);
       //   console.log( this.nombre_fase);
-       },
-       MostrarPrimero(){
-
-       },
+       },      
        DatosProyecto(id){
          let me=this;
-          axios.get('Backphp/ProcesoProyecto.php/?id_proyect='+id).then(response => {              
-                // me.fases = response.data;
-                 
+          axios.get('Backphp/ApiWeb/Proyecto.php/?id_proyect='+id).then(response => {    
                   me.nombreProyecto=response.data[0].nombre_proyecto;  
                   me.fecha_inicio=response.data[0].fecha_inicio;
                   me.fecha_termino=response.data[0].fecha_termino;
-                  me.metodologia=response.data[0].nombre_metodologia;   
-               //   me.ElementosProyecto(id);    
-
+                  me.metodologia=response.data[0].nombre_metodologia;     
                }).catch(function (error) {
                       console.log(error);
               }) .finally(() => {
            })
-       },
-       ElementosProyecto(id_proyecto){
-        //esyo ya no va we
-           let me=this;
-          axios.get('Backphp/ProcesoCronogramaElemento.php/?id_proyecto='+id_proyecto).then(response => {              
-                  me.elementosConfi = response.data;
-                //  console.log(response.data);
-                          
-               }).catch(function (error) {
-                      console.log(error);
-              }) .finally(() => {
-           })
-       },
+       },     
        NuevaVersion(idcromograma,nombre){
         this.idcronogramamalemento=idcromograma;      
         this.nombre_elemento=nombre; 
@@ -342,8 +307,7 @@ export default {
 
         const obj={elemntoconfiguracionID,version,fecha_inicio,fecha_termino,miembroresponsableID};
         axios.post('Backphp/ProcesoVersion.php/',obj).then(response => {                       
-           //   console.log(response);
-              
+                        
               this.Confirmacion();             
            
           }).catch(function (error) {
@@ -384,7 +348,7 @@ export default {
        ListaMiembros(id){
          let me=this;
          var previa=[];
-         axios.get('Backphp/ProcesoMiembro.php/?id_proyecto='+id).then(response => {  
+         axios.get('Backphp/ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {  
                   previa=response.data;  
                   previa.map(function(x){
                   me.miembros.push({text: x.nombre,value:x.id});

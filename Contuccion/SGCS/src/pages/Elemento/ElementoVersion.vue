@@ -76,8 +76,7 @@ export default {
         required: true,
         default: false
       },idlemennto: [String, String],
-        idmetodo: [String, String]
-      
+        idmetodo: [String, String]      
     },
     data() {
         return {

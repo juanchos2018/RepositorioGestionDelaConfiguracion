@@ -63,7 +63,6 @@
         </a>
       </div>
     </div>
-
   <a-modal v-model="visible" title="Modal" ok-text="Aceptar" cancel-text="Cancelar" >
       <label for="">Nombre</label>
       <b-input v-model="nombre_fase"> </b-input> 
@@ -159,12 +158,10 @@ export default {
       this.metodologiaId=metodologiaId;
       this.visible = true;
      
-   },  
-   
-    hideModal() {
+   },     
+   hideModal() {
       this.visible = false;
-      this.EditarFase();
-
+      //this.EditarFase();
     },
     goNext (skipFunction) {
       if (!skipFunction && typeof this.onNext == 'function'){
@@ -202,25 +199,28 @@ export default {
           let nombre_fase=this.nombre_fase;      
           let id_fase=this.id_fase;    
           const obj={id_fase,nombre_fase};
-           axios.put('Backphp/ProcesoFase.php/',obj).then(response => {                       
-           console.log(response);
-           this.ListarFases()
-          // this.ListarMetodologia(this.idmetodologia)
-          // this.ListarMetodologia();
-            //  if(response.status=="200"){             
-               
-
-              //}
+           axios.put('Backphp/ApiWeb/Fase.php/',obj).then(response => {                     
+        
+           this.Confirmacion();
+           this.ListarFases()         
           }).catch(function (error) {
               console.log(error);
-          }) .finally(() => {
-              
-          })
+          }) .finally(() => {              
+       })
     },
-    ListarFases(){
-        // this.$emit('Listar-Fase',this.metodologiaId);
+    ListarFases(){       
           this.$eventHub.$emit('Listar-Fase',this.metodologiaId)
     },
+    Confirmacion(){
+          this.$swal({
+              position: 'top-end',
+              icon: 'success',
+              title: 'Modificado',
+              text:'texto',
+              showConfirmButton: false,
+              timer: 3000
+          })
+      },
     handleButtonClick(skipFunction){
        // this.currentStep=item
      //  RecibeStep

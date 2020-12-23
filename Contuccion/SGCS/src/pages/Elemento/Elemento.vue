@@ -64,8 +64,8 @@
      </div>
     </div>
     
-   <elemento-nuevo @CerrarModal="CerrarModal" :DialogoElemento="DialogoElemento"  v-on:ListarElemento-Emit="ListarElemento"></elemento-nuevo>
-   <elemento-editar @CerrarModal="CerrarModal" :DialogoModificar="DialogoModificar" v-bind:id_elemento="id_elemento"  v-on:ListarElemento-Emit="ListarElemento"></elemento-editar>
+   <elemento-nuevo @CerrarModal="CerrarModal" :DialogoElemento="DialogoElemento"  v-on:ListarElemento-Emit="ListaElemento"></elemento-nuevo>
+   <elemento-editar @CerrarModal="CerrarModal" :DialogoModificar="DialogoModificar" v-bind:id_elemento="id_elemento"  v-on:ListarElemento-Emit="ListaElemento"></elemento-editar>
    
     </div>
 </template>
@@ -95,7 +95,7 @@ export default {
             }
         },
         created(){
-            this. ListarElemento();
+            this.ListaElemento();
         },
         methods:{
                CerrarModal() {
@@ -106,18 +106,18 @@ export default {
                      this.id_elemento=id;   
                      this.DialogoModificar = true;         
                },
-               ListarElemento(){
+               ListaElemento(){
                     let me=this;
-                    axios.get('Backphp/ProcesoElemento.php/').then(response => {   
-                        console.log(response.data);                         
-                      me.items = response.data;                      
+                    axios.get('Backphp/ApiWeb/Elemento.php/').then(response => {   
+                                      
+                      me.items = response.data.data;                      
                   }).catch(function (error) {
                       console.log(error);
-                  }) .finally(() => {
-                     
-                   })
-                },
-                MensajeEliminar(){
+                  }) .finally(() => {                     
+                 })
+
+               },            
+               MensajeEliminar(){
                     this.$swal.fire({
                         title: 'Elminar ?',
                         text: "Ya no podras revertir!",
@@ -149,7 +149,7 @@ export default {
             filteredList() {
                 return this.items.filter(post => {
                 return post.nombre.toLowerCase().includes(this.search.toLowerCase())
-               })
+            })
       }
     },
 }

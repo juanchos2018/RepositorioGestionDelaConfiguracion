@@ -109,13 +109,13 @@ export default {
            let  correo =this.$refs.email.value;
            let  password =this.$refs.password.value;
            const obj={correo}
-            axios.get('Backphp/ProcesoLogin.php/?correo='+correo+'&password='+password).then(response => {   
-                // console.log(response.data);  
-            //  this.$router.push({ name: 'AnalyticsPage' })   
+            axios.get('Backphp/ApiWeb/Login.php/?correo='+correo+'&password='+password).then(response => {   
+               
                this.$session.start()
                 this.$store.dispatch("guardarDatos",response.data[0].nombre)      
                 this.$store.dispatch("guardarTipo",response.data[0].id_tipo)    
-                this.$store.dispatch("guardarTipoUsuario",response.data[0].tiposusuario)         
+                this.$store.dispatch("guardarTipoUsuario",response.data[0].tiposusuario)    
+                this.$store.dispatch("guardarIdUsuario",response.data[0].id_usuario)      
                  window.localStorage.setItem('authenticated', true);
                  this.$router.push('/app/inicio').catch(err => {         
                   if ( err.name !== 'NavigationDuplicated' && !err.message.includes('Avoided redundant navigation to current location')) {                     

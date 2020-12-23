@@ -8,7 +8,6 @@
   </div> <br>
   <h4> Fases de la Metodologia  <strong>  {{nombremetodologia}}</strong>  </h4> 
   <br>
-
   <wizard
       ref="wizard"      
       :steps="items"         
@@ -42,7 +41,7 @@
         </div>       
     </wizard> 
   <fase-nueva @CerrarModal="CerrarModal" :DialogoFase="DialogoFase"  v-bind:idmetodologia="datos.id_metodologia" v-on:Listar-Fase="ListarFasePorMetodologia"></fase-nueva>
-   <fases-elemento @CerrarModal="CerrarModal"  :DialogoFaseElemento="DialogoFaseElemento" v-bind:idmetodologia="datos.id_metodologia" > </fases-elemento>
+  <fases-elemento @CerrarModal="CerrarModal" :DialogoFaseElemento="DialogoFaseElemento" v-bind:idmetodologia="datos.id_metodologia" > </fases-elemento>
     
    </div>
 
@@ -50,20 +49,18 @@
 
 <script>
 import axios from  'axios';
-import firebase from '@/firebase'
 import Wizard from './Wizard.vue';
 import { VStepper } from 'vue-stepper-component'
 import FaseNueva from './FaseNueva';
 import FasesElemento from './FasesElemento';
 import ElementoNuevo from '@/pages/Elemento/ElementoNuevo';
 export default {
-     components: { Wizard,VStepper,FaseNueva,FasesElemento },
+     components: { Wizard,FaseNueva,FasesElemento },
      
     data(){
         return{
             items:[],
-            nombremetodologia:'',
-            child:'-MKgGmEB0AVCJ0TR_zeX',
+            nombremetodologia:'',        
             current: 0,
             pagina:'page1',    
             detalle2:[],
@@ -73,15 +70,14 @@ export default {
                          { label:"Acciones", key: 'acciones', sortable: false },
                 ],
             datos:{
-                id_metodologia:"",
-                nombre:""               
+                 id_metodologia:"",
+                 nombre:""               
                  },
             DialogoFase:false,
             DialogoFaseElemento:false,         
         }
     },
-    created(){
-       // this.Listar();   
+    created(){   
       this.$eventHub.$on('Listar-Fase', this.ListarFasePorMetodologia);
     },
     mounted(){
@@ -105,14 +101,13 @@ export default {
             this.ListarFasePorMetodologia(val[0]);  
           }         
        },
-       ListarFasePorMetodologia(id){       
-        let me=this;
-         axios.get('Backphp/ProcesoFase.php/?metodologiaId='+id).then(response => {              
+       ListarFasePorMetodologia(metodologiaId){    
+         let me=this;
+         axios.get('Backphp/ApiWeb/Fase.php/?metodologiaId='+metodologiaId).then(response => {              
                  me.items = response.data;
-                 me.ListarElemtosFase(me.items[0].id_fase);                       
-           
+                 me.ListarElemtosFase(me.items[0].id_fase);   
                }).catch(function (error) {
-                      console.log(error);
+                    console.log(error);
               }) .finally(() => {
            })
        },
@@ -120,14 +115,14 @@ export default {
            this.DialogoFase = false;    
            this.DialogoFaseElemento = false;           
        },
-       ListarElemtosFase(id_fase){
+       ListarElemtosFase(faseId){
           let me=this;
-          axios.get('Backphp/ProcesoPlantilla.php/?id_fase='+id_fase).then(response => {                 
+          axios.get('Backphp/ApiWeb/PlantillaElemento.php/?faseId='+faseId).then(response => {                 
                  me.detalle2 = response.data;                
                }).catch(function (error) {
-                      console.log(error);
-              }) .finally(() => {
-           })
+                   console.log(error);
+             }) .finally(() => {
+         })
        },       
        alerta(){        
            this.$refs.popover.$emit('open')
@@ -151,9 +146,7 @@ export default {
             }
           })
        },
-       Remover(id){
-
-       },
+     
        nextClicked(currentPage) {
           //siguiente
        //  console.log('next clicked', currentPage)        

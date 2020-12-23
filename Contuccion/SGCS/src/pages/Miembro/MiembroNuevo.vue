@@ -4,9 +4,7 @@
 
      <form action="">
           <div class="form-row">                 
-          <b-form-group  label="Miembro:"  class="col-md-12">
-
-              
+          <b-form-group  label="Miembro:"  class="col-md-12">              
                <a-select     v-model="id_usuario" >              
                  <a-select-option v-for="d in usuarios" :key="d.value">
                   {{ d.text }}
@@ -57,8 +55,7 @@ export default {
           codigo:'',
           nombre:'',            
           isLoading:false,          
-          Show:this.DialogMiembro,
-         
+          Show:this.DialogMiembro,         
           usuarios:[],
           roles:[],
           id_rol:'',
@@ -71,9 +68,7 @@ export default {
         this.Show = this.DialogMiembro
       }
     },
-    created () {
-    //    this.CantidadMetodologia();
-      //  this.codigo=this.CodeMetodologia+""+ this.contador;
+    created() {    
           this.ListarUsuario();
           this.ListarRoles();
     },
@@ -85,12 +80,11 @@ export default {
           let usuario_miembroid=this.id_usuario;     
           let rolId=this.id_rol;     
           let proyectoId=this.id_proyecto;   
-
           const obj={usuario_miembroid:usuario_miembroid,rolId:rolId,proyectoId:proyectoId};
-           axios.post('Backphp/ProcesoMiembro.php/',obj).then(response => {                       
+           axios.post('Backphp/ApiWeb/Miembro.php/',obj).then(response => {                       
               console.log(response);
                this.Confirmacion();
-            //  this.ListarMetodologia();            
+                     
           }).catch(function (error) {
               console.log(error);
           }) .finally(() => {
@@ -103,8 +97,8 @@ export default {
       ListarUsuario(){
              let me=this;
                   var elementos=[];
-                  axios.get('Backphp/ProcesoUsuario.php/',).then(function(response){                      
-                  elementos=response.data;   
+                  axios.get('Backphp/ApiWeb/Usuario.php/',).then(function(response){                      
+                  elementos=response.data.data;   
                   console.log(response.data)
                   elementos.map(function(x){
                         me.usuarios.push({text: x.nombre,value:x.id_usuario});
@@ -116,39 +110,18 @@ export default {
        ListarRoles(){
              let me=this;
                   var elementos=[];
-                  axios.get('Backphp/ProcesoRol.php/',).then(function(response){                      
-                  elementos=response.data;   
+                  axios.get('Backphp/ApiWeb/Rol.php/',).then(function(response){                      
+                  elementos=response.data.data;   
                   elementos.map(function(x){
                         me.roles.push({text: x.nombre,value:x.id_rol});
                  });  
               }).catch(function(error){
                   console.log(error);
            });       
-       },  
-      Guardar(){         
-              let newData = firebase.database().ref('Metodologia/').push();
-              newData.set({                 
-                  codigo: this.codigo,
-                  nombre: this.nombre,
-                  fecha: Date(),
-                  //key:key
-              });
-            
-         },     
-         CerrarModal(){              
+       },         
+        CerrarModal(){              
               this.$emit('CerrarModal');
-          },
-         CantidadMetodologia(){  
-            firebase.database().ref('Metodologia').on('value', (data) => {   
-              var  array=[];             
-              data.forEach((doc) => {
-                    var item = doc.val()
-                    item.key = doc.key  
-                    array.push(item)
-             });
-             this.contador=array.length+1;
-         });
-       }, 
+        },       
        Confirmacion(){
           this.$swal({
               position: 'top-end',

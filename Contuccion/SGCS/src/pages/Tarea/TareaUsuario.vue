@@ -44,6 +44,7 @@ export default {
             
               DialogoTareaEditar:false,
               idtipousuario:'',
+              idusuario:'',
               proyectos:[],
         }
     },
@@ -52,13 +53,13 @@ export default {
     },
     mounted() {
      if(localStorage.idtipo) this.idtipousuario = localStorage.idtipo;
-       this.ListarPoryectos(this.idtipousuario);
-     // this.datosUsuario=decode(this.Token)     
-     // this.NombreUsuario=this.datosUsuario.Nombre;
+      if(localStorage.idtipo) this.idusuario = localStorage.id_usuario;
+       this.ListarPoryectos(this.idusuario);   
     },
     methods: {
         ListarPoryectos(idtipousuario){
               let me=this;
+              console.log(idtipousuario);
               axios.get('Backphp/ProcesoUsuario.php/?usuario_miembroid='+idtipousuario).then(response => {
                     
                       me.proyectos = response.data;     
@@ -72,8 +73,7 @@ export default {
              let me=this;
                   var elementos=[];
                   axios.get('Backphp/ProcesoUsuario.php/',).then(function(response){                      
-                  me.tareas=response.data;   
-                   
+                  me.tareas=response.data;                     
               }).catch(function(error){
                   console.log(error);
             });       

@@ -68,22 +68,19 @@ export default {
      
     },
     methods: {
-      RegistrarElemento(){         
-          let nombre=this.nombre;
-          let codigo_elemento=this.codigo;           
+      RegistrarElemento(){
+          let codigo_elemento=this.codigo;   
+          let nombre=this.nombre;                
           const obj={codigo_elemento,nombre};
-          axios.post('Backphp/ProcesoElemento.php/',obj).then(response => {                       
-              console.log(response);
-                this.ListarElemetos();
-               this.Confirmacion();
-             
-           
+          axios.post('Backphp/ApiWeb/Elemento.php/',obj).then(response => {    
+               this.ListarElemetos();
+               this.Confirmacion();      
           }).catch(function (error) {
               console.log(error);
           }) .finally(() => {
               
           })
-      },
+      },     
       ListarElemetos(){
         this.$emit('ListarElemento-Emit');
       },
@@ -92,18 +89,7 @@ export default {
       },
        CerrarModal(){              
               this.$emit('CerrarModal');
-       },
-       CantidadMetodologia(){  
-            firebase.database().ref('Metodologia').on('value', (data) => {   
-              var  array=[];             
-              data.forEach((doc) => {
-                    var item = doc.val()
-                    item.key = doc.key  
-                    array.push(item)
-             });
-             this.contador=array.length+1;
-         });
-       }, 
+       },       
        Confirmacion(){
           this.$swal({
               position: 'top-end',
