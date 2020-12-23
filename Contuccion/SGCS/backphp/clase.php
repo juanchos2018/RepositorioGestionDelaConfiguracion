@@ -4,5 +4,4 @@
 class Foo{
  public      $labels = array();
    
-
 }

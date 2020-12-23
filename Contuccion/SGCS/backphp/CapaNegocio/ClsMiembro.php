@@ -1,7 +1,25 @@
 <?php
-
+//require_once('../CapaDatos/ClsLibre.php');
+require_once('../CapaDatos/conectar.php');
 class ClsMiembro{
 
+    public $id;
+    public $usuario_miembroid; 
+	public $rolId; 
+    public $proyectoId;  
+   
+ 
+    public function Agregar($usuario_miembroid,$rolId,$proyectoId){      
+        $conexion=new Conexion();
+        $db=$conexion->getConexion();
+        $sql="INSERT INTO  miembroproyecto (usuario_miembroid,rolId,proyectoId) VALUES (:usuario_miembroid,:rolId,:proyectoId)";
+        $consulta=$db->prepare($sql);         
+        $consulta->bindParam(':usuario_miembroid',$usuario_miembroid); 
+        $consulta->bindParam(':rolId',$rolId); 
+        $consulta->bindParam(':proyectoId',$proyectoId); 
+        $consulta->execute();      
+        return '{"msg":"Agreado Miembro"}';
+    }
     public function getMiembro($miemdro_id){
         $vector=array();
         $conexion=new Conexion();
@@ -58,9 +76,9 @@ class ClsMiembro{
         $sql="SELECT  usu.nombre ,t.id_tarea,t.verionID, t.fecha_inicio,t.fecha_termino,t.descripcion,t.porcentajeavance,t.urlevidencia,t.estado FROM tarea_ecs AS t
         inner JOIN  miembroproyecto AS mi 
         ON t.miembroresponsableID =mi.id
-       INNER JOIN usuario AS  usu
-       on usu.id_usuario=mi.usuario_miembroid
-       WHERE t.miembroresponsableID =".$miembroresponsableID;
+        INNER JOIN usuario AS  usu
+        on usu.id_usuario=mi.usuario_miembroid
+        WHERE t.miembroresponsableID =".$miembroresponsableID;
         $consulta=$db->prepare($sql);
         $consulta->execute();
         while($fila=$consulta->fetch()){
@@ -76,18 +94,18 @@ class ClsMiembro{
         return $vector;
     }
 
-// const obj={usuario_miembroid:usuario_miembroid,rolId:rolId,proyectoId:proyectoId};
-    public function setMiembro($usuario_miembroid,$rolId,$proyectoId){
+    public function EditarRol($id, $rolId){
       
         $conexion=new Conexion();
-        $db=$conexion->getConexion();
-        $sql="INSERT INTO  miembroproyecto (usuario_miembroid,rolId,proyectoId) VALUES (:usuario_miembroid,:rolId,:proyectoId)";
-        $consulta=$db->prepare($sql);         
-        $consulta->bindParam(':usuario_miembroid',$usuario_miembroid); 
-        $consulta->bindParam(':rolId',$rolId); 
-        $consulta->bindParam(':proyectoId',$proyectoId); 
+        $db=$conexion->getConexion();     
+        $sql = "UPDATE miembroproyecto SET rolId=:rolId WHERE id=:id";
+        $consulta=$db->prepare($sql); 
+        $consulta->bindParam(':id',$id);      
+        $consulta->bindParam(':rolId',$rolId);   
+           
         $consulta->execute();      
-        return '{"msg":"Agreado Miembro"}';
-    }
+        return '{"msg":"editado Fase"}';
+  }
+
 
 }

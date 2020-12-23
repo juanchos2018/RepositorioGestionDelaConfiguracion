@@ -33,9 +33,30 @@ class ClsUsuario{
         $consulta->bindParam(':password',$password);
         $consulta->bindParam(':tiposusuarioId',$tiposusuarioId);      
         $consulta->execute();
-        return '{"msg":"Agreado usuario"}';
-      
-			
+        return '{"msg":"Agreado usuario"}';    
     }
 
+    public function get_proyectosusuario($usuario_miembroid){
+      
+        $vector=array();
+        $conexion=new Conexion();
+        $db=$conexion->getConexion();
+        $sql="SELECT  mi.id ,ro.nombre,pro.id_proyecto, pro.nombre_proyecto FROM miembroproyecto AS mi 
+        INNER JOIN rol AS ro
+        ON ro.id_rol =mi.rolId 
+        INNER JOIN proyecto AS pro
+        ON mi.proyectoId=pro.id_proyecto
+        WHERE mi.usuario_miembroid=".$usuario_miembroid;
+        $consulta=$db->prepare($sql);
+        $consulta->execute();
+        while($fila=$consulta->fetch()){
+              $vector[]=array(
+                "id"=>$fila['id'],
+                "nombre"=>$fila['nombre'],
+                "id_proyecto"=>$fila['id_proyecto'],
+                "nombre_proyecto"=>$fila['nombre_proyecto'],
+                );           
+        }
+        return $vector;
+    }
 }

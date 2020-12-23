@@ -21,12 +21,13 @@ if($method=="GET"){
         echo $json;
     }
 }
-if ($method=="POST"){
+if ($method=="POST"){    
     $json=null;
     $data=json_decode(file_get_contents("php://input"),true);  
+    $api=new ClsElemento();
     $codigo_elemento=$data['codigo_elemento'];    
     $nombre=$data['nombre'];     
-    $api=new ClsElemento();
+   
     $json=$api->setElemento($codigo_elemento,$nombre);
     echo $json;
 }   

@@ -2,6 +2,9 @@
 
 class ClsElemento{
 
+    public $codigo_elemento;
+    public $nombre;
+    
     public function getElemento(){
         $vector=array();
         $conexion=new Conexion();

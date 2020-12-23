@@ -13,6 +13,13 @@ if($method=="GET"){
         $json=json_encode($obj);
         echo $json;
     }
+    if(!empty($_GET['usuario_miembroid'])){
+        $id=$_GET['usuario_miembroid'];
+        $api=new ClsUsuario();
+        $obj=$api->get_proyectosusuario($id);
+        $json=json_encode($obj);
+        echo $json;
+    }
     else{
         $vector=array();
         $api=new ClsUsuario();

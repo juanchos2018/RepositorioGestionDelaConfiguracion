@@ -1,8 +1,6 @@
 <?php
-
-require_once('conectar.php');
-require_once('Miembro.php');
-require_once('cors.php');
+require_once('../CapaNegocio/ClsMiembro.php');
+require_once('../includes/cors.php');
 $method=$_SERVER['REQUEST_METHOD'];
 
 if($method=="GET"){
@@ -28,13 +26,7 @@ if($method=="GET"){
         $json=json_encode($obj);
         echo $json;
     }
-    else{
-        $vector=array();
-        $api=new ClsMiembro();
-        $vector=$api->getProyectos();
-        $json=json_encode($vector);
-        echo $json;
-    }
+    
 }
 if ($method=="POST"){
     $json=null;
@@ -43,6 +35,17 @@ if ($method=="POST"){
     $rolId=$data['rolId'];   
     $proyectoId=$data['proyectoId'];  
     $api=new ClsMiembro();
-    $json=$api->setMiembro($usuario_miembroid,$rolId,$proyectoId);
+    $json=$api->Agregar($usuario_miembroid,$rolId,$proyectoId);
+    echo $json;
+}   
+
+if ($method=="PUT"){
+    $json=null;
+    $data=json_decode(file_get_contents("php://input"),true);  
+    $id=$data['id'];    
+    $rolId=$data['rolId'];   
+  
+    $api=new ClsMiembro();
+    $json=$api->EditarRol($id,$rolId);
     echo $json;
 }   
