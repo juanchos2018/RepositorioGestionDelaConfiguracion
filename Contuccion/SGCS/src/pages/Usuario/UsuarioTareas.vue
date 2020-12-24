@@ -44,6 +44,20 @@
         </div>
       
           </b-card>
+
+          <div>
+                <div class="timeline-wrapper"> 
+                <ul class="StepProgress"> 
+                <li  v-for="schedule in timeline" :key="schedule.key"  class="StepProgress-item"  >
+                  <div class="bold time"> {{schedule.fecha}}   </div> 
+                  <b-card class="mb-2"  style="max-width: 20rem; margin-left:55px">  
+                  <div style="margin: 0 0 0 30px;" class="bold">{{schedule.nombre}}</div>
+                  <div style="margin: 0 0 0 30px">{{schedule.descripcion}}</div>
+                  </b-card>
+                </li>
+              </ul>
+            </div>   
+          </div>
  
       <!--<div class="timeline-wrapper"> 
         <ul class="StepProgress"> 
@@ -102,7 +116,8 @@ export default {
             marginBottom: '10px',
             boxShadow: '0px -1px 0 0 #e8e8e8 inset',
             tareas:[],
-            tareasAcabadas:[]
+            tareasAcabadas:[],
+              timeline:[],
             
           },   
         
@@ -116,12 +131,21 @@ export default {
       },
       methods: {
          GetDatos(){
-            var item = this.$route.params.id_proyecto
-              if(item){        
-                  this.MostarFaseMetodolgiaProyecto(item);  
-                
-              }   
-          },
+         var item = this.$route.params.id_tarea
+          if(item){     
+              this.ListarTimliene(item);  
+          }         
+       },
+           ListarTimliene(id_tarea){
+           let me=this;
+            axios.get('Backphp/ApiWeb/Timeline.php/?id_tarea='+id_tarea).then(response => {              
+                 me.timeline = response.data.data;    
+                 console.log(response.data)            
+               }).catch(function (error) {
+                    console.log(error);
+              }) .finally(() => {
+           })
+         },
            MostarFaseMetodolgiaProyecto(id){
               let me=this;
               axios.get('Backphp/ProcesoProyecto.php/?id_proyecto='+id).then(response => {              
@@ -157,7 +181,7 @@ export default {
                           var item = doc.val()
                           item.key = doc.key  
                           this.tareas.push(item)
-                        //  vm.schedules.push(Object.assign({}, obj))
+                     //    vm.schedules.push(Object.assign({}, obj))
                   });
               });
            },  

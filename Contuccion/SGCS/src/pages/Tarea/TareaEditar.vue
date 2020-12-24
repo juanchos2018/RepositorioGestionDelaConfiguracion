@@ -7,14 +7,13 @@
                <b-input                  
                   aria-describedby="input-live-help input-live-feedback"
                   class="p-2 px-4 btn-xs "
-                 v-model="nombre_tarea">
+                 v-model="descripcion">
                </b-input>
              </b-form-group>                
-          </div>         
-
+          </div>  
             <div class="form-row">                 
                <b-form-group  label="Porcentaje Avance:"  class="col-md-12">            
-                  <b-form-input type="range" min="0" max="100" v-model="rango"></b-form-input>
+               <b-form-input type="range" min="0" max="100" v-model="rango" @change="addNumber" ></b-form-input>
                 {{rango}}            
              </b-form-group>                
           </div>
@@ -25,15 +24,16 @@
                           required          
                           v-model="urlevidencia" >
                         </b-form-input>
-                   </b-form-group>                 
+                   </b-form-group>     
+                            
           </div>            
          <hr>
         <div class="float-right" >              
           <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
-          <b-button type="button"   variant="primary"  class="p-2 px-4 btn-xs">
+          <b-button type="button"   variant="primary"  @click="RegistrarAvance" class="p-2 px-4 btn-xs">
               <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
              <span v-show="!isLoading"> Registra Avance</span>
-            </b-button>
+            </b-button>           
         </div>
      </form>    
   </b-modal>
@@ -42,6 +42,8 @@
 <script>
 
 import axios from  'axios';
+import moment from 'moment'
+
 export default {
     name: 'tarea-editar',  
     props:{
@@ -49,7 +51,7 @@ export default {
         type: Boolean,
         required: true,
         default: false
-      }
+      },id_tarea: [String, String],descripcion: [String, String] ,porcentaje:{type:Number},id_responsable:[String, String] 
       
     },
     data() {
@@ -60,21 +62,28 @@ export default {
           nombre:'',            
           isLoading:false,          
           Show:this.DialogoTareaEditar,
-          id_miembro:'',
-          nombre_tarea:'',
+          id_miembro:'',       
           fecha_inicio:'',
           fecha_termino:'',
           miembroreponsableID:'',
           urlevidencia:'',
-          rango:'',
-         // miembros:[],
+          rango:this.porcentaje, 
+          fecha_actual:moment().format('DD/MM/YYYY'),
+          hora_actual:moment().format('HH:mm:ss'),
+          estado_tarea:'',
           
         }
     },
+    mounted: function () {
+  //    this.rango=this.porcentaje;
+     },
     watch: {
       DialogoTareaEditar(){
         this.Show = this.DialogoTareaEditar
-      }
+      },   
+      porcentaje(){
+        this.rango = this.porcentaje;
+      },  
     },
     created () {    
          
@@ -83,33 +92,51 @@ export default {
      
     },
     methods: {
-            RegistrarTarea(){         
-                let verionID=this.id_version;
-                let miembroresponsableID=this.id_miembro;    
-                let fecha_inicio=this.fecha_inicio;
-                let fecha_termino=this.fecha_termino;  
-                let descripcion=this.nombre_tarea;
-                let porcentajeavance="0";   
-                let urlevidencia="nulo";     
-                let estado="Nuevo"; 
-
-                const obj={verionID,miembroresponsableID,fecha_inicio,fecha_termino,descripcion,porcentajeavance,urlevidencia,estado};
-            //    console.log(obj)
-                 axios.post('Backphp/ProcesoTarea.php/',obj).then(response => {                       
-                    console.log(response);
-                   // this.ListarElemetos();
-                    this.Confirmacion();                    
-                
-                }).catch(function (error) {
-                    console.log(error);
-                }) .finally(() => {
-                    
+            addNumber() {
+              let myNumber = this.rango;       
+              this.$emit("update-number", myNumber);
+            },
+            RegistrarAvance(){
+                 var estadota='';
+                  let id_tarea=this.id_tarea;
+                  let urlevidencia=this.urlevidencia;
+                  let porcentajeavance=this.rango;    
+                  if(this.rango==100){
+                      estadota="Terminado"
+                  }else{
+                      estadota="Proceso";
+                  }
+                  let estado=estadota;          
+                  const obj={id_tarea,urlevidencia,porcentajeavance,estado};
+                  axios.put('Backphp/ApiWeb/Tarea.php/',obj).then(response => {     
+                 
+                      this.Confirmacion();
+                       this.ListarTareas(this.id_responsable); 
+                      this.RegistrarTimeline(estadota);
+                  }).catch(function (error) {
+                      console.log(error);
+                  }) .finally(() => {              
                 })
-            },
-            ListarElemetos(){
-                this.$emit('ListarElemento-Emit');
-            },
-            
+            },     
+            RegistrarTimeline(estadota){
+                  let miembroresponsableID=this.id_responsable;
+                  let fecha=this.fecha_actual;
+                  let hora=this.hora_actual;    
+                  let estado=estadota;   
+                  let id_tarea=this.id_tarea;       
+                  const obj={miembroresponsableID,fecha,hora,estado,id_tarea};
+                   axios.post('Backphp/ApiWeb/Timeline.php/',obj).then(response => {    
+                           console.log(response.data)               
+                     }).catch(function (error) {
+                      console.log(error);
+                  }) .finally(() => {              
+                })
+            },      
+           
+            ListarTareas(id){
+           
+                this.$emit('ListarTareas-Emit',id);
+            },            
             CerrarModal(){              
                  this.$emit('CerrarModal');
             },

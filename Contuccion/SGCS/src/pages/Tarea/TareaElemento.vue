@@ -28,7 +28,7 @@
                 <b-tab title="Tareas" active>
                     <div class="float-right">
                         <b-button @click="AbrirModal" variant="primary"  class="p-2 px-4 btn-xs"> Agregar Tarea </b-button>
-                    </div>
+                    </div> <br> <br>
                <div class="row" >             
                     <div class="col-4" v-for="item in tareasversion" :key="item.key">                
                         <b-card no-body class="overflow-hidden"  footer-tag="footer">
@@ -44,22 +44,23 @@
                                 <b-card-body >                   
                                 <b-card-title> <h5> {{item.descripcion}}</h5> </b-card-title>                    
                                 <b-card-text>
-                                texto
+                                   <a-progress :percent="parseInt(item.porcentajeavance)" /> 
+
+                                   <h5>Responsable: {{item.nombre}}</h5>
                                 </b-card-text>                
                                 </b-card-body>                
-                            </b-col>
-                            </b-row>            
-                                <template #footer  footer-class="myDiv">
+                            </b-col>      
+                             </b-row>      
+                                  <template #footer  footer-class="myDiv">
                                     <div  style="background-color: white; float:right;">
-                                    <b-button variant="success" v-b-tooltip.hover title="Editar" > <b-icon icon="pencil-square" animation="fade" font-scale="1" ></b-icon> </b-button>
-                                   
+                                    <b-button variant="success" v-b-tooltip.hover title="Detalle"  @click="DetalleTarea(item.id_tarea)"> <b-icon icon="card-list" animation="fade" font-scale="1" ></b-icon> </b-button>
+                                  
                                     </div>                                          
                                 </template>
                         </b-card>
                         <br>
                     </div>
-                    </div>
-                                
+                    </div>                                
                 </b-tab>
                 <b-tab title="Second">
                     <p>I'm the second tab</p>
@@ -69,6 +70,8 @@
        </div>
        <!--Modal -->
         <tarea-nueva @CerrarModal="CerrarModal" :DialogoTarea="DialogoTarea" v-bind:miembros="miembros"  v-bind:id_version="id_version" ></tarea-nueva>
+
+      
    
     </div>
 </template>
@@ -76,9 +79,10 @@
 <script>
 import axios from  'axios';
 import TareaNueva from './TareaNueva';
+
 export default {
     name: 'tarea-elemento',
-    components: {TareaNueva  },
+    components: {TareaNueva },
     data(){
       return{
           nombre_proyecto:'',
@@ -90,6 +94,7 @@ export default {
           miembros:[],
           tareasversion:[],
           DialogoTarea:false,
+          DialogoDetalleTarea:false,
       }
     },
     created () {
@@ -111,36 +116,36 @@ export default {
                     this.id_miembro=val[3]
                     this.nombre_proyecto=val[4]
                     this.ListaMiembros(val[5]);
-                    this.ListarTareasVersion(val[2]);
-
-                
+                    this.ListarTareasVersion(val[2]);                
                 }
             },
             ListaMiembros(id){
                     let me=this;
                     var previa=[];
-                    axios.get('Backphp/ProcesoMiembro.php/?id_proyecto='+id).then(response => {  
+                     axios.get('Backphp/ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {  
+                    
                             previa=response.data;  
                             console.log(response.data)
                             previa.map(function(x){
-                            me.miembros.push({text: x.nombre,value:x.id});
+                              me.miembros.push({text: x.nombre,value:x.id});
                             })
                             }).catch(function (error) {
                                 console.log(error);
-                        }) .finally(() => {
-                    })       
+                      }) .finally(() => {
+                  })       
             },
             ListarTareasVersion(id){
-                    let me=this;
-                   
-                    axios.get('Backphp/ProcesoTarea.php/?id_tarea='+id).then(response => {  
-                            me.tareasversion=response.data;  
-                           // console.log(response.data)
-                            
+                    let me=this;                   
+                    axios.get('Backphp/ApiWeb/Tarea.php/?id_tarea='+id).then(response => {  
+                           me.tareasversion=response.data;  
+                           console.log(response.data)                            
                             }).catch(function (error) {
-                                console.log(error);
-                        }) .finally(() => {
-                    }) 
+                               console.log(error);
+                     }) .finally(() => {
+                 }) 
+            },
+            DetalleTarea(id_tarea){
+                this.$router.push({name:"tareadetalle",params:{id_tarea} });
             },
             AbrirModal(){
                 this.DialogoTarea=true

@@ -67,9 +67,9 @@ export default {
        },
        ListaUsuarios(){
            let me=this;
-              axios.get('Backphp/ProcesoUsuario.php/').then(response => {
-                    
-                      me.items = response.data;                      
+              axios.get('Backphp/ApiWeb/Usuario.php/').then(response => {
+                     
+                      me.items = response.data.data;                      
                   }).catch(function (error) {
                       console.log(error);
                   }) .finally(() => {

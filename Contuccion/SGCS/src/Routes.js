@@ -24,6 +24,7 @@ import Elemento from '@/pages/Elemento/Elemento';
 import MiembroTareas from '@/pages/Miembro/MiembroTareas';
 import TareaElemento from '@/pages/Tarea/TareaElemento';
 import TareaElementoMiembro from '@/pages/Tarea/TareaElementoMiembro';
+import TareaDetalle from '@/pages/Tarea/TareaDetalle';
 import TareaUsuario from '@/pages/Tarea/TareaUsuario';
 import store from './store/index'
 
@@ -189,7 +190,15 @@ var router = new Router({
             Miembro :true,          
           }
         },
-       
+        {
+          path: 'tareadetalle:id_tarea',
+          name: 'tareadetalle',
+          component: TareaDetalle,
+          meta :{
+            Administrador :true,     
+            Jefe:true           
+          }
+        },
        
       ],
     },

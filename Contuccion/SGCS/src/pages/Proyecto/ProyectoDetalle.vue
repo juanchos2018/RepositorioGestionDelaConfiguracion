@@ -1,14 +1,6 @@
 <template>
   <div  class="bg-light">
-    
-  <!--  <step-progress-bar
-      ref="stepProgressBarCompRef"
-       v-bind:totalSteps="stepProgressBarParams.totalSteps"
-      v-bind:initCurrentStep="stepProgressBarParams.currentStep"
-      v-bind:stepTitles="stepProgressBarParams.stepTitles"    
-    @click="ver"
-    />-->
-   <b-card>
+    <b-card>
      <div class="container">
         <b-progress :value="50" variant="info" striped :animated="animate" class="mt-2"></b-progress>
         <div class="row">
@@ -76,7 +68,9 @@
                     </div>
                    <div style="  display: flex;align-items: center;">
                      <b-icon icon="play-fill"></b-icon>  <h5 style="margin-left:5px">Version {{ item.version }}</h5>
+                      <h5 style="margin-left:20px">{{ item.nombre }}</h5>
                   </div>
+                  
                   </a-card>
                 </a-list-item>            
               </a-list>                   
@@ -171,7 +165,7 @@
 <script>
 import Widget from '@/components/Widget/Widget';
 import moment from 'moment'
-import firebase from '@/firebase'
+
 import StepProgressBar from './StepProgressBarComponent.vue'
 import axios from  'axios';
 
@@ -257,8 +251,9 @@ export default {
        MostarFaseMetodolgiaProyecto(id){
           let me=this;
           axios.get('Backphp/ApiWeb/Proyecto.php/?id_proyecto='+id).then(response => {              
-                 me.fases = response.data;                  
-                  me.ElentosFaseProyecto(me.id_proyecto, me.fases[0].id_fase);                        
+                  me.fases = response.data;                  
+                  me.ElentosFaseProyecto(me.id_proyecto, me.fases[0].id_fase);     
+                  me.nombre_fase =me.fases[0].nombre_fase;                   
                }).catch(function (error) {
                       console.log(error);  
               }) .finally(() => {
@@ -294,6 +289,7 @@ export default {
            })
        },     
        NuevaVersion(idcromograma,nombre){
+         console.log(idcromograma,nombre)
         this.idcronogramamalemento=idcromograma;      
         this.nombre_elemento=nombre; 
         this.DialogoElementoVersion=true;
@@ -306,8 +302,8 @@ export default {
          let miembroresponsableID=this.id_miembro;     
 
         const obj={elemntoconfiguracionID,version,fecha_inicio,fecha_termino,miembroresponsableID};
-        axios.post('Backphp/ProcesoVersion.php/',obj).then(response => {                       
-                        
+        axios.post('Backphp/ApiWeb/Version.php/',obj).then(response => {                       
+                        console.log(response.data);
               this.Confirmacion();             
            
           }).catch(function (error) {

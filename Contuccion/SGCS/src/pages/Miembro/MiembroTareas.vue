@@ -90,7 +90,7 @@
 <script>
 import Widget from '@/components/Widget/Widget';
 import moment from 'moment'
-import firebase from '@/firebase'
+
 import axios from  'axios';
 import TareaDetalle from '@/pages/Tarea/TareaDetalle';
 function formatDate(date) {
@@ -154,7 +154,6 @@ export default {
                 var datos=item.split('-');   
                 var id_proye=datos[0];
                 var id_miembro=datos[1];
-
                 this.MostarFaseMetodolgiaProyecto(id_proye);  
                 this.DatosMiembro(id_miembro);
               }   
@@ -212,18 +211,7 @@ export default {
               obj.title = vm.title
               vm.schedules.push(Object.assign({}, obj))
           },
-          Listar(){
-              var vm = this
-                  firebase.database().ref('Tareas').on('value', (data) => {   
-                    this.tareas=[];             
-                        data.forEach((doc) => {
-                          var item = doc.val()
-                          item.key = doc.key  
-                          this.tareas.push(item)
-                        //  vm.schedules.push(Object.assign({}, obj))
-                  });
-              });
-           },  
+           
            onChange(current) {
               console.log('onChange:', current);
               this.current = current;

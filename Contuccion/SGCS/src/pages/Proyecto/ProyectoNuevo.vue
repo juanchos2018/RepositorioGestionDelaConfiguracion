@@ -133,7 +133,7 @@ export default {
            fecha_fin:'',
            metodologia:'',
            metodologiaId:'',
-           usuariojefeId:'1',
+           usuariojefeId:'',
            metodologias:[],
            plantillaelemento:[],
            listaFases:[],
@@ -178,6 +178,11 @@ export default {
     created(){
       this.ListarMetodologias();
       this.ListarTodasPlantillas();
+     
+    },
+    mounted() {
+    
+      if(localStorage.idtipo) this.usuariojefeId = localStorage.id_usuario;
      
     },
     methods:{      

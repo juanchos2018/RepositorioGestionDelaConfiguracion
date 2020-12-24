@@ -60,7 +60,7 @@ export default {
         ListarPoryectos(idtipousuario){
               let me=this;
               console.log(idtipousuario);
-              axios.get('Backphp/ProcesoUsuario.php/?usuario_miembroid='+idtipousuario).then(response => {
+              axios.get('Backphp/ApiWeb/Usuario.php/?usuario_miembroid='+idtipousuario).then(response => {
                     
                       me.proyectos = response.data;     
                       console.log(response.data)                 
@@ -69,15 +69,7 @@ export default {
                  }) .finally(() => {                     
             })
         },
-        ListarTareas(){
-             let me=this;
-                  var elementos=[];
-                  axios.get('Backphp/ProcesoUsuario.php/',).then(function(response){                      
-                  me.tareas=response.data;                     
-              }).catch(function(error){
-                  console.log(error);
-            });       
-        },
+       
         Ver(id_responsable){
              this.$router.push({name:"tareaselemento",params:{id_responsable} });
         },

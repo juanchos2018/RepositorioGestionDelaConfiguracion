@@ -1,13 +1,12 @@
 <template>
  <div>
-
     <div class="row">
      <div class="col-5" v-for="item in agrupados" :key="item.key">    
-          <Widget class="h-100 mb-6"  title="<h5> <span class='fw-semi-bold'>Proyecto </span></h5>"  close collapse customHeader>
+       <Widget class="h-100 mb-6"  title="<h5> <span class='fw-semi-bold'>Proyecto </span></h5>"  close collapse customHeader>
         <h5>{{item.nombre_proyecto}}</h5>
         <VueApexCharts width="350"  type="donut" :options="chartOptions"  :series="agrupados[item.index].series"  @dataPointSelection="dataPointSelectionHandler" @click="Detalle(item.id_proyecto)" ></VueApexCharts>
    
-      </Widget>
+       </Widget>
       
        </div>  
     </div>
@@ -213,13 +212,7 @@ export default {
            puntos2: [],
         };
       },
-      created(){
-      //  this.ListarPrueba();
-      //  this.ListaAgrupada();
-      //    this.ListarPlantilla();
-       //  this.ListarMetodologia();
-        // this.ListarFases();      
-     //   this. ListarProyecto();
+      created(){ 
 
      this.ListarListaTareas();
      this.ListaDeProyectos();
@@ -269,6 +262,36 @@ export default {
 
             },
        methods: {
+          ListarListaTareas(){
+                      let me=this;                     
+                        axios.get('Backphp/ApiWeb/Consulta.php/').then(response => {   
+                           me.ArrayOptions=response.data.data;                       
+                            //console.log(response.data)      
+                           }).catch(function (error) {
+                                console.log(error);
+                           }) .finally(() => {
+                              
+                   })
+           },
+           ListaDeProyectos(){
+                  let me=this;                 
+                  axios.get('Backphp/ApiWeb/Proyecto.php/').then(response => {                              
+                        me.agrupados = response.data;  
+                      //  console.log(response.data);
+                        for(var i=0;i< me.ArrayOptions.length ;i++){
+                            for  (var e=0;e< me.agrupados.length ;e++){
+                                if(me.ArrayOptions[i].id_proyecto==me.agrupados[e].id_proyecto){   
+                                      me.agrupados[e].series.push(parseInt(me.ArrayOptions[i].cantidad))
+                                    
+                                   } 
+                               }                    
+                           }  
+                        }).catch(function (error) {
+                            console.log(error);
+                      }) .finally(() => {
+                          
+                 })
+           },
           ListarProyecto(){
              let me=this;
              var  prueba="nada";
@@ -292,54 +315,21 @@ export default {
                      
             })
            },
-           ListarListaTareas(){
-                      let me=this;
-                     
-                        axios.get('Backphp/ProcesoConsulta.php/').then(response => {   
-                          me.ArrayOptions=response.data;                       
-                           // console.log(response.data)      
-                           }).catch(function (error) {
-                                console.log(error);
-                           }) .finally(() => {
-                              
-                      })
-           },
+          
            ListarPrueba(){
                        let me=this;
                        let result = []
                        let result2 = []
                        let result3 = []
                         axios.get('Backphp/ProcesoPrueba.php/').then(response => {   
-                          me.ArrayOptions=response.data;                       
+                          me.ArrayOptions=response.data.data;                       
                             console.log(response.data)      
                            }).catch(function (error) {
                                 console.log(error);
                            }) .finally(() => {
                               
-                      })
-            },
-           ListaDeProyectos(){
-                  let me=this;
-                 
-                  axios.get('Backphp/ProcesoProyecto.php/').then(response => {                              
-                        me.agrupados = response.data;  
-                        console.log(response.data);
-                        for(var i=0;i< me.ArrayOptions.length ;i++){
-                            for  (var e=0;e< me.agrupados.length ;e++){
-                                if(me.ArrayOptions[i].id_proyecto==me.agrupados[e].id_proyecto){   
-                                      me.agrupados[e].series.push(parseInt(me.ArrayOptions[i].cantidad))
-                                    //   me.agrupados[e].labels.push(me.ArrayOptions[i].estado_tarea)
-                                        // me.chartOptions.labels.push([me.ArrayOptions[i].estado_tarea]);
-                                     
-                                   } 
-                               }                    
-                           }  
-                        }).catch(function (error) {
-                            console.log(error);
-                      }) .finally(() => {
-                          
                  })
-           }, 
+            },          
            ListaAgrupada(){
                       let me=this;
                       var id="1";
@@ -403,8 +393,6 @@ export default {
               axios.get('Backphp/ProcesoMetodologia.php/').then(response => {
                         me.metodologias = response.data;
                      
-                          //  console.log(response.data);
-                          //  me.ListarFases();
                       }).catch(function (error) {
                             console.log(error);
                     }) .finally(() => {

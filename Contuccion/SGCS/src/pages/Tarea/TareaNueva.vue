@@ -16,7 +16,7 @@
                <b-input                  
                   aria-describedby="input-live-help input-live-feedback"
                   class="p-2 px-4 btn-xs "
-                 v-model="nombre_tarea">
+                 v-model="justificacion">
                </b-input>
              </b-form-group>                
           </div>
@@ -82,6 +82,7 @@ export default {
           Show:this.DialogoTarea,
           id_miembro:'',
           nombre_tarea:'',
+          justificacion:'',
           fecha_inicio:'',
           fecha_termino:'',
           miembroreponsableID:'',
@@ -112,10 +113,9 @@ export default {
                 let estado="Nuevo"; 
 
                 const obj={verionID,miembroresponsableID,fecha_inicio,fecha_termino,descripcion,porcentajeavance,urlevidencia,estado};
-            //    console.log(obj)
-                 axios.post('Backphp/ProcesoTarea.php/',obj).then(response => {                       
-                    console.log(response);
-                   // this.ListarElemetos();
+          
+                    axios.post('Backphp/ApiWeb/Tarea.php/',obj).then(response => {                      
+              
                     this.Confirmacion();                    
                 
                 }).catch(function (error) {

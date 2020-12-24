@@ -95,9 +95,9 @@ export default {
        ListarTipoUsuario(){
               let me=this;
                   var tipos=[];
-                  axios.get('Backphp/ProcesoTipoUsuario.php/',).then(function(response){                      
-                  tipos=response.data;    
-                //  console.log(response.data);              
+                  axios.get('Backphp/ApiWeb/TipoUsuario.php/',).then(function(response){                      
+                  tipos=response.data.data;    
+                  console.log(response.data);              
                   tipos.map(function(x){
                         me.tipoUsuario.push({text: x.nombre,value:x.id_tipo});
                  });  
@@ -110,9 +110,9 @@ export default {
           let apellido=this.apellido;
           let correo=this.correo;
           let password="123456";
-          let id_tipo_usuario=this.id_tipo_usuario;             
-          const obj={nombre,apellido,correo,password,id_tipo_usuario};
-           axios.post('Backphp/ProcesoUsuario.php/',obj).then(response => {
+          let tiposusuarioId=this.id_tipo_usuario;             
+          const obj={nombre,apellido,correo,password,tiposusuarioId};
+           axios.post('Backphp/ApiWeb/Usuario.php/',obj).then(response => {
                        
                 //  console.log(response);
                    this. Confirmacion();
