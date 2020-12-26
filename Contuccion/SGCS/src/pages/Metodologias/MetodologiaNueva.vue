@@ -75,7 +75,7 @@ export default {
       RegistrarMetodologia(){
           let nombre=this.nombre;         
           const obj={nombre};
-           axios.post('Backphp/ApiWeb/Metodologia.php/',obj).then(response => {                       
+           axios.post('ApiWeb/Metodologia.php/',obj).then(response => {                       
               console.log(response);
               this.Confirmacion();
               this.ListarMetodologia();           

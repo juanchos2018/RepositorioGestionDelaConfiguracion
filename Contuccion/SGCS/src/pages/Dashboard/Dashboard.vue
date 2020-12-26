@@ -264,7 +264,7 @@ export default {
        methods: {
           ListarListaTareas(){
                       let me=this;                     
-                        axios.get('Backphp/ApiWeb/Consulta.php/').then(response => {   
+                        axios.get('ApiWeb/Consulta.php/').then(response => {   
                            me.ArrayOptions=response.data.data;                       
                             //console.log(response.data)      
                            }).catch(function (error) {
@@ -275,7 +275,7 @@ export default {
            },
            ListaDeProyectos(){
                   let me=this;                 
-                  axios.get('Backphp/ApiWeb/Proyecto.php/').then(response => {                              
+                  axios.get('ApiWeb/Proyecto.php/').then(response => {                              
                         me.agrupados = response.data;  
                       //  console.log(response.data);
                         for(var i=0;i< me.ArrayOptions.length ;i++){
@@ -292,29 +292,7 @@ export default {
                           
                  })
            },
-          ListarProyecto(){
-             let me=this;
-             var  prueba="nada";
-              axios.get('Backphp/ProcesoProyecto.php/?prueba='+prueba).then(response => {                    
-                     me.proyectos = response.data; 
-                      let result = [] 
-                      response.data.forEach(element => {
-                    //   me.latitulosbels2.push({label:element.nombreproyecto})
-                        me.latitulosbels2.push([element.nombreproyecto])
-                     });
-
-                     response.data.forEach(element => {
-                    //   me.latitulosbels2.push({label:element.nombreproyecto})
-                        me.puntos2.push([element.tarea1])
-                     });               
-
-                       console.log(response.data)                  
-                  }).catch(function (error) {
-                      console.log(error);
-                  }) .finally(() => {
-                     
-            })
-           },
+      
           
            ListarPrueba(){
                        let me=this;

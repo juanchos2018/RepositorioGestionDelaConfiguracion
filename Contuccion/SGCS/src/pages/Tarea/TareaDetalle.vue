@@ -1,9 +1,7 @@
 <template>
 <div>
-          <div class="form-row">    
-         
-          <b-form-group    class="col-md-3">   
-                     
+          <div class="form-row">             
+          <b-form-group    class="col-md-3">                        
             <a-steps :current="current"   direction="vertical" @change="onChange" >
                  <a-step v-for="item in timeline" :key="item.id_timeline" :title="item.fecha" :sub-title="item.hora" :description="item.descripcion"  />              
                 <a-popover slot="progressDot" slot-scope="{  prefixCls }">                 
@@ -12,11 +10,7 @@
             </a-steps>  
             </b-form-group>
              <b-form-group   class="col-md-9">  
-               <!--
-              <div class="steps-content">
-                <h5>contenuido</h5>
-              </div> -->
-              <div>
+               <div>
                 <b-card>
                      <a-progress
                       :stroke-color="{
@@ -24,8 +18,7 @@
                             '100%': '#87d068',
                           }"
                           :percent="parseInt(porcentajeavance)"
-                        />
-                 
+                        />                 
                     <a-descriptions :title="descripcion">
                         <a-descriptions-item label="Nombre">
                           {{nombre_miembro}}
@@ -40,9 +33,7 @@
                           {{estado}}
                         </a-descriptions-item>
                         <a-descriptions-item label="Url Evidencia">
-
                         <b-link href="urlevidencia">link</b-link>
-
                         </a-descriptions-item>
                       </a-descriptions>
 
@@ -51,6 +42,11 @@
             </b-form-group>    
         </div>  
         <hr>
+        <div style="float:right">
+
+           <b-button variant="danger"  class="p-2 px-4 btn-xs">Rechazar</b-button>
+          <b-button variant="success"  class="p-2 px-4 btn-xs" style="margin-left:5px">Aprobar Tarea</b-button>
+        </div>
 
   </div>
 </template>
@@ -101,7 +97,7 @@ export default {
        },
          ListarTimliene(id_tarea){
            let me=this;
-            axios.get('Backphp/ApiWeb/Timeline.php/?id_tarea='+id_tarea).then(response => {              
+            axios.get('ApiWeb/Timeline.php/?id_tarea='+id_tarea).then(response => {              
                  me.timeline = response.data.data;    
                  console.log(response.data)            
                }).catch(function (error) {
@@ -111,7 +107,7 @@ export default {
          },
         BuscarTarea(id_tarea1){
            let me=this;
-            axios.get('Backphp/ApiWeb/Tarea.php/?id_tarea1='+id_tarea1).then(response => {              
+            axios.get('ApiWeb/Tarea.php/?id_tarea1='+id_tarea1).then(response => {              
               //   me.timeline = response.data;    
                  console.log(response.data)     
                  me.nombre_miembro=response.data.nombre; 

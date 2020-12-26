@@ -5,6 +5,7 @@
             <label for="">Buscar</label> 
             <b-form-input
                 id="input-30" 
+                autocomplete=off
                 require
                 class="p-2 px-4 btn-xs"               
                 v-model="search"  >
@@ -15,7 +16,7 @@
         </div>
        <div class="row" >
           
-        <div class="col-4" v-for="item in items" :key="item.key">
+        <div class="col-4" v-for="item in filteredList" :key="item.key">
         <b-card  border-variant="primary" >
             <b-dropdown class="dropdown-icon strong"   variant="#FFFFF" style="float:right;font-weight: 400" right >            
                      <b-dropdown-item @click="AbrirDialogo(item.id_proyecto)">Nuevo Miembro</b-dropdown-item>
@@ -59,6 +60,13 @@ export default {
     created(){
        this.ListarProyecto();
     },
+     computed: {
+      filteredList() {
+        return this.items.filter(post => {
+          return post.nombre_proyecto.toLowerCase().includes(this.search.toLowerCase())
+        })
+      }
+    },
     methods:{
         Nuevo(){
              this.$router.push('/app/proyectonuevo');
@@ -77,7 +85,7 @@ export default {
         },
         ListarProyecto(){
              let me=this;
-              axios.get('Backphp/ApiWeb/Proyecto.php/').then(response => {                    
+              axios.get('ApiWeb/Proyecto.php/').then(response => {                    
                       me.items = response.data;                      
                   }).catch(function (error) {
                       console.log(error);

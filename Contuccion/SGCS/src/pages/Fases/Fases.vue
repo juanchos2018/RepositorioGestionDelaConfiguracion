@@ -30,7 +30,7 @@
          
            <b-table striped hover :items="detalle2" :fields="fields">
             <template v-slot:cell(acciones)="data">                      
-                 <b-button variant="primary" size="sm" @click="Remover(data.item.id_elemento)" ><b-icon icon="trash" animation="fade" font-scale="1"></b-icon> </b-button>
+                 <b-button variant="primary" size="sm" @click="MensajeEliminar(data.item.id_plantilla)" ><b-icon icon="trash" animation="fade" font-scale="1"></b-icon> </b-button>
               </template>  
                  <template #empty>
                   <div class="text-center text-muted">
@@ -103,7 +103,7 @@ export default {
        },
        ListarFasePorMetodologia(metodologiaId){    
          let me=this;
-         axios.get('Backphp/ApiWeb/Fase.php/?metodologiaId='+metodologiaId).then(response => {              
+         axios.get('ApiWeb/Fase.php/?metodologiaId='+metodologiaId).then(response => {              
                  me.items = response.data;
                  me.ListarElemtosFase(me.items[0].id_fase);   
                }).catch(function (error) {
@@ -117,36 +117,50 @@ export default {
        },
        ListarElemtosFase(faseId){
           let me=this;
-          axios.get('Backphp/ApiWeb/PlantillaElemento.php/?faseId='+faseId).then(response => {                 
+          axios.get('ApiWeb/PlantillaElemento.php/?faseId='+faseId).then(response => {    
+            console.log(response.data)             
                  me.detalle2 = response.data;                
                }).catch(function (error) {
                    console.log(error);
              }) .finally(() => {
          })
-       },       
+       },     
+       MensajeEliminar(id){
+            this.$swal.fire({
+                        title: 'Elminar ?',
+                        text: "Ya no podras revertir!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, Eliminar!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                          this.Eliminar(id);
+                        
+                        }
+                    })
+       },  
+       Eliminar(id){
+       
+         var id_plantilla=id;
+          const obj={id_plantilla};
+          axios.get('ApiWeb/PlantillaElemento.php/?id_plantilla='+id_plantilla).then(response => {                       
+                 console.log(response);
+                   this.$swal.fire(
+                            'Eliminado!',
+                            'Has Eliminado.',
+                            'success'
+                        )
+                }).catch(function (error) {
+                      console.log(error);
+                }) .finally(() => {                     
+              })
+       },
        alerta(){        
            this.$refs.popover.$emit('open')
        },
-       MensajeEliminar(){
-         this.$swal.fire({
-            title: 'Elminar?',
-            text: "Ya no podras revertir!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, Eliminar !'
-          }).then((result) => {
-            if (result.isConfirmed) {
-             this.$swal.fire(
-                'Eliminado!',
-                'Has Eliminado.',
-                'success'
-              )
-            }
-          })
-       },
-     
+    
        nextClicked(currentPage) {
           //siguiente
        //  console.log('next clicked', currentPage)        

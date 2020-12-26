@@ -122,7 +122,7 @@ export default {
             ListaMiembros(id){
                     let me=this;
                     var previa=[];
-                     axios.get('Backphp/ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {  
+                     axios.get('ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {  
                     
                             previa=response.data;  
                             console.log(response.data)
@@ -136,7 +136,7 @@ export default {
             },
             ListarTareasVersion(id){
                     let me=this;                   
-                    axios.get('Backphp/ApiWeb/Tarea.php/?id_tarea='+id).then(response => {  
+                    axios.get('ApiWeb/Tarea.php/?id_tarea='+id).then(response => {  
                            me.tareasversion=response.data;  
                            console.log(response.data)                            
                             }).catch(function (error) {

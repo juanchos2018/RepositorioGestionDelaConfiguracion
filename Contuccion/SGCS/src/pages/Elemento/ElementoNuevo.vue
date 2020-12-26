@@ -72,7 +72,7 @@ export default {
           let codigo_elemento=this.codigo;   
           let nombre=this.nombre;                
           const obj={codigo_elemento,nombre};
-          axios.post('Backphp/ApiWeb/Elemento.php/',obj).then(response => {    
+          axios.post('ApiWeb/Elemento.php/',obj).then(response => {    
                this.ListarElemetos();
                this.Confirmacion();      
           }).catch(function (error) {

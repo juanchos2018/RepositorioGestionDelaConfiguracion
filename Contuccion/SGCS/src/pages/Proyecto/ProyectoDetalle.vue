@@ -2,7 +2,8 @@
   <div  class="bg-light">
     <b-card>
      <div class="container">
-        <b-progress :value="50" variant="info" striped :animated="animate" class="mt-2"></b-progress>
+        <h5>Finalizacion de Proyecto</h5>
+         <a-progress :percent="50" status="active" />
         <div class="row">
         <h5>Nombre Proyecto  :</h5>
      <h4>{{ nombreProyecto}}</h4>
@@ -18,8 +19,8 @@
       <br>
       <div>   
         <b-row>
-        <b-col>  <h5>4 Nuevo</h5></b-col>
-        <b-col>  <h5>3 Progreso</h5></b-col>
+        <b-col>  <h5>{{TareaNuevas}} Nuevo</h5></b-col>
+        <b-col>  <h5>{{TareaProceso}} Proceso</h5></b-col>
         <b-col>  <h5>1 Finalizado</h5></b-col>
       </b-row>
       </div>
@@ -69,8 +70,7 @@
                    <div style="  display: flex;align-items: center;">
                      <b-icon icon="play-fill"></b-icon>  <h5 style="margin-left:5px">Version {{ item.version }}</h5>
                       <h5 style="margin-left:20px">{{ item.nombre }}</h5>
-                  </div>
-                  
+                  </div>                  
                   </a-card>
                 </a-list-item>            
               </a-list>                   
@@ -231,11 +231,33 @@ export default {
       estado:'',
       version:'',
       metodologia:'',
+      TareaNuevas:'',
+      TareaProceso:'',
+      TareaTerminada:'',
       DialogoElementoVersion:false,     
     };
   },
   created(){
     // this.stepProgressBarParams.currentStep =3
+  },
+   mounted() {
+      this.GetDatos();
+      this.$nextTick(function() {
+            var me = this;
+            $('#next').click(function() {
+                if (me.stepProgressBarParams.currentStep > me.stepProgressBarParams.totalSteps) {
+                  return;
+                }
+                me.stepProgressBarParams.currentStep += 1;
+            });
+
+            $('#back').click(function() {
+              if (me.stepProgressBarParams.currentStep == 1) {
+                return;
+              }
+              me.stepProgressBarParams.currentStep -= 1;
+            });
+       });
   },
   methods: {
     
@@ -246,11 +268,12 @@ export default {
             this.MostarFaseMetodolgiaProyecto(id); 
             this.DatosProyecto(id); 
             this.ListaMiembros(id);
+            this.ProyectoTotalTareas(id);
           }  
        },
        MostarFaseMetodolgiaProyecto(id){
           let me=this;
-          axios.get('Backphp/ApiWeb/Proyecto.php/?id_proyecto='+id).then(response => {              
+          axios.get('ApiWeb/Proyecto.php/?id_proyecto='+id).then(response => {              
                   me.fases = response.data;                  
                   me.ElentosFaseProyecto(me.id_proyecto, me.fases[0].id_fase);     
                   me.nombre_fase =me.fases[0].nombre_fase;                   
@@ -261,7 +284,7 @@ export default {
        },
        ElentosFaseProyecto(id_proyecto,id_fase){
            let me=this;
-          axios.get('Backphp/ApiWeb/Proyecto.php/?parametro1='+id_proyecto+'&id_fase='+id_fase).then(response => {              
+          axios.get('ApiWeb/Proyecto.php/?parametro1='+id_proyecto+'&id_fase='+id_fase).then(response => {              
                me.elementosConfi = response.data;  
                }).catch(function (error) {
                       console.log(error);
@@ -269,16 +292,16 @@ export default {
            })
        },
        onChange(current) {
-      //   console.log('onChange:', current);
+    
          this.current = current;
          var code =this.fases[current].id_fase;
          this.nombre_fase =this.fases[current].nombre_fase;
          this.ElentosFaseProyecto(this.id_proyecto,code);
-      //   console.log( this.nombre_fase);
+     
        },      
        DatosProyecto(id){
          let me=this;
-          axios.get('Backphp/ApiWeb/Proyecto.php/?id_proyect='+id).then(response => {    
+          axios.get('ApiWeb/Proyecto.php/?id_proyect='+id).then(response => {    
                   me.nombreProyecto=response.data[0].nombre_proyecto;  
                   me.fecha_inicio=response.data[0].fecha_inicio;
                   me.fecha_termino=response.data[0].fecha_termino;
@@ -287,9 +310,20 @@ export default {
                       console.log(error);
               }) .finally(() => {
            })
-       },     
+       },  
+       ProyectoTotalTareas(id_proyecto){
+          let me=this;
+          axios.get('ApiWeb/Consulta.php/?id_proyecto='+id_proyecto).then(response => {    
+                  me.TareaNuevas=response.data[0].cantidad;  
+                  me.TareaProceso=response.data[1].cantidad;
+                  console.log(response.data)  
+               }).catch(function (error) {
+                      console.log(error);
+              }) .finally(() => {
+           })
+       },  
        NuevaVersion(idcromograma,nombre){
-         console.log(idcromograma,nombre)
+     
         this.idcronogramamalemento=idcromograma;      
         this.nombre_elemento=nombre; 
         this.DialogoElementoVersion=true;
@@ -302,7 +336,7 @@ export default {
          let miembroresponsableID=this.id_miembro;     
 
         const obj={elemntoconfiguracionID,version,fecha_inicio,fecha_termino,miembroresponsableID};
-        axios.post('Backphp/ApiWeb/Version.php/',obj).then(response => {                       
+        axios.post('ApiWeb/Version.php/',obj).then(response => {                       
                         console.log(response.data);
               this.Confirmacion();             
            
@@ -332,7 +366,7 @@ export default {
        },
        ListaVersiones(id_elemento){
             let me=this;
-              axios.get('Backphp/ApiWeb/Version.php/?id_elemento='+id_elemento).then(response => {
+              axios.get('ApiWeb/Version.php/?id_elemento='+id_elemento).then(response => {
                        me.listaversiones = response.data; 
                      //  console.log(response.data);                     
                   }).catch(function (error) {
@@ -344,11 +378,11 @@ export default {
        ListaMiembros(id){
          let me=this;
          var previa=[];
-         axios.get('Backphp/ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {  
+         axios.get('ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {  
                   previa=response.data;  
                   previa.map(function(x){
                   me.miembros.push({text: x.nombre,value:x.id});
-                  })
+                    })
                  }).catch(function (error) {
                        console.log(error);
               }) .finally(() => {
@@ -383,25 +417,7 @@ export default {
       this.$refs.stepProgressBarCompRef.changeCurrentStep(val);
     }
   },
-  mounted() {
-      this.GetDatos();
-      this.$nextTick(function() {
-            var me = this;
-            $('#next').click(function() {
-                if (me.stepProgressBarParams.currentStep > me.stepProgressBarParams.totalSteps) {
-                  return;
-                }
-                me.stepProgressBarParams.currentStep += 1;
-            });
-
-            $('#back').click(function() {
-              if (me.stepProgressBarParams.currentStep == 1) {
-                return;
-              }
-              me.stepProgressBarParams.currentStep -= 1;
-            });
-       });
-  }
+ 
 };
 </script>
 

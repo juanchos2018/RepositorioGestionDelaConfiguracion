@@ -54,7 +54,7 @@
                 <template #footer  footer-class="myDiv">
                      <div  style="background-color: white; float:right;">
                        <b-button variant="success" v-b-tooltip.hover title="Editar" > <b-icon icon="pencil-square" animation="fade" font-scale="1" @click="AbrirModalEditar(item.id_elemento)"></b-icon> </b-button>
-                      <b-button variant="danger" style="margin-left:2px"  @click="MensajeEliminar" v-b-tooltip.hover title="Eliminar"> <b-icon icon="trash" animation="fade" font-scale="1"></b-icon> </b-button>
+                      <b-button variant="danger" style="margin-left:2px"  @click="MensajeEliminar(item.id_elemento)" v-b-tooltip.hover title="Eliminar"> <b-icon icon="trash" animation="fade" font-scale="1"></b-icon> </b-button>
                      </div>                                          
                 </template>
          </b-card>
@@ -108,7 +108,7 @@ export default {
                },
                ListaElemento(){
                     let me=this;
-                    axios.get('Backphp/ApiWeb/Elemento.php/').then(response => {   
+                    axios.get('ApiWeb/Elemento.php/').then(response => {   
                                       
                       me.items = response.data.data;                      
                   }).catch(function (error) {
@@ -117,7 +117,7 @@ export default {
                  })
 
                },            
-               MensajeEliminar(){
+               MensajeEliminar(id){
                     this.$swal.fire({
                         title: 'Elminar ?',
                         text: "Ya no podras revertir!",
@@ -128,14 +128,25 @@ export default {
                         confirmButtonText: 'Si, Eliminar!'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                        this.$swal.fire(
-                            'Eliminado!',
-                            'Has Eliminado.',
-                            'success'
-                        )
+                          //  this.Eliminar(id);
                         }
                     })
                 },
+                 Eliminar(id){       
+                        var id_elemento=id;
+                        const obj={id_elemento};
+                        axios.get('ApiWeb/Elemento.php/?id_elemento='+id_elemento).then(response => {                       
+                                console.log(response);
+                                this.$swal.fire(
+                                            'Eliminado!',
+                                            'Has Eliminado.',
+                                            'success'
+                                        )
+                                }).catch(function (error) {
+                                    console.log(error);
+                                }) .finally(() => {                     
+                            })
+                    },
                 Grilla(){
                         this.Vergrilla=true;
                         this.VerCard=false;

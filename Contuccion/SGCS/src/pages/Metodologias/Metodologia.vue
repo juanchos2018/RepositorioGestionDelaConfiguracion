@@ -106,7 +106,7 @@ export default {
        },
       ListarMetodologia(){
          let   me=this;
-         axios.get('Backphp/ApiWeb/Metodologia.php/').then(response => {
+         axios.get('ApiWeb/Metodologia.php/').then(response => {
                   me.items = response.data.data;             
                 }).catch(function (error) {
                       console.log(error);

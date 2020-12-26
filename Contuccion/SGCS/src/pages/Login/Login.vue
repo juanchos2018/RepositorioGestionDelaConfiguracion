@@ -109,7 +109,14 @@ export default {
            let  correo =this.$refs.email.value;
            let  password =this.$refs.password.value;
            const obj={correo}
-            axios.get('Backphp/ApiWeb/Login.php/?correo='+correo+'&password='+password).then(response => {   
+            let config = {
+                      header : {
+                      'Access-Control-Allow-Origin': '*',
+                      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+                       'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE'
+                      }
+                    }
+            axios.get('ApiWeb/Login.php/?correo='+correo+'&password='+password,config).then(response => {   
                
                this.$session.start()
                 this.$store.dispatch("guardarDatos",response.data[0].nombre)      

@@ -199,7 +199,7 @@ export default {
           let nombre_fase=this.nombre_fase;      
           let id_fase=this.id_fase;    
           const obj={id_fase,nombre_fase};
-           axios.put('Backphp/ApiWeb/Fase.php/',obj).then(response => {                     
+           axios.put('ApiWeb/Fase.php/',obj).then(response => {                     
         
            this.Confirmacion();
            this.ListarFases()         

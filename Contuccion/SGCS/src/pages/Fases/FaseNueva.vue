@@ -62,7 +62,7 @@ export default {
           let nombre_fase=this.nombre;      
           let metodologiaId=this.idmetodologia;    
           const obj={nombre_fase,metodologiaId};
-           axios.post('Backphp/ApiWeb/Fase.php/',obj).then(response => {
+           axios.post('ApiWeb/Fase.php/',obj).then(response => {
            this.Confirmacion();
            this.ListarFases(this.idmetodologia)
          

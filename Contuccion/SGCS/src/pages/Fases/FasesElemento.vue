@@ -80,7 +80,7 @@ export default {
         ListarElementos(){
              let me=this;
                   var elementos=[];
-                  axios.get('Backphp/ApiWeb/Elemento.php/').then(response => {  
+                  axios.get('ApiWeb/Elemento.php/').then(response => {  
               //    axios.get('Backphp/ProcesoElemento.php/',).then(function(response){                      
                   elementos=response.data.data;   
                   elementos.map(function(x){
@@ -93,7 +93,7 @@ export default {
         ListarFase(metodologiaId){           
          let me=this;        
          var fases=[];
-           axios.get('Backphp/ApiWeb/Fase.php/?metodologiaId='+metodologiaId).then(response => {  
+           axios.get('ApiWeb/Fase.php/?metodologiaId='+metodologiaId).then(response => {  
          //   axios.get('Backphp/ProcesoFase.php/?metodologiaId='+d).then(response => {               
                  fases= response.data;                              
                  fases.map(function(x){
@@ -108,7 +108,7 @@ export default {
                 let faseId=this.idfase;
                 let elementoId=this.id_elemento;                
                 const obj={faseId,elementoId};
-                axios.post('Backphp/ApiWeb/PlantillaElemento.php/',obj).then(response => {                       
+                axios.post('ApiWeb/PlantillaElemento.php/',obj).then(response => {                       
                   console.log(response);
                   this.Confirmacion();
                 }).catch(function (error) {

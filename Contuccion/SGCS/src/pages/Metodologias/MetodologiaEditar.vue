@@ -63,7 +63,7 @@ export default {
           let id_metodologia=this.id_metodologia;
           let nombre=this.nombre;           
           const obj={id_metodologia,nombre};
-          axios.put('Backphp/ApiWeb/Metodologia.php/',obj).then(response => { 
+          axios.put('ApiWeb/Metodologia.php/',obj).then(response => { 
                this.ListarMetodologia();
                this.Confirmacion();
           }).catch(function (error) {

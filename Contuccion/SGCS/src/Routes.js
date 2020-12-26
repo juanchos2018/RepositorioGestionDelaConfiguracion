@@ -26,6 +26,7 @@ import TareaElemento from '@/pages/Tarea/TareaElemento';
 import TareaElementoMiembro from '@/pages/Tarea/TareaElementoMiembro';
 import TareaDetalle from '@/pages/Tarea/TareaDetalle';
 import TareaUsuario from '@/pages/Tarea/TareaUsuario';
+import InformeCambio from '@/pages/Informe/InformeCambio';
 import store from './store/index'
 
 Vue.use(Router);
@@ -127,16 +128,28 @@ var router = new Router({
           path: 'solicitud',
           name: 'solicitud',
           component: Solicitud,
+          meta :{
+            Administrador :true,   
+            Jefe:true       
+          }
         },
         {
           path: 'solicitudnueva',
           name: 'solicitudnueva',
           component: SolicitudNueva,
+          meta :{
+            Administrador :true,   
+            Jefe:true       
+          }
         },
         {
           path: 'solicitudlista',
           name: 'solicitudlista',
           component: SolicitudLista,
+          meta :{
+            Administrador :true,   
+            Jefe:true       
+          }
         },
         {
           path: 'elemento',
@@ -199,7 +212,15 @@ var router = new Router({
             Jefe:true           
           }
         },
-       
+        {
+          path: 'informecambio:datos',
+          name: 'informecambio',
+          component: InformeCambio,
+          meta :{
+            Administrador :true,     
+            Jefe:true      
+          }
+        },
       ],
     },
   ],

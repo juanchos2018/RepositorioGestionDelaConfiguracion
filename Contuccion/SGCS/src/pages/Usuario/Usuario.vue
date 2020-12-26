@@ -67,7 +67,7 @@ export default {
        },
        ListaUsuarios(){
            let me=this;
-              axios.get('Backphp/ApiWeb/Usuario.php/').then(response => {
+              axios.get('ApiWeb/Usuario.php/').then(response => {
                      
                       me.items = response.data.data;                      
                   }).catch(function (error) {

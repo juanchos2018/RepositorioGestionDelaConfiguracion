@@ -23,9 +23,9 @@
                    <a-progress :percent="parseInt(item.porcentajeavance)" /> 
                </b-card-text>   
                 </b-card-body>                  
-                 <div  style="background-color: white; float:right;">                     
-                      <b-badge variant="danger">{{item.fecha_inicio}}</b-badge>
-                       <b-badge variant="danger">{{item.fecha_termino}}</b-badge>
+                 <div  style="background-color: white;">                     
+                      <b-badge variant="danger">{{item.fecha_inicio  | moment("DD-MM-YYYY")}}</b-badge>
+                       <b-badge variant="danger" style="margin-left:5px">{{item.fecha_termino  | moment("DD-MM-YYYY")}}</b-badge>
                   </div>           
             </b-col>
             </b-row>  
@@ -34,7 +34,32 @@
         </div>  
             </b-tab>
                 <b-tab title="Tareas Terminadas">
-                    <p>Tareas Terminadas </p>
+                     <div   class="row" > 
+                      
+                        <div class="col-4" v-for="item in tareasterminadas" :key="item.key" style="margin-top:10px">  
+                            <b-card class="overflow-hidden"  footer-tag="footer" >
+                                <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
+                                    <b-dropdown-item  >Editar</b-dropdown-item>
+                                    <b-dropdown-item >Opcion 2</b-dropdown-item>                           
+                                </b-dropdown>   
+                            <b-row no-gutters>
+                            <b-card-title> <h5>{{item.descripcion}}</h5> </b-card-title>   
+                            <b-col md="12">
+                                <b-card-body>  
+                                <b-card-text>
+                            <h5>{{item.estado}}</h5>    
+                                <a-progress :percent="parseInt(item.porcentajeavance)" /> 
+                            </b-card-text>   
+                                </b-card-body>                  
+                                <div  style="background-color: white;">                     
+                                    <b-badge variant="danger">{{item.fecha_inicio  | moment("DD-MM-YYYY")}}</b-badge>
+                                    <b-badge variant="danger" style="margin-left:5px">{{item.fecha_termino  | moment("DD-MM-YYYY")}}</b-badge>
+                                </div>           
+                            </b-col>
+                            </b-row>  
+                        </b-card>         
+                        </div>
+                        </div> 
                 </b-tab>             
             </b-tabs>       
          <tarea-editar @CerrarModal="CerrarModal" :DialogoTareaEditar="DialogoTareaEditar" v-bind:id_tarea="id_tarea"  v-bind:id_responsable="id_responsable" v-bind:descripcion="descripcion"  v-bind:porcentaje="porcentaje"   @update-number="update" v-on:ListarTareas-Emit="ListarTareas"></tarea-editar>
@@ -43,6 +68,7 @@
 
 <script>
 import axios from  'axios';
+import moment from 'moment'
 import TareaEditar from './TareaEditar';
 export default {
     name: 'tarea-usuario',
@@ -80,8 +106,33 @@ export default {
        ListarTareas(id){
              let me=this;         
              var elementos=[];
-             axios.get('Backphp/ApiWeb/Miembro.php/?miembroresponsableID='+id,).then(function(response){                      
-                  me.tareas=response.data;                      
+             axios.get('ApiWeb/Miembro.php/?miembroresponsableID='+id,).then(function(response){   
+                console.log(response.data)   
+                response.data.forEach(elem => {
+                    if (elem.estado=="Terminado") {
+                         me.tareasterminadas.push({
+                             id_tarea:elem.id_tarea,
+                             descripcion: elem.descripcion,
+                             porcentajeavance: elem.porcentajeavance,
+                             fecha_inicio:elem.fecha_inicio,
+                             fecha_termino: elem.fecha_termino,
+                             estado:elem.estado,                    
+                          })
+                 }else{
+                         me.tareas.push({
+                             id_tarea:elem.id_tarea,
+                             descripcion: elem.descripcion,
+                             porcentajeavance: elem.porcentajeavance,
+                             fecha_inicio:elem.fecha_inicio,
+                             fecha_termino: elem.fecha_termino,
+                             estado:elem.estado,  
+                 
+                       })
+                 }
+               
+              });                
+                 
+                                    
               }).catch(function(error){
                   console.log(error);
            });       

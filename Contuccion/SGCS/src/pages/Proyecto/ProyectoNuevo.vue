@@ -203,9 +203,13 @@ export default {
           let estado="activo";
           let metodologia=this.metodologiaId;  
           var lista=this.listaFases;
+
+          var cantidad=lista.length;
+          var porcentajeFAse=100/parseInt(cantidad);
+
           var ListaElementos=this.listaElementos;
           const obj={codigo,nombre,fechaini,fechater,descripcion,estado,metodologia,usuariojefeId,lista,ListaElementos};
-          axios.post('Backphp/ApiWeb/Proyecto.php/',obj).then(response => {                       
+          axios.post('ApiWeb/Proyecto.php/',obj).then(response => {                       
                  console.log(response);
                   this.Listacronogramafase=response.data;
                   this. Confirmacion();
@@ -232,7 +236,7 @@ export default {
                }
               var listacronogramaelemento=this.listaenviar;
               const obj={listacronogramaelemento}
-              axios.post('Backphp/ApiWeb/CronogramaElemento.php/',obj).then(response => {  
+              axios.post('ApiWeb/CronogramaElemento.php/',obj).then(response => {  
                   this.Limpiar();
                 }).catch(function (error) {
                       console.log(error);
@@ -242,7 +246,7 @@ export default {
           ListarMetodologias(){
                   let me=this;
                   var tipoDcumento=[];
-                  axios.get('Backphp/ApiWeb/Metodologia.php/').then(response => {     
+                  axios.get('ApiWeb/Metodologia.php/').then(response => {     
                     console.log(response.data)                               
                     tipoDcumento=response.data.data; 
                     tipoDcumento.map(function(x){
@@ -265,7 +269,7 @@ export default {
           MostarFaseMetodolgia(id){
                 let me=this;
                 me.Limpiar();
-                axios.get('Backphp/ApiWeb/Metodologia.php/?id_meto='+id).then(response => {              
+                axios.get('ApiWeb/Metodologia.php/?id_meto='+id).then(response => {              
                     me.fases = response.data;
                     me.listaFases=[];                 
                     response.data.forEach(item=>{
@@ -293,7 +297,7 @@ export default {
           },
           ListarElemtosFase(id_fase){
               let me=this;
-              axios.get('Backphp/ApiWeb/PlantillaElemento.php/?faseId='+id_fase).then(response => {                 
+              axios.get('ApiWeb/PlantillaElemento.php/?faseId='+id_fase).then(response => {                 
                     me.plantillaelemento = response.data;     
                              
                   }).catch(function (error) {
@@ -303,7 +307,7 @@ export default {
           }, 
           ListarTodasPlantillas(){
                   let me=this;                 
-                  axios.get('Backphp/ApiWeb/PlantillaElemento.php/',).then(function(response){                      
+                  axios.get('ApiWeb/PlantillaElemento.php/',).then(function(response){                      
                   me.TodasPlantillas=response.data;    
                 // console.log(response.data);  
               }).catch(function(error){

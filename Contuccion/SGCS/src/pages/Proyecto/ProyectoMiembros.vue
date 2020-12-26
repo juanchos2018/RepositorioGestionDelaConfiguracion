@@ -18,20 +18,22 @@
       <div class="row" >             
        <div class="col-4" v-for="item in items" :key="item.key">  
               
-        <b-card no-body class="overflow-hidden" style="max-width: 340px;"  bg-variant="secondary" text-variant="white" footer-tag="footer">
+        <b-card no-body class="overflow-hidden"    border-variant="primary" footer-tag="footer">
             <b-row no-gutters>
             <b-col md="3">
                 <div class="UserAvatar__IconImage-hmym9w-1 jtNJTZ" >
                     <center> 
-                    <b-img src="https://picsum.photos/600/300/?image=25" alt="Avatar" class="avatar1"> </b-img>  
+                      
+                    <img src="../../assets/loguusu1.png" alt="Avatar" class="avatar1"/>  
                     </center>
                 </div>     
             </b-col>
-            <b-col md="6">
+            <b-col md="8">
                 <b-card-body >                   
                 <b-card-title > {{item.nombre}}</b-card-title>                    
                 <b-card-text>
-                   {{item.nombre_rol}}
+                    
+                      <span class="badge badge-success">  {{item.nombre_rol}}</span>
                 </b-card-text>                
                 </b-card-body>                
             </b-col>
@@ -89,7 +91,7 @@ export default {
           },
           ListarMiembrosProyecto(id){
               let me=this;
-                axios.get('Backphp/ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {                         
+                axios.get('ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {                         
                       me.items = response.data;          
                     }).catch(function (error) {
                             console.log(error);

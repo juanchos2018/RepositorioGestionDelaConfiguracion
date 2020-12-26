@@ -108,7 +108,7 @@ export default {
                   }
                   let estado=estadota;          
                   const obj={id_tarea,urlevidencia,porcentajeavance,estado};
-                  axios.put('Backphp/ApiWeb/Tarea.php/',obj).then(response => {     
+                  axios.put('ApiWeb/Tarea.php/',obj).then(response => {     
                  
                       this.Confirmacion();
                        this.ListarTareas(this.id_responsable); 
@@ -125,7 +125,7 @@ export default {
                   let estado=estadota;   
                   let id_tarea=this.id_tarea;       
                   const obj={miembroresponsableID,fecha,hora,estado,id_tarea};
-                   axios.post('Backphp/ApiWeb/Timeline.php/',obj).then(response => {    
+                   axios.post('ApiWeb/Timeline.php/',obj).then(response => {    
                            console.log(response.data)               
                      }).catch(function (error) {
                       console.log(error);

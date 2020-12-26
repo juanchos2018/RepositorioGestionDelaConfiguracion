@@ -64,7 +64,22 @@
             index="solicitud"
              isHeader           
         />
-      
+      <NavLink
+            :activeItem="activeItem"
+            header="ListaSolicitud"
+            link="/app/solicitudlista"
+            iconName="flaticon-network"
+            index="solicitudlista"
+            isHeader           
+        />
+         <NavLink
+            :activeItem="activeItem"
+            header="Informecambio"
+            link="/app/informecambio"
+            iconName="flaticon-network"
+            index="informecambio"
+            isHeader           
+        />
         
            <NavLink
             v-if="esAdministrador"

@@ -114,7 +114,7 @@ export default {
 
                 const obj={verionID,miembroresponsableID,fecha_inicio,fecha_termino,descripcion,porcentajeavance,urlevidencia,estado};
           
-                    axios.post('Backphp/ApiWeb/Tarea.php/',obj).then(response => {                      
+                    axios.post('ApiWeb/Tarea.php/',obj).then(response => {                      
               
                     this.Confirmacion();                    
                 

@@ -48,10 +48,10 @@ Vue.use(VueSession)
 
 Vue.config.productionTip = false;
 //https://edsyscomp.com/
-
+// String URL="https://edsyscomp.com/registrar_usuario.php?";
 //axios.defaults.baseURL='https://localhost:44323/'
-axios.defaults.baseURL='http://localhost/'
-//axios.defaults.baseURL='https://edsyscomp.com/'
+axios.defaults.baseURL='http://localhost/Backphp/'
+//axios.defaults.baseURL='https://edsyscomp.com/api/'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

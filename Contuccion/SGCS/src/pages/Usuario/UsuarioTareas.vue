@@ -138,7 +138,7 @@ export default {
        },
            ListarTimliene(id_tarea){
            let me=this;
-            axios.get('Backphp/ApiWeb/Timeline.php/?id_tarea='+id_tarea).then(response => {              
+            axios.get('ApiWeb/Timeline.php/?id_tarea='+id_tarea).then(response => {              
                  me.timeline = response.data.data;    
                  console.log(response.data)            
                }).catch(function (error) {
@@ -148,7 +148,7 @@ export default {
          },
            MostarFaseMetodolgiaProyecto(id){
               let me=this;
-              axios.get('Backphp/ProcesoProyecto.php/?id_proyecto='+id).then(response => {              
+              axios.get('ProcesoProyecto.php/?id_proyecto='+id).then(response => {              
                     me.fases = response.data;
                                   
                }).catch(function (error) {
