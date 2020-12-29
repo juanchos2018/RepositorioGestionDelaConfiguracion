@@ -118,7 +118,7 @@ export default {
                     }
             axios.get('ApiWeb/Login.php/?correo='+correo+'&password='+password,config).then(response => {   
                
-               this.$session.start()
+                this.$session.start()
                 this.$store.dispatch("guardarDatos",response.data[0].nombre)      
                 this.$store.dispatch("guardarTipo",response.data[0].id_tipo)    
                 this.$store.dispatch("guardarTipoUsuario",response.data[0].tiposusuario)    

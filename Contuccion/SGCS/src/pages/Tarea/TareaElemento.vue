@@ -2,20 +2,35 @@
     <div>
         <div>
           <b-card>
-            <div class="container">            
+               
                 <div class="row">
-                <h5>{{nombre_elemento}}</h5>         
+               
+                  <b-form-group    class="col-md-12">
+               
+                <div class="">               
+                <h5>{{nombre_elemento}}</h5>                  
+                </div>
+                </b-form-group>     
             </div>  
-            <div class="row">
-                <h5>Fase: </h5>
-                <h5> {{nombre_fase}}</h5>
-            </div>
-            <div class="row"> 
-                <h5>Proyecto : </h5>
-                <h5> {{nombre_proyecto}}</h5>
-            </div> 
+
+              <div  class="form-row">  
+                <b-form-group    class="col-md-4">
+                <label class="control-label font-weight-bold text-info">Fase</label> 
+                <div class="">               
+                <label for="">{{ nombre_fase}}</label>                 
+                </div>
+                </b-form-group>
+                <b-form-group    class="col-md-4">
+                <label class="control-label font-weight-bold text-info">Proyecto</label> 
+                <div class="">               
+                <label for="">{{ nombre_proyecto}}</label>                 
+                </div>
+                </b-form-group>
+        </div> 
+            
+            
             <br>            
-          </div>         
+               
         </b-card>
         </div>
         <div>
@@ -45,7 +60,6 @@
                                 <b-card-title> <h5> {{item.descripcion}}</h5> </b-card-title>                    
                                 <b-card-text>
                                    <a-progress :percent="parseInt(item.porcentajeavance)" /> 
-
                                    <h5>Responsable: {{item.nombre}}</h5>
                                 </b-card-text>                
                                 </b-card-body>                
@@ -54,8 +68,7 @@
                                   <template #footer  footer-class="myDiv">
                                     <div  style="background-color: white; float:right;">
                                     <b-button variant="success" v-b-tooltip.hover title="Detalle"  @click="DetalleTarea(item.id_tarea)"> <b-icon icon="card-list" animation="fade" font-scale="1" ></b-icon> </b-button>
-                                  
-                                    </div>                                          
+                                   </div>                                          
                                 </template>
                         </b-card>
                         <br>
@@ -69,10 +82,8 @@
           </b-card>  
        </div>
        <!--Modal -->
-        <tarea-nueva @CerrarModal="CerrarModal" :DialogoTarea="DialogoTarea" v-bind:miembros="miembros"  v-bind:id_version="id_version" ></tarea-nueva>
-
-      
-   
+        <tarea-nueva @CerrarModal="CerrarModal" :DialogoTarea="DialogoTarea" v-bind:miembros="miembros"  v-bind:id_version="id_version"  v-on:Listar-Tarea="ListarTareasVersion"></tarea-nueva>
+       
     </div>
 </template>
 
@@ -105,8 +116,7 @@ export default {
     },
     methods: {
             DatosId(){
-                var dato = this.$route.params.datos
-                // var datos=element+'-' +fase+'-'+ id_version+'-'+miembro_id;
+                var dato = this.$route.params.datos               
                 if(dato){
                     this.editable = true
                     var val = dato.split("-")

@@ -2,31 +2,86 @@
   <div  class="bg-light">
     <b-card>
      <div class="container">
-        <h5>Finalizacion de Proyecto</h5>
-         <a-progress :percent="50" status="active" />
-        <div class="row">
-        <h5>Nombre Proyecto  :</h5>
-     <h4>{{ nombreProyecto}}</h4>
-      </div>  
-      <div class="row">
-        <h5>Fecha Inicio : </h5>
-        <h5>{{ fecha_inicio}}</h5>
-      </div>
-      <div class="row"> 
-        <h5>Fecha Termino : </h5>
-        <h5>{{ fecha_termino}}</h5>
-      </div> 
-      <br>
-      <div>   
-        <b-row>
-        <b-col>  <h5>{{TareaNuevas}} Nuevo</h5></b-col>
-        <b-col>  <h5>{{TareaProceso}} Proceso</h5></b-col>
-        <b-col>  <h5>1 Finalizado</h5></b-col>
-      </b-row>
-      </div>
+
+        <div class="form-row">
+             <b-form-group     class="col-md-4">
+              <h4>{{ nombreProyecto}}</h4>
+            <span class="badge badge-success">{{estado}}</span>
+            </b-form-group>
+             <b-form-group    class="col-md-8">
+               <a-progress :percent="50" status="active" />
+            </b-form-group>
+         </div> 
+       <div  class="form-row">  
+             <b-form-group   class="col-md-12">
+            <p>{{descripcion}}</p>         
+            </b-form-group>
+       </div>  
+        <div  class="form-row">  
+            <b-form-group    class="col-md-4">
+               <label class="control-label font-weight-bold text-info">Fecha Inicio</label> 
+               <div class="">               
+              <label for="">{{ fecha_inicio}}</label>                 
+               </div>
+            </b-form-group>
+             <b-form-group    class="col-md-4">
+               <label class="control-label font-weight-bold text-info">Fecha Termino</label> 
+               <div class="">               
+              <label for="">{{ fecha_termino}}</label>                 
+               </div>
+            </b-form-group>
+       </div>  
      </div>         
    </b-card>
    <br>
+    <div  class="form-row">  
+             <b-form-group   class="col-md-4">
+              <Widget class="h-100 mb-6"   >
+                <div style="display: flex;">
+                  <div>
+                 <div style="font-size: 4rem;">
+                <b-icon icon="card-list" animation="fade" font-scale="1" ></b-icon>
+                </div>
+               </div>
+                <div style="margin-top:20px;margin-left:5%">
+                 <h5>Nuevo</h5>
+                 <h5>{{TareaNuevas}}</h5>  
+              </div>    
+             </div>               
+              </Widget>      
+           </b-form-group>
+             <b-form-group   class="col-md-4">
+              <Widget class="h-100 mb-6"   >
+                <div style="display: flex;">
+                  <div>
+                 <div style="font-size: 4rem;">
+                <b-icon icon="hourglass-split" animation="fade" font-scale="1" ></b-icon>
+                </div>
+               </div>
+                <div style="margin-top:20px;margin-left:5%">
+                 <h5>Progreso</h5>
+                 <h5>{{TareaProceso}}</h5>  
+              </div>    
+             </div>               
+              </Widget>       
+           </b-form-group>
+             <b-form-group   class="col-md-4">
+            <Widget class="h-100 mb-6"   >
+                <div style="display: flex;">
+                  <div>
+                 <div style="font-size: 4rem;">
+                <b-icon icon="shield-fill-check" animation="fade" font-scale="1" ></b-icon>
+                </div>
+               </div>
+                <div style="margin-top:20px;margin-left:5%">
+                 <h5>Terminado</h5>
+                 <h5>{{TareaNuevas}}</h5>  
+              </div>    
+             </div>               
+              </Widget>       
+           </b-form-group>
+       </div>  
+ 
    <div>
      <b-card   
         header="Primary" 
@@ -306,6 +361,8 @@ export default {
                   me.fecha_inicio=response.data[0].fecha_inicio;
                   me.fecha_termino=response.data[0].fecha_termino;
                   me.metodologia=response.data[0].nombre_metodologia;     
+                  me.estado=response.data[0].estado;    
+                  me.descripcion=response.data[0].descripcion;    
                }).catch(function (error) {
                       console.log(error);
               }) .finally(() => {

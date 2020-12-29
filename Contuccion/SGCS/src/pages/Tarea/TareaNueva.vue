@@ -116,7 +116,8 @@ export default {
           
                     axios.post('ApiWeb/Tarea.php/',obj).then(response => {                      
               
-                    this.Confirmacion();                    
+                    this.Confirmacion();    
+                    this.ListarTarea();                
                 
                 }).catch(function (error) {
                     console.log(error);
@@ -124,8 +125,8 @@ export default {
                     
                 })
             },
-            ListarElemetos(){
-                this.$emit('ListarElemento-Emit');
+            ListarTarea(){
+                this.$emit('Listar-Tarea',this.id_version);
             },
             
             CerrarModal(){              

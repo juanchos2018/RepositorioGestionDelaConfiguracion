@@ -106,8 +106,10 @@ export default {
        ListarTareas(id){
              let me=this;         
              var elementos=[];
+             me.tareasterminadas=[];
+             me.tareas=[];
              axios.get('ApiWeb/Miembro.php/?miembroresponsableID='+id,).then(function(response){   
-                console.log(response.data)   
+             ///   console.log(response.data)   
                 response.data.forEach(elem => {
                     if (elem.estado=="Terminado") {
                          me.tareasterminadas.push({

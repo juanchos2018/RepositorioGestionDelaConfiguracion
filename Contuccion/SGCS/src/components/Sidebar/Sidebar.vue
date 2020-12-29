@@ -8,6 +8,7 @@
       <header class="logo">
          <img src="../../assets/logo/logo1.png" width="30%" alt=""><br>       
           <span class="primary-word"  >  SGC  </span>
+          <h5 style="color:white">{{tipoUsuario}}</h5>
       </header>
       <ul class="nav">
         <NavLink
@@ -120,9 +121,14 @@ export default {
   components: { NavLink },
   data() {
     return {
-     
+     tipoUsuario:'',
     }
   },
+    mounted() {
+    
+      if(localStorage.tipousuario) this.tipoUsuario = localStorage.tipousuario;
+     
+    },
   methods: {
     ...mapActions('layout', ['changeSidebarActive', 'switchSidebar']),
     setActiveByRoute() {

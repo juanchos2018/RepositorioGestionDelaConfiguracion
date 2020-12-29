@@ -11,11 +11,18 @@
                </b-input>
              </b-form-group>                
           </div>  
-            <div class="form-row">                 
+            <div class="form-row">     
+              <!--            
                <b-form-group  label="Porcentaje Avance:"  class="col-md-12">            
                <b-form-input type="range" min="0" max="100" v-model="rango" @change="addNumber" ></b-form-input>
                 {{rango}}            
-             </b-form-group>                
+             </b-form-group>   
+             --> 
+               <b-form-group  label="Porcentaje Avance:"  class="col-md-12">            
+                <a-slider v-model="rango"  @change="addNumber"  />   
+                {{rango}}                     
+             </b-form-group>  
+                    
           </div>
           <div class="form-row"> 
                <b-form-group  label="Url Evidencia"  class="col-md-12">
@@ -71,6 +78,7 @@ export default {
           fecha_actual:moment().format('DD/MM/YYYY'),
           hora_actual:moment().format('HH:mm:ss'),
           estado_tarea:'',
+           disabled: false,
           
         }
     },
@@ -136,7 +144,13 @@ export default {
             ListarTareas(id){
            
                 this.$emit('ListarTareas-Emit',id);
-            },            
+            },  
+             onChange(value) {
+              console.log('change: ', value);
+            },
+            onAfterChange(value) {
+              console.log('afterChange: ', value);
+            },          
             CerrarModal(){              
                  this.$emit('CerrarModal');
             },
@@ -157,6 +171,8 @@ export default {
   ::v-deep .myDiv {
     background-color: 	#FFFFFF;
   }
-
+.code-box-demo .ant-slider {
+  margin-bottom: 16px;
+}
 </style>
 

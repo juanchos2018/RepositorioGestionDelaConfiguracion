@@ -81,7 +81,7 @@ export default {
           let rolId=this.id_rol;     
           let proyectoId=this.id_proyecto;   
           const obj={usuario_miembroid:usuario_miembroid,rolId:rolId,proyectoId:proyectoId};
-           axios.post('Backphp/ApiWeb/Miembro.php/',obj).then(response => {                       
+           axios.post('ApiWeb/Miembro.php/',obj).then(response => {                       
               console.log(response);
                this.Confirmacion();                     
           }).catch(function (error) {
@@ -94,9 +94,9 @@ export default {
           this.$emit('Listar-Emit');
       },   
       ListarUsuario(){
-             let me=this;
+                  let me=this;
                   var elementos=[];
-                  axios.get('Backphp/ApiWeb/Usuario.php/',).then(function(response){                      
+                  axios.get('ApiWeb/Usuario.php/').then(function(response){                      
                   elementos=response.data.data;   
                   console.log(response.data)
                   elementos.map(function(x){
@@ -109,7 +109,7 @@ export default {
        ListarRoles(){
              let me=this;
                   var elementos=[];
-                  axios.get('Backphp/ApiWeb/Rol.php/',).then(function(response){                      
+                  axios.get('ApiWeb/Rol.php/',).then(function(response){                      
                   elementos=response.data.data;   
                   elementos.map(function(x){
                         me.roles.push({text: x.nombre,value:x.id_rol});

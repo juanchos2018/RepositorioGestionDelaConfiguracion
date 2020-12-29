@@ -30,17 +30,29 @@
                 Fecha Inicio :  {{item.fecha_inicio}} <br>
                 Fecha Termino:  {{item.fecha_termino}}<br>
                 Estado:  <span class="badge badge-success">{{item.estado}}</span>  <br>
+                 <br>
+                <div class="row"  style="margin-left:4px;margin-top:2px" >
+                    <br>
+                  <div  style=" display: flex;" v-for="item in filteredList[item.index].listaMiembro" :key="item.key"> 
+                    <b-avatar variant="primary" :text="item.inicial"  v-b-tooltip.hover :title="item.nombre" style="margin-left:3px" ></b-avatar>
+                   
+                 </div>
+                 </div>
                
             </b-card-text>
-            <br>
-            <br>
-          <!--   <b-card-text class="small text-muted">Ultima Actualizacion hace 3 min</b-card-text>-->
+             
+         
+           
+          <!--  
+              
+
+               <b-card-text class="small text-muted">Ultima Actualizacion hace 3 min</b-card-text>-->
             </b-card>
             <br>
             </div>
         </div>
         <miembro-nuevo @CerrarModal="CerrarModal"   v-bind:id_proyecto="id_proyecto" :DialogMiembro="DialogMiembro" > </miembro-nuevo>
-  
+
     </div>
 </template>
 <script>
@@ -52,6 +64,7 @@ export default {
     data(){
         return{
               items:[],
+              listaMiembros:[],
               DialogMiembro:false,
               id_proyecto:'',            
               search: '',
@@ -59,6 +72,7 @@ export default {
     },
     created(){
        this.ListarProyecto();
+       this.LisrarMiembrosProyecto();
     },
      computed: {
       filteredList() {
@@ -92,6 +106,24 @@ export default {
                 }) .finally(() => {                     
             })
         },        
+        LisrarMiembrosProyecto(){
+              let me=this;
+              axios.get('ApiWeb/Miembro.php/').then(response => {                    
+                      me.listaMiembros = response.data;   
+                      
+                        for(var i=0;i< me.items.length ;i++){
+                            for  (var e=0;e< me.listaMiembros.length ;e++){
+                                if(me.items[i].id_proyecto==me.listaMiembros[e].id_proyecto){   
+                                      me.items[i].listaMiembro.push({ nombre: me.listaMiembros[e].nombre,inicial:me.listaMiembros[e].inicial})
+                                    
+                                   } 
+                               }                    
+                           } 
+                  }).catch(function (error) {
+                      console.log(error);
+                }) .finally(() => {                     
+            })
+        },
        CerrarModal() {
            this.DialogMiembro = false;  
        },

@@ -7,15 +7,18 @@
           <br>           
         </div>
     <div >   
-      <div class="row" id="listaproyectos">             
+      <div class="row" >             
        <div class="col-4" v-for="item in items" :key="item.key">  
               
-        <b-card no-body class="overflow-hidden" style="max-width: 340px;"  bg-variant="dark" text-variant="white" footer-tag="footer">
+         <b-card no-body class="overflow-hidden"    border-variant="primary" footer-tag="footer">
             <b-row no-gutters>
             <b-col md="3">
                 <div class="UserAvatar__IconImage-hmym9w-1 jtNJTZ" >
                     <center> 
-                    <b-img src="https://picsum.photos/600/300/?image=25" alt="Avatar" class="avatar1"> </b-img>  
+             
+                   <div style="font-size: 4rem;">
+                <b-icon icon="person-circle" animation="fade" font-scale="1" ></b-icon>
+                </div>
                     </center>
                 </div>     
             </b-col>
@@ -23,7 +26,8 @@
                 <b-card-body >                   
                 <b-card-title>{{item.nombre}}</b-card-title>                    
                 <b-card-text> 
-                   {{item.apellido}}
+                   {{item.apellido}} <br>
+                   <span class="badge badge-success">{{item.tipo}}</span> 
                 </b-card-text>                
                 </b-card-body>                
             </b-col>
@@ -67,8 +71,7 @@ export default {
        },
        ListaUsuarios(){
            let me=this;
-              axios.get('ApiWeb/Usuario.php/').then(response => {
-                     
+              axios.get('ApiWeb/Usuario.php/').then(response => {                     
                       me.items = response.data.data;                      
                   }).catch(function (error) {
                       console.log(error);
