@@ -21,7 +21,7 @@
                <b-form-group  label="Porcentaje Avance:"  class="col-md-12">            
                 <a-slider v-model="rango"  @change="addNumber"  />   
                 {{rango}}                     
-             </b-form-group>  
+              </b-form-group>  
                     
           </div>
           <div class="form-row"> 
@@ -33,7 +33,18 @@
                         </b-form-input>
                    </b-form-group>     
                             
-          </div>            
+          </div>   
+          <div class="form-row">
+            <b-form-group  label="descripcion"   class="col-md-12">
+            <b-form-textarea
+              
+                v-model="descripcion_avance"
+              
+                placeholder="Enter at least 10 characters"
+                rows="2"
+              ></b-form-textarea>
+          </b-form-group>
+            </div>         
          <hr>
         <div class="float-right" >              
           <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
@@ -78,7 +89,8 @@ export default {
           fecha_actual:moment().format('DD/MM/YYYY'),
           hora_actual:moment().format('HH:mm:ss'),
           estado_tarea:'',
-           disabled: false,
+          disabled: false,
+          descripcion_avance:'',
           
         }
     },
@@ -106,34 +118,47 @@ export default {
             },
             RegistrarAvance(){
                  var estadota='';
+                 var estado1='';
                   let id_tarea=this.id_tarea;
                   let urlevidencia=this.urlevidencia;
                   let porcentajeavance=this.rango;    
+                
                   if(this.rango==100){
-                      estadota="Terminado"
+                      estadota="Proceso"
+                      estado1="Terminado";
                   }else{
                       estadota="Proceso";
+                      estado1="Proceso";
                   }
-                  let estado=estadota;          
-                  const obj={id_tarea,urlevidencia,porcentajeavance,estado};
+
+                  let estado=estadota;  
+
+                  const obj={id_tarea,urlevidencia,porcentajeavance,estado,estado1};
                   axios.put('ApiWeb/Tarea.php/',obj).then(response => {     
-                 
+                      console.log(response.data)   
                       this.Confirmacion();
-                       this.ListarTareas(this.id_responsable); 
+                      this.ListarTareas(this.id_responsable); 
                       this.RegistrarTimeline(estadota);
                   }).catch(function (error) {
                       console.log(error);
                   }) .finally(() => {              
-                })
+                })                
+              // this.RegistrarTimeline(estadota);
             },     
             RegistrarTimeline(estadota){
                   let miembroresponsableID=this.id_responsable;
                   let fecha=this.fecha_actual;
                   let hora=this.hora_actual;    
                   let estado=estadota;   
-                  let id_tarea=this.id_tarea;       
-                  const obj={miembroresponsableID,fecha,hora,estado,id_tarea};
-                   axios.post('ApiWeb/Timeline.php/',obj).then(response => {    
+                  let id_tarea=this.id_tarea;     
+
+                    let descripcion_avance=this.descripcion_avance;  
+                    let porcentajeavance=this.rango;  
+                    let urlevidencia=this.urlevidencia;
+
+                  const obj={miembroresponsableID,fecha,hora,estado,id_tarea,porcentajeavance,urlevidencia,descripcion_avance};
+
+                  axios.post('ApiWeb/Timeline.php/',obj).then(response => {    
                            console.log(response.data)               
                      }).catch(function (error) {
                       console.log(error);

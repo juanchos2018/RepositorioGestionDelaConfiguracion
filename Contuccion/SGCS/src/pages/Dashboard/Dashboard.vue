@@ -2,7 +2,7 @@
  <div>
     <div class="row">
      <div class="col-5" v-for="item in agrupados" :key="item.key">    
-       <Widget class="h-100 mb-6"  title="<h5> <span class='fw-semi-bold'>Proyecto </span></h5>"  close collapse customHeader>
+       <Widget class="h-100 mb-6"  title="<h5> <span class='fw-semi-bold'> </span></h5>"  close collapse customHeader>
         <h5>{{item.nombre_proyecto}}</h5>
         <VueApexCharts width="350"  type="donut" :options="chartOptions"  :series="agrupados[item.index].series"  @dataPointSelection="dataPointSelectionHandler" @click="Detalle(item.id_proyecto)" ></VueApexCharts>
    

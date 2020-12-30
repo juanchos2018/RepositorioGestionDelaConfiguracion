@@ -1,17 +1,20 @@
 <template>
 <div>
           <div class="form-row">             
-          <b-form-group    class="col-md-3">                        
-            <a-steps :current="current"   direction="vertical" @change="onChange" >
+          <b-form-group    class="col-md-3">  
+            <Widget class="h-100 mb-6"   >
+               <a-steps :current="current"   direction="vertical" @change="onChange" >
                  <a-step v-for="item in timeline" :key="item.id_timeline" :title="item.fecha" :sub-title="item.hora" :description="item.descripcion"  />              
                 <a-popover slot="progressDot" slot-scope="{  prefixCls }">                 
                    <span :class="`${prefixCls}-icon-dot`" />
                 </a-popover>             
-            </a-steps>  
+            </a-steps>               
+              </Widget>                       
+            
             </b-form-group>
              <b-form-group   class="col-md-9">  
                <div>
-                <b-card>
+                <b-card>                   
                      <a-progress
                       :stroke-color="{
                             '0%': '#108ee9',
@@ -36,27 +39,34 @@
                         <b-link href="urlevidencia">link</b-link>
                         </a-descriptions-item>
                       </a-descriptions>
-
+                
+                  <label for="">Comentario :</label>
+                  <p> {{comnentario}}</p>
                 </b-card>
+              </div>
+              <br>
+                <div style="float:right">
+               <!-- <b-button variant="danger"  class="p-2 px-4 btn-xs">Rechazar</b-button> -->
+                <b-button variant="success"  class="p-2 px-4 btn-xs" @click="Responder" style="margin-left:5px">Responder</b-button>
               </div>
             </b-form-group>    
         </div>  
         <hr>
-        <div style="float:right">
-
-           <b-button variant="danger"  class="p-2 px-4 btn-xs">Rechazar</b-button>
-          <b-button variant="success"  class="p-2 px-4 btn-xs" style="margin-left:5px">Aprobar Tarea</b-button>
-        </div>
-
+     
   </div>
 </template>
 
 <script>
 
 //DialogMetodologia
+import Widget from '@/components/Widget/Widget';
 import moment from 'moment'
 import firebase from '@/firebase'
 import axios from  'axios';
+import Swal from 'sweetalert2'
+
+// CommonJS
+//const Swal = require('sweetalert2')
 export default {
     name: 'tarea-detalle',       
     data() {
@@ -70,9 +80,11 @@ export default {
           urlevidencia:'',
           estado:'',   
           id_usuario:'',
-          
+          comnentario:'',
           timeline:[],
           current: 0,
+          id_tareamiembro:'',
+          mensaje:'',
         }
     },
     watch: {
@@ -88,17 +100,18 @@ export default {
       this.GetDatos()
     },
     methods: {
-         GetDatos(){
+        GetDatos(){
          var item = this.$route.params.id_tarea
           if(item){     
+            this.id_tareamiembro=item;
               this.ListarTimliene(item);  
               this.BuscarTarea(item);
           }         
        },
-         ListarTimliene(id_tarea){
+       ListarTimliene(id_tarea){
            let me=this;
             axios.get('ApiWeb/Timeline.php/?id_tarea='+id_tarea).then(response => {              
-                 me.timeline = response.data.data;    
+                 me.timeline = response.data;    
                  console.log(response.data)            
                }).catch(function (error) {
                     console.log(error);
@@ -107,9 +120,8 @@ export default {
          },
         BuscarTarea(id_tarea1){
            let me=this;
-            axios.get('ApiWeb/Tarea.php/?id_tarea1='+id_tarea1).then(response => {              
-              //   me.timeline = response.data;    
-                 console.log(response.data)     
+            axios.get('ApiWeb/Tarea.php/?id_tarea1='+id_tarea1).then(response => {             
+             
                  me.nombre_miembro=response.data.nombre; 
                  me.fecha_inicio=response.data.fecha_inicio;
                  me.fecha_termino=response.data.fecha_termino   
@@ -121,15 +133,115 @@ export default {
                     console.log(error);
               }) .finally(() => {
            })
-        } ,
+        },
+        Responder(){
+          const swalWithBootstrapButtons =  this.$swal.mixin({
+                customClass: {
+                  confirmButton: 'btn btn-success',
+                  cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: true
+              })
+              swalWithBootstrapButtons.fire({
+                title: this.descripcion,
+                text: "Responder a esta  Tarea !",
+                icon: 'warning',
+                showCancelButton: true,
+                 confirmButtonColor: '#3085d6',
+                 confirmButtonText: 'Aprobar !',
+                cancelButtonText: 'Rechazar !',
+                cancelButtonColor: '#d33',
+                reverseButtons: true
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    this.EditarTareaMiembro(this.id_tareamiembro,"Terminado","Terminado","Aprobado");
+                } else if (result.dismiss === Swal.DismissReason.cancel  ) {
+                   //  this.RecharzarTarea();
+                     this.RecharzarTarea();
+                }
+              })
+        },     
         onChange(current) {
           console.log('onChange:', current);
-          this.current = current;
+           var id_timelinea =this.timeline[current].id_timeline;
+           console.log('id :', id_timelinea);
+           this.ListarComit(id_timelinea);
+           this.current = current;
         },
-       CerrarModal(){              
-              this.$emit('CerrarModal');
-       },       
-       Confirmacion(){
+        ListarComit(id_timelinea){
+           let me=this;
+            axios.get('ApiWeb/Historial.php/?id_timeline='+id_timelinea).then(response => {            
+             
+               if(response.data.length>0){
+                me.comnentario=response.data[0].descripcion;
+                me.urlevidencia=response.data[0].urlevidencia;
+               }else{
+                   me.comnentario="";
+               }
+              
+              
+               }).catch(function (error) {
+                    console.log(error);
+              }) .finally(() => {
+           })
+
+        },
+        CerrarModal(){              
+           this.$emit('CerrarModal');
+        },   
+        EditarTareaMiembro(idtarea,esta,esta1,esta2){
+
+                  let id_tarea=idtarea; 
+                  let estado=esta;  
+                  let estado1=esta1;  
+                  let estado2=esta2;  
+                   let respuesta="Aprobado"; 
+                  const obj={id_tarea,estado,estado1,estado2,respuesta};
+                  axios.put('ApiWeb/Historial.php/',obj).then(response => {     
+                      console.log(response.data)   
+                          this.$swal.fire(
+                          'Aprobado!',
+                          'Your file has been deleted.',
+                          'success'
+                        )
+                  }).catch(function (error) {
+                      console.log(error);
+                  }) .finally(() => {              
+                }) 
+        },   
+        RecharzarTarea(){
+         let me =this;
+         this.$swal.fire({
+            title: 'Mensaje',
+            input: 'textarea',
+            confirmButtonText: 'Enviar !',
+          }).then(function(result) {
+            if (result.value) {             
+                 me.EnviarMensaje(result.value);
+            }
+          })
+        },       
+        EnviarMensaje(mensaje){
+          // this.EditarTareaMiembro(this.id_tareamiembro,"Terminado","Terminado","Aprobado");
+                  let id_tarea=this.id_tareamiembro; 
+                  let estado="Proceso";  
+                  let estado1="Terminado";  
+                  let estado2="Observado";  
+                  let respuesta=mensaje; 
+                  const obj={id_tarea,estado,estado1,estado2,respuesta};
+                  axios.put('ApiWeb/Historial.php/',obj).then(response => {     
+                      console.log(response.data)   
+                          this.$swal.fire(
+                          'Observado!',
+                          'Enviado Obervacion.',
+                          'success'
+                        )
+                  }).catch(function (error) {
+                      console.log(error);
+                  }) .finally(() => {              
+                }) 
+        },
+        Confirmacion(){
           this.$swal({
               position: 'top-end',
               icon: 'success',
@@ -138,7 +250,7 @@ export default {
               showConfirmButton: false,
               timer: 3000
            })
-       },
+        },
     }
 };
 </script>

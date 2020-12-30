@@ -39,7 +39,7 @@
                         <div class="col-4" v-for="item in tareasterminadas" :key="item.key" style="margin-top:10px">  
                             <b-card class="overflow-hidden"  footer-tag="footer" >
                                 <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
-                                    <b-dropdown-item  >Editar</b-dropdown-item>
+                                    <b-dropdown-item  @click="showModal(item.id_tarea)" >Ver</b-dropdown-item>
                                     <b-dropdown-item >Opcion 2</b-dropdown-item>                           
                                 </b-dropdown>   
                             <b-row no-gutters>
@@ -47,8 +47,24 @@
                             <b-col md="12">
                                 <b-card-body>  
                                 <b-card-text>
-                            <h5>{{item.estado}}</h5>    
-                                <a-progress :percent="parseInt(item.porcentajeavance)" /> 
+                            <h5>{{item.estado}}</h5>  
+                            <div style="display: flex;">
+                                 <a-progress :percent="parseInt(item.porcentajeavance)" /> 
+                                 <div v-if="item.estado2=='Aprobado'">
+                                   <b-icon icon="check-square" scale="2" variant="success" v-b-tooltip.hover title="Aprobado"></b-icon>
+                                  </div>    
+                                  <div v-else-if="item.estado2 == 'Revision'">
+                                       <b-icon icon="hourglass-split" scale="2" variant="primary" v-b-tooltip.hover title="Revision"></b-icon>
+                                   </div>   
+                                    <div v-else-if="item.estado2 == 'Observado'">
+                                        <b-icon icon="exclamation-triangle-fill" scale="2" variant="warning" v-b-tooltip.hover title="Observado"></b-icon>
+                                   </div>                      
+                                   <div v-else>
+                                       <b-icon icon="x-circle" scale="2" variant="danger"></b-icon>
+                                   </div>
+                                
+                             </div>  
+                               
                             </b-card-text>   
                                 </b-card-body>                  
                                 <div  style="background-color: white;">                     
@@ -61,8 +77,12 @@
                         </div>
                         </div> 
                 </b-tab>             
-            </b-tabs>       
-         <tarea-editar @CerrarModal="CerrarModal" :DialogoTareaEditar="DialogoTareaEditar" v-bind:id_tarea="id_tarea"  v-bind:id_responsable="id_responsable" v-bind:descripcion="descripcion"  v-bind:porcentaje="porcentaje"   @update-number="update" v-on:ListarTareas-Emit="ListarTareas"></tarea-editar>
+            </b-tabs>    
+         <tarea-editar @CerrarModal="CerrarModal" :DialogoTareaEditar="DialogoTareaEditar" v-bind:id_tarea="id_tarea"  v-bind:id_responsable="id_responsable" v-bind:descripcion="descripcion"  v-bind:porcentaje="porcentaje"   @update-number="update" ></tarea-editar>
+   
+        <b-modal  ref="my-modal" title="Respuesta "  body-class="myDiv">
+            <p class="my-4">{{respuesta}}</p>
+        </b-modal>
     </div>
 </template>
 
@@ -83,6 +103,7 @@ export default {
               descripcion:'',
               porcentaje:null,
               id_responsable:'',
+              respuesta:'',
              
         }
     },
@@ -104,21 +125,24 @@ export default {
              }      
        },
        ListarTareas(id){
+           //v-on:ListarTareas-Emit="ListarTareas"
              let me=this;         
              var elementos=[];
              me.tareasterminadas=[];
              me.tareas=[];
              axios.get('ApiWeb/Miembro.php/?miembroresponsableID='+id,).then(function(response){   
-             ///   console.log(response.data)   
+               console.log(response.data)   
                 response.data.forEach(elem => {
-                    if (elem.estado=="Terminado") {
+                    if (elem.estado1=="Terminado") {
                          me.tareasterminadas.push({
                              id_tarea:elem.id_tarea,
                              descripcion: elem.descripcion,
                              porcentajeavance: elem.porcentajeavance,
                              fecha_inicio:elem.fecha_inicio,
                              fecha_termino: elem.fecha_termino,
-                             estado:elem.estado,                    
+                             estado:elem.estado,   
+                             estado1:elem.estado1, 
+                             estado2:elem.estado2,                  
                           })
                  }else{
                          me.tareas.push({
@@ -139,6 +163,20 @@ export default {
                   console.log(error);
            });       
         },
+        showModal(id_tarea){
+            console.log(id_tarea);
+            this.$refs['my-modal'].show()
+             let me=this;
+             axios.get('ApiWeb/Tarea.php/?id='+id_tarea).then(response => {             
+               //  console.log(response.data)
+                 me.respuesta=response.data.respuesta;                
+             
+               }).catch(function (error) {
+                    console.log(error);
+              }) .finally(() => {
+           })
+        },
+      
         EditarTarea(idtarea,descripcion,porcentaje){
             this.id_tarea=idtarea;
             this.descripcion=descripcion;
@@ -152,3 +190,10 @@ export default {
     }
 }
 </script>
+<style scoped>
+  ::v-deep .myDiv {
+    background-color: 	#FFFFFF;
+  }
+
+</style>
+
