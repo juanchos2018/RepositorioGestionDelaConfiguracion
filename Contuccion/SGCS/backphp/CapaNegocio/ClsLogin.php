@@ -2,7 +2,7 @@
 require_once('../CapaDatos/conectar.php');
 class ClsLogin{
   
-    public function GetLogin($correo_usuario,$password){      
+    public function Loguear($correo_usuario,$password){      
         $vector=array();      
         $conexion=new Conexion();
         $db=$conexion->getConexion();

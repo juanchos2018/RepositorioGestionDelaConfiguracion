@@ -29,16 +29,16 @@ if ($method=="POST"){
     }
 }
 if($method=="GET"){
-    if(!empty($_GET['id'])){
-      //  $id=$_GET['id'];
-     //   $api=new ClsElemento();
-    // //   $obj=$api->getElemento();
-     //   $json=json_encode($obj);
-     //   echo $json;
+    if(!empty($_GET['id_elemento'])){
+        $id_elemento=$_GET['id_elemento'];
+        $api=new ClsElemento();
+        $obj=$api->Eliminar($id_elemento);
+        $json=json_encode($obj);
+        echo $json;
     }
     else{
         $elemento = new ClsElemento();           
-        $resul=$elemento->getElemento();
+        $resul=$elemento->Listar();
         if(count($resul)>0){
                 http_response_code(200);
                 $msg->mensaje = "Listar elemento";

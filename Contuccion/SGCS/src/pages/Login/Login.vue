@@ -1,62 +1,27 @@
 <template>
-<!--
-  <div class="auth-page">
-    <b-container>
-      <h5 class="auth-logo">
-        <i class="fa fa-circle text-primary"></i>
-        Sing App
-        <i class="fa fa-circle text-danger"></i>
-      </h5>
-      <Widget class="widget-auth mx-auto" title="<h3 class='mt-0'>Login to your Web App</h3>" customHeader>
-        <p class="widget-auth-info">
-            Use your email to sign in.
-        </p>
-        <form class="mt" @submit.prevent="login">
-          <b-alert class="alert-sm" variant="danger" :show="!!errorMessage">
-            {{errorMessage}}
-          </b-alert>
-          <div class="form-group">
-            <input class="form-control no-border" ref="email" required type="email" name="email" placeholder="Email" />
-          </div>
-          <div class="form-group">
-            <input class="form-control no-border" ref="password" required type="password" name="password" placeholder="Password" />
-          </div>
-          <b-button type="submit" size="sm" class="auth-btn mb-3" variant="inverse">Login</b-button>
-          <p class="widget-auth-info">or sign in with</p>
-          <div class="social-buttons">
-            <b-button variant="primary" class="social-button mb-2">
-              <i class="social-icon social-google"></i>
-              <p class="social-text">GOOGLE</p>
-            </b-button>
-            <b-button variant="success" class="social-button">
-              <i class="social-icon social-microsoft"></i>
-              <p class="social-text">MICROSOFT</p>
-            </b-button>
-          </div>
-        </form>
-        <p class="widget-auth-info">
-          Don't have an account? Sign up now!
-        </p>
-        <router-link class="d-block text-center" to="login">Create an Account</router-link>
-      </Widget>
-    </b-container>
-    <footer class="auth-footer">
-      2019 &copy; Sing App Vue Admin Dashboard Template.
-    </footer>
-  </div>-->
+
   <div>
+  
 <img class="wave" src="../../assets/wave1.png">
 	<div class="container">		
+      
 		<div class="img">
 			<img src="../../assets/loginsvg.svg">
+       
 		</div>
+  
 		<div class="login-content">
 			<form @submit.prevent="Loguear">
+         <h4>Gestion de la Configuración de software</h4>
+         <b-card>
+
+       
 				<img src="../../assets/avatar.svg">
 				<h2 class="title">Bienvenido</h2>
            		<div class="input-div one">
            		   <div class="i">
-           		   	 <i class="fas fa-user"></i>
+           		 
+                     <i class="fal fa-user"></i>
            		   </div>
            		   <div class="div">
            		   		<input  ref="email" required type="text" name="email"  placeholder="Correo" >
@@ -82,6 +47,7 @@
 						</div>							
 						Ingresar
 			 </b-button>
+         </b-card>
             </form>
         </div>
     </div>

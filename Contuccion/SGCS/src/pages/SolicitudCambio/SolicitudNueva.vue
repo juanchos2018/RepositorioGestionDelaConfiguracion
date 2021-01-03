@@ -24,8 +24,8 @@
         </b-card>
     <br>
     <br>
-          <b-card>          
-                 <b-card-title>Datos Solicitud de Cambio</b-card-title>
+      <b-card>       
+              <b-card-title>Datos Solicitud de Cambio</b-card-title>
                    <div class="form-row">    
                    <b-form-group    class="col-md-12">
                     <label class="control-label font-weight-bold text-info">Objetivo</label> 
@@ -61,8 +61,7 @@ export default {
     
     data(){
         return{
-            items:[],
-        
+            items:[],        
             id_proyecto:'',
             fecha:'',
             objetivo:'',
@@ -72,36 +71,37 @@ export default {
             usuario_miembroid:'',
             id_usuario:'',
             condidgo:'',
+            idtipousuario:'',
+            id_jefeproyecto:'',
 
         }
     },
 
     created () {
-          this.ListarProyecto();  
+          //this.ListarProyecto();  
     },
-     mounted() {
-    
+     mounted() {    
       if(localStorage.idtipo) this.id_usuario = localStorage.id_usuario;
-     
+      if(localStorage.idtipo) this.idtipousuario = localStorage.idtipo;
+       this.ListarPoryectosMiembro(this.id_usuario);      
     },
-    methods: {
-          ListarProyecto(){
-            let me=this;           
-            var previa=[];
-            axios.get('ApiWeb/Proyecto.php/').then(response => {                    
-                      previa = response.data;                      
+    methods: {       
+        ListarPoryectosMiembro(idtipousuario){
+              let me=this;
+              var previa=[];       
+              axios.get('ApiWeb/Usuario.php/?usuario_miembroid='+idtipousuario).then(response => {                    
+                    previa = response.data;                      
                       previa.map(function(x){
                            me.items.push({text: x.nombre_proyecto,value:x.id_proyecto});
-                       }); 
+                       });               
                   }).catch(function (error) {
                       console.log(error);
-                }) .finally(() => {
-                     
+                 }) .finally(() => {                     
             })
         },
         CrearSolicitudCambio(){
           let id_proyecto=this.id_proyecto;  
-          let miembrojefeId=this.usuario_miembroid;
+          let miembrojefeId=this.id_jefeproyecto;
           let miembrosolicitanteId=this.usuario_miembroid;
           let fecha=this.fecha;
           let objetivo=this.objetivo;
@@ -115,18 +115,19 @@ export default {
                    }).catch(function (error) {
                       console.log(error);
                 }) .finally(() => {                     
-              })
+            })
         },
         ObtenerIdMiembro(proyectoId){
                  axios.get('ApiWeb/Usuario.php/?proyectoId='+proyectoId+"&usuario_miembroid="+this.id_usuario).then(response => {                       
                  console.log(response.data);                             
                  this.usuario_miembroid=response.data.id;
+                 this.id_jefeproyecto=response.data.idusuarioJefe;
                 }).catch(function (error) {
                       console.log(error);
-                }) .finally(() => {                     
-              })
-        },
-         Confirmacion(){
+              }) .finally(() => {                     
+           })
+        },      
+        Confirmacion(){
             this.$swal({
                 position: 'top-end',
                 icon: 'success',
@@ -134,8 +135,8 @@ export default {
                 text:'texto',
                 showConfirmButton: false,
                 timer: 3000
-              })
-          },
+            })
+        },
         handleChange(value){
             var idpro=value;
             this.ObtenerIdMiembro(idpro);

@@ -21,11 +21,17 @@
          <br>
      <div class="inner-content">    
         <div v-if="Vergrilla">
-             <b-table :items="filteredList" :fields="fields"  stacked="sm">   
+          <b-card>
+   <b-table  striped hover :items="filteredList" :fields="fields"  stacked="sm">   
               <template v-slot:cell(accion)="item">
-                <b-button variant="primary" @click="Detalle(item.item.id_metodologia+'-'+item.item.nombre)" >Ver</b-button>
+                <b-button variant="primary"  class="m-1 p-2 px-4 btn-xs" @click="Detalle(item.item.id_metodologia+'-'+item.item.nombre)" >Ver</b-button>
+                <b-button type="button"  size="lg" class="m-1 p-2 px-4 btn-xs" v-b-tooltip.hover title="Editar" @click="AbrirModalEditar(item.item.id_metodologia)" variant="primary"> 
+                 <b-icon icon="pencil-square" animation="fade" font-scale="1" ></b-icon>
+                 </b-button>
               </template>
             </b-table>
+          </b-card>
+          
        </div>
       <div v-if="VerCard">   
            <div class="row" >             

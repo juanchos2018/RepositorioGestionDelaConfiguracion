@@ -7,9 +7,15 @@ class conexion{
 	var $host;
 	var $database;
 	var $identificador;
-  
+
 	function __construct($parametros=""){
 		if($parametros==""){
+		//	$proveedor = "mysql";		
+		//	$user="edsyscom";			
+		//	$pass="HxhCyVR9k7;5(5";
+		//	$database="edsyscom_bdmoviles";
+		//	$host="localhost";
+
 			$proveedor = "mysql";		
 			$user="root";			
 			$pass="";

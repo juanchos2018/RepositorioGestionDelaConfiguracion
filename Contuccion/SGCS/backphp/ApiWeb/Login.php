@@ -11,7 +11,7 @@ if($method=="GET"){
         $correo_usuario=$_GET['correo'];
         $password=$_GET['password'];
         $api=new ClsLogin();
-        $obj=$api->GetLogin($correo_usuario,$password);
+        $obj=$api->Loguear($correo_usuario,$password);
         $json=json_encode($obj);
         echo $json;
     }

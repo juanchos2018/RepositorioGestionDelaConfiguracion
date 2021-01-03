@@ -3,6 +3,11 @@
 class Conexion{
 
     public function getConexion(){
+      //  $hostname="localhost";
+      //  $database="edsyscom_bdmoviles";
+      //  $username="edsyscom";
+      //  $password="HxhCyVR9k7;5(5";
+
         $hostname="localhost";
         $database="sistemagc";
         $username="root";

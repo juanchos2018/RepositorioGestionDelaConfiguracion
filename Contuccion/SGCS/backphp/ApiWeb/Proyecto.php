@@ -5,24 +5,19 @@ require_once('../CapaNegocio/ClsProyecto.php');
 $method=$_SERVER['REQUEST_METHOD'];
 
 if($method=="GET"){
-    if(!empty($_GET['id'])){
-        $id=$_GET['id'];
-        $api=new ClsProyecto();
-        $obj=$api->getProyectos();
-        $json=json_encode($obj);
-        echo $json;
-    }
-    else if(!empty($_GET['id_proyecto'])){
+    if(!empty($_GET['id_proyecto'])){
             $id_proyecto=$_GET['id_proyecto'];
             $api=new ClsProyecto();
-            $obj=$api->getFaseMetodologiaProyecto($id_proyecto);
+          //  $obj=$api->getFaseMetodologiaProyecto($id_proyecto);
+         //  $obj=$api->ListaFasesProyecto($id_proyecto);
+            $obj=$api->ListaFasesProyecto($id_proyecto);
             $json=json_encode($obj);
             echo $json;
     }
     else if(!empty($_GET['id_proyect'])){
             $id_proyecto=$_GET['id_proyect'];
             $api=new ClsProyecto();
-            $obj=$api->getProyecto($id_proyecto);
+            $obj=$api->BuscarProyecto($id_proyecto);
             $json=json_encode($obj);
             echo $json;
      }    
@@ -30,14 +25,15 @@ if($method=="GET"){
             $id_proyecto=$_GET['parametro1'];
             $id_fase=$_GET['id_fase'];
             $api=new ClsProyecto();
-            $obj=$api->getElementosFaseProyecto($id_proyecto,$id_fase);
+            //getFaseMetodologiaProyecto
+            $obj=$api->ListaElementosFaseProyecto($id_proyecto,$id_fase);
             $json=json_encode($obj);
             echo $json;
        }
     else{
         $vector=array();
         $api=new ClsProyecto();
-        $vector=$api->getProyectos();
+        $vector=$api->Listar();
         $json=json_encode($vector);
         echo $json;
     }
@@ -56,8 +52,10 @@ if ($method=="POST"){
     $usuariojefeId=$data['usuariojefeId'];  
     $ListaFases=$data['lista'];
     $ListaElementos=$data['ListaElementos']; 
+    $porcentajeFase=$data['porcentajeFase']; 
+    $porcentaje=$data['porcentaje'];
     $api=new ClsProyecto();
-    $obj=$api->setProyecto($codigo,$nombre,$fechaini,$fechater,$descripcion,$estado,$metodologia,$usuariojefeId,$ListaFases,$ListaElementos);
+    $obj=$api->Agregar($codigo,$nombre,$fechaini,$fechater,$descripcion,$estado,$metodologia,$usuariojefeId,$ListaFases,$ListaElementos,$porcentajeFase,$porcentaje);
      $json=json_encode($obj);      
     echo $json;
 }

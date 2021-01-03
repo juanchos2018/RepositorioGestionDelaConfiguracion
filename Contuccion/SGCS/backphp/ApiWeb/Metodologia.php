@@ -38,7 +38,7 @@ if($method=="GET"){
     else if (!empty($_GET['id_meto'])){
         $id=$_GET['id_meto'];
         $api=new ClsMetodologia();
-        $obj=$api->getFaseMetodologia($id);
+        $obj=$api->ListaFaseMetodologia($id);
         $json=json_encode($obj);
         echo $json;
     }

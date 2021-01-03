@@ -5,7 +5,7 @@ import Login from '@/pages/Login/Login';
 import ErrorPage from '@/pages/Error/Error';
 // Main
 import AnalyticsPage from '@/pages/Dashboard/Dashboard';
-
+import DetalleGrafico from '@/pages/Dashboard/DetalleGrafico';
 import Usuario from '@/pages/Usuario/Usuario';
 import UsuarioTareas from '@/pages/Usuario/UsuarioTareas';
 
@@ -62,7 +62,16 @@ var router = new Router({
           meta :{
             libre: true  
           }         
-        },        
+        },    
+        {
+          path: 'detallegrafico:id_proyecto',
+          name: 'detallegrafico',
+          component: DetalleGrafico,
+          meta :{
+            libre: true  ,
+            Jefe:true 
+          }         
+        },     
         {
           path: 'usuario',
           name: 'usuario',
@@ -138,8 +147,8 @@ var router = new Router({
           name: 'solicitudnueva',
           component: SolicitudNueva,
           meta :{
-            Administrador :true,   
-            Jefe:true       
+            Miembro :true,   
+                 
           }
         },
         {

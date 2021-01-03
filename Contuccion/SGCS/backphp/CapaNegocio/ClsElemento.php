@@ -14,16 +14,16 @@ class ClsElemento
         $rs=$sql->consulta($consulta);
         return $rs;
     }
-    public function getElemento(){
+    public function Listar(){
         $sql = new tablalibre();
         $consulta ="SELECT * FROM elementoconfiguracion";
         $rs=$sql->consulta($consulta);
         $vector = array();
         while($datos = $rs->recordset->fetch(PDO::FETCH_ASSOC)){
               $temp = new ClsElemento;
-              $temp->id_elemento = $datos["id_elemento"];
-              $temp->codigo_elemento = $datos["codigo_elemento"];
-              $temp->nombre = $datos["nombre"];             	
+              $temp->id_elemento =      $datos["id_elemento"];
+              $temp->codigo_elemento =  $datos["codigo_elemento"];
+              $temp->nombre =           $datos["nombre"];             	
               array_push($vector,$temp);
         }
         return $vector;
@@ -36,6 +36,12 @@ class ClsElemento
         $rs=$sql->consulta($consulta);
         return $rs;
     } 
-
+    function Eliminar($id_elemento)
+    {
+        $sql = new tablalibre();
+        $consulta ="delete from elementoconfiguracion where id_elemento=".$id_elemento;
+        $rs=$sql->consulta($consulta);
+        return $rs;
+    }
 }
 

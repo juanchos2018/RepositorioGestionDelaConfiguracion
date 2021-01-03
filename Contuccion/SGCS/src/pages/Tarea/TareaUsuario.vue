@@ -60,8 +60,7 @@ export default {
         ListarPoryectos(idtipousuario){
               let me=this;
               console.log(idtipousuario);
-              axios.get('ApiWeb/Usuario.php/?usuario_miembroid='+idtipousuario).then(response => {
-                    
+              axios.get('ApiWeb/Usuario.php/?usuario_miembroid='+idtipousuario).then(response => {                    
                       me.proyectos = response.data;     
                       console.log(response.data)                 
                   }).catch(function (error) {

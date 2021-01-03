@@ -32,12 +32,14 @@ if ($method=="POST"){
     }
 }
 if($method=="GET"){
-    if(!empty($_GET['id'])){
-      //  $id=$_GET['id'];
-     //   $api=new ClsElemento();
-    // //   $obj=$api->getElemento();
-     //   $json=json_encode($obj);
-     //   echo $json;
+    if(!empty($_GET['proyectoId'] )){
+       //&& !empty( $_GET['usuario_miembroid']  ) 
+       $proyectoId=$_GET['proyectoId'];
+       $usuario_miembroid=$_GET['usuario_miembroid'];
+       $api=new ClsUsuario();
+       $obj=$api->ObtenerIdMiembro($usuario_miembroid,$proyectoId);
+       $json=json_encode($obj);
+       echo $json;
     }
   else  if(!empty($_GET['usuario_miembroid'])){
         $id=$_GET['usuario_miembroid'];
@@ -46,7 +48,7 @@ if($method=="GET"){
         $json=json_encode($obj);
         echo $json;
     }
-    else{
+  else{
         $usuario = new ClsUsuario();           
         $resul=$usuario->Listar();
         if(count($resul)>0){

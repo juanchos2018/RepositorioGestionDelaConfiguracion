@@ -38,7 +38,7 @@
             <b-col md="3">
                 <div class="UserAvatar__IconImage-hmym9w-1 jtNJTZ" >
                     <center> 
-                    <img src="../../assets/elemento.png" alt="Avatar" class="avatar1"/> 
+                    <img   src="../../assets/elemento.png" alt="Avatar" class="avatar1 img-fluid"/> 
                     </center>
                 </div>     
             </b-col>

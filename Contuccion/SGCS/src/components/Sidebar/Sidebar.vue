@@ -58,6 +58,7 @@
             ]"
         />
          <NavLink
+             v-if="esMiembro"
             :activeItem="activeItem"
             header="Solicitud"
             link="/app/solicitudnueva"

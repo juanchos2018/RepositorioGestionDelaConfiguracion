@@ -20,7 +20,7 @@ class ClsMiembro{
         $consulta->execute();      
         return '{"msg":"Agreado Miembro"}';
     }
-    public function getMiembro($miemdro_id){
+    public function ObtenerDatos($miemdro_id){
         $vector=array();
         $conexion=new Conexion();
         $db=$conexion->getConexion();
@@ -33,16 +33,16 @@ class ClsMiembro{
         $consulta->execute();
         while($fila=$consulta->fetch()){
             $vector[]=array(
-                "usuario_miembroid"=>$fila['usuario_miembroid'],
-                "apellido"=>$fila['apellido'],
-                "nombre"=>$fila['nombre'],
-                "nombre_rol"=>$fila['nombre_rol'],
-                "id_usuario"=>$fila['id_usuario'] );           
+                "usuario_miembroid"=>   $fila['usuario_miembroid'],
+                "apellido"=>            $fila['apellido'],
+                "nombre"=>              $fila['nombre'],
+                "nombre_rol"=>          $fila['nombre_rol'],
+                "id_usuario"=>          $fila['id_usuario'] );           
         }
         return $vector;
     }
    
-    public function getMiembrosProyecto($id_proyecto){
+    public function ListaMiembrosProyecto($id_proyecto){
         $vector=array();
         $conexion=new Conexion();
         $db=$conexion->getConexion();
@@ -69,11 +69,11 @@ class ClsMiembro{
         return $vector;
     }
 
-    public function getTareasMiembro($miembroresponsableID){
+    public function ListaTareasMiembro($miembroresponsableID){
         $vector=array();
         $conexion=new Conexion();
         $db=$conexion->getConexion();
-        $sql="SELECT  usu.nombre ,t.id_tarea,t.verionID, t.fecha_inicio,t.fecha_termino,t.descripcion,t.porcentajeavance,t.urlevidencia,t.estado FROM tarea_ecs AS t
+        $sql="SELECT  usu.nombre ,t.id_tarea,t.verionID, t.fecha_inicio,t.fecha_termino,t.descripcion,t.porcentajeavance,t.urlevidencia,t.estado ,t.estado1,t.estado2 ,t.respuesta FROM tarea_ecs AS t
         inner JOIN  miembroproyecto AS mi 
         ON t.miembroresponsableID =mi.id
         INNER JOIN usuario AS  usu
@@ -89,7 +89,10 @@ class ClsMiembro{
                 "descripcion"=>$fila['descripcion'],
                 "urlevidencia"=>$fila['urlevidencia'],
                 "porcentajeavance"=>$fila['porcentajeavance'],
-                "estado"=>$fila['estado']);           
+                "estado"=>$fila['estado'],
+                "estado1"=>$fila["estado1"],
+                "estado2"=>$fila["estado2"],
+                "respuesta"=>$fila["respuesta"]);           
         }
         return $vector;
     }
@@ -106,6 +109,30 @@ class ClsMiembro{
         $consulta->execute();      
         return '{"msg":"editado Fase"}';
   }
-
+  
+  public function ListarMiembros(){
+      
+    $vector=array();
+    $conexion=new Conexion();
+    $db=$conexion->getConexion();
+    $sql=" SELECT  pro.id_proyecto,  usu.nombre  FROM  miembroproyecto AS mi 
+    INNER  JOIN  proyecto AS pro
+    ON pro.id_proyecto=mi.proyectoId
+    INNER JOIN usuario AS usu
+    ON  usu.id_usuario=mi.usuario_miembroid";
+    $consulta=$db->prepare($sql);
+    $consulta->execute();
+    while($fila=$consulta->fetch()){
+        $inicial="";
+        $inicial = $fila['nombre'];
+        
+        $vector[]=array(
+            "id_proyecto"=>$fila['id_proyecto'],
+            "nombre"=>$fila['nombre'],
+            "inicial"=>$inicial[0]);           
+    }
+    return $vector;
+    }
+    
 
 }

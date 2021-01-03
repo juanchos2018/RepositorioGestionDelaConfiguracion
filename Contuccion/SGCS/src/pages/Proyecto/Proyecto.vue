@@ -14,15 +14,17 @@
           <br>    
           <br>       
         </div>
-       <div class="row" >
-          
+       <div class="row" >          
         <div class="col-4" v-for="item in filteredList" :key="item.key">
         <b-card  border-variant="primary" >
-            <b-dropdown class="dropdown-icon strong"   variant="#FFFFF" style="float:right;font-weight: 400" right >            
-                     <b-dropdown-item @click="AbrirDialogo(item.id_proyecto)">Nuevo Miembro</b-dropdown-item>
-                    <b-dropdown-item @click="Miembros(item.id_proyecto)">Miembros</b-dropdown-item>
-                   
-                    <b-dropdown-item @click="Detalle(item.id_proyecto)">Detalle</b-dropdown-item>           
+            <b-dropdown no-caret  variant="#FFFFF" style="float:right;font-weight: 400" right >      
+                 <template slot="button-content">
+                    <i class="py-0 fa fa-cog"></i>
+                  
+                </template>      
+                    <b-dropdown-item @click="AbrirDialogo(item.id_proyecto)">Nuevo Miembro</b-dropdown-item>
+                    <b-dropdown-item @click="Miembros(item.id_proyecto)">Miembros</b-dropdown-item>                   
+                             
                 </b-dropdown>             
             <b-card-title>{{item.nombre_proyecto}}</b-card-title>  
             <br>    
@@ -34,23 +36,23 @@
                 <div class="row"  style="margin-left:4px;margin-top:2px" >
                     <br>
                   <div  style=" display: flex;" v-for="item in filteredList[item.index].listaMiembro" :key="item.key"> 
-                    <b-avatar variant="primary" :text="item.inicial"  v-b-tooltip.hover :title="item.nombre" style="margin-left:3px" ></b-avatar>
+                    <b-avatar :variant="item.color" :text="item.inicial"  v-b-tooltip.hover :title="item.nombre" style="margin-left:3px" ></b-avatar>
                    
                  </div>
-                 </div>
-               
-            </b-card-text>
-             
-         
-           
+                 </div>    
+                  <b-button type="button"  style="float:right" variant="primary"  @click="Detalle(item.id_proyecto)" class="p-2 px-4 btn-xs">
+                        Detalle
+                    <b-icon icon="forward"></b-icon>
+                     </b-button>           
+            </b-card-text>       
           <!--  
-              
-
+              chevron-double-right
                <b-card-text class="small text-muted">Ultima Actualizacion hace 3 min</b-card-text>-->
             </b-card>
             <br>
             </div>
         </div>
+  
         <miembro-nuevo @CerrarModal="CerrarModal"   v-bind:id_proyecto="id_proyecto" :DialogMiembro="DialogMiembro" > </miembro-nuevo>
 
     </div>
@@ -68,11 +70,16 @@ export default {
               DialogMiembro:false,
               id_proyecto:'',            
               search: '',
+              idtipousuario:'',
+              idusuario:'',
+              mycolor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+              colores:['primary','success','info','warning','dark','secondary'],
+               selectedImage: ''
         }
     },
     created(){
-       this.ListarProyecto();
-       this.LisrarMiembrosProyecto();
+    //   this.ListarProyecto();
+    //   this.LisrarMiembrosProyecto();
     },
      computed: {
       filteredList() {
@@ -80,6 +87,11 @@ export default {
           return post.nombre_proyecto.toLowerCase().includes(this.search.toLowerCase())
         })
       }
+    },
+    mounted() {
+     if(localStorage.idtipo) this.idtipousuario = localStorage.idtipo;
+      if(localStorage.idtipo) this.idusuario = localStorage.id_usuario;
+       this.ListarPoryectosUsuario(this.idusuario);   
     },
     methods:{
         Nuevo(){
@@ -106,15 +118,30 @@ export default {
                 }) .finally(() => {                     
             })
         },        
+        ListarPoryectosUsuario(idtipousuario){
+              let me=this;
+              console.log(idtipousuario);
+              axios.get('ApiWeb/Usuario.php/?usuario_miembroid='+idtipousuario).then(response => {                    
+                       me.items = response.data;    
+                  //    console.log(response.data)  
+                      me.LisrarMiembrosProyecto();               
+                  }).catch(function (error) {
+                      console.log(error);
+                 }) .finally(() => {                     
+            })
+        },
         LisrarMiembrosProyecto(){
               let me=this;
+              
               axios.get('ApiWeb/Miembro.php/').then(response => {                    
-                      me.listaMiembros = response.data;   
-                      
+                      me.listaMiembros = response.data;                         
                         for(var i=0;i< me.items.length ;i++){
                             for  (var e=0;e< me.listaMiembros.length ;e++){
                                 if(me.items[i].id_proyecto==me.listaMiembros[e].id_proyecto){   
-                                      me.items[i].listaMiembro.push({ nombre: me.listaMiembros[e].nombre,inicial:me.listaMiembros[e].inicial})
+                                    var color='';
+                                    var idx = Math.floor(Math.random() * this.colores.length);
+                                        color= this.colores[idx];
+                                      me.items[i].listaMiembro.push({ nombre: me.listaMiembros[e].nombre,inicial:me.listaMiembros[e].inicial,color:color})
                                     
                                    } 
                                }                    

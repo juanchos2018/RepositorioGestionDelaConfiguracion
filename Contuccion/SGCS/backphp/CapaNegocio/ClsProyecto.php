@@ -9,11 +9,12 @@ require_once('ClsLabel.php');
 class ClsProyecto
 {
  
-    public function getProyectos(){
+    public function Listar(){
         $vector=array();
         $options =array();  
         $series=[];
         $contador=0;
+        $listaMiembro=array();
         $datos= array("Nuevo", "Proceso", "Terminado");
         $charOptions= new Foo();
         $charOptions->labels=$datos; 
@@ -38,12 +39,13 @@ class ClsProyecto
                 "labels"=>$options, 
                 "series"=>$series,
                 "index"=>$contador,
-                "charOptions"=>$charOptions );  
+                "charOptions"=>$charOptions,
+                "listaMiembro"=>$listaMiembro );  
                 $contador++;              
         }
         return $vector;
     }  
-    public function getProyecto($id_proyecto){
+    public function BuscarProyecto($id_proyecto){
         $vector=array();
         $conexion=new Conexion();
         $db=$conexion->getConexion();
@@ -68,6 +70,7 @@ class ClsProyecto
         return $vector;
     }   
     public function getFaseMetodologiaProyecto($id_proyecto){
+        /// ya no se usa borrar
         $vector=array();
         $conexion=new Conexion();
         $db=$conexion->getConexion();
@@ -88,14 +91,77 @@ class ClsProyecto
         }
         return $vector;
     }
-    public function setProyecto($codigo,$nombre,$fechaini,$fechater,$descripcion,$estado,$metodologia,$usuariojefeId,$ListaFases,$ListaElementos){
+    public function ListaFasesProyectono($id_proyecto){
+        $vector=array();
+        $conexion=new Conexion();
+        $db=$conexion->getConexion();
+        $series=array();
+        $sql="SELECT  pro.id_proyecto,crono.id_fase,crono.nombre FROM  cronogramafase AS crono 
+        INNER JOIN cronograma AS cr
+        ON crono.coronogramaId  =cr.id_cronograma
+        INNER JOIN proyecto AS pro
+        ON pro.id_proyecto=cr.id_proyecto   
+        WHERE pro.id_proyecto=".$id_proyecto;
+        $consulta=$db->prepare($sql);
+        $consulta->execute();
+        while($fila=$consulta->fetch()){
+            $vector[]=array(   
+                "id_fase"=>$fila['id_fase'],       
+                "nombre_fase"=>$fila['nombre'],               
+                "title"=>$fila['nombre'],
+                "series"=>$series);           
+        }
+        return $vector;
+    }
+    public function ListaFasesProyecto($id_proyecto){
+        $vector=array();
+        $conexion=new Conexion();
+        $db=$conexion->getConexion();
+        $series1=array();
+        $categories=array();
+        $contador=0;
+      
+        $lista=array();
+        $data=array();
+        $series[]=array(   "data"=>$data    );
+    
+         $fruits = array ( "series"  => array () );
+
+     
+        $xaxis        = (object) [ 'categories' => $categories ];
+        $chartOptions = (object) ['xaxis' =>  $xaxis  ];     
+        $sql="SELECT  pro.id_proyecto,crono.id_fase,crono.nombre FROM  cronogramafase AS crono 
+        INNER JOIN cronograma AS cr
+        ON crono.coronogramaId  =cr.id_cronograma
+        INNER JOIN proyecto AS pro
+        ON pro.id_proyecto=cr.id_proyecto   
+        WHERE pro.id_proyecto=".$id_proyecto;
+        $consulta=$db->prepare($sql);
+        $consulta->execute();
+        while($fila=$consulta->fetch()){
+            $vector[]=array(   
+                "id_fase"=>$fila['id_fase'],       
+                "nombre_fase"=>$fila['nombre'],               
+                "title"=>$fila['nombre'],
+               
+              ///  "series"=>$series,
+                "index"=>$contador,
+                "series"=>$series,
+              
+                "chartOptions"=>$chartOptions);  
+                $contador++;           
+        }
+        return $vector;
+    }
+    
+    public function Agregar($codigo,$nombre,$fechaini,$fechater,$descripcion,$estado,$metodologia,$usuariojefeId,$ListaFases,$ListaElementos,$porcentajeFase,$porcentaje){
       
         $conexion=new Conexion();
         $cronograma=new ClsCronograma();        
         $miembro=new ClsMiembro();      
         $vector=array(); 
         $db=$conexion->getConexion();
-        $sql="INSERT INTO proyecto (codigo_proyecto,nombre_proyecto,fecha_inicio,fecha_termino,descripcion,estado,metodologiaId,usuariojefeId)  VALUES (:codigo,:nombre,:fechaini,:fechater,:descripcion,:estado,:metodologia,:usuariojefeId)";
+        $sql="INSERT INTO proyecto (codigo_proyecto,nombre_proyecto,fecha_inicio,fecha_termino,descripcion,estado,metodologiaId,usuariojefeId,porcentaje)  VALUES (:codigo,:nombre,:fechaini,:fechater,:descripcion,:estado,:metodologia,:usuariojefeId,:porcentaje)";
        
         $consulta=$db->prepare($sql);
         $consulta->bindParam(':codigo',$codigo);
@@ -106,6 +172,7 @@ class ClsProyecto
         $consulta->bindParam(':estado',$estado);
         $consulta->bindParam(':metodologia',$metodologia);
         $consulta->bindParam(':usuariojefeId',$usuariojefeId);
+        $consulta->bindParam(':porcentaje',$porcentaje);
         $consulta->execute();
         $retunidproyecto = $db->lastInsertId();
         $vector=array();
@@ -114,7 +181,7 @@ class ClsProyecto
         $dato=$miembro->Agregar($usuariojefeId,$rolId,$retunidproyecto);
         foreach ($ListaFases as $item)    {   
            $cronogramafase=new ClsCronogramaFase();            
-           $id_cronograma_fase= $cronogramafase->setCronogramaFase($id_cronograma,$item['nombre'],$item['id_fase']);   
+           $id_cronograma_fase= $cronogramafase->setCronogramaFase($id_cronograma,$item['nombre'],$item['id_fase'],$porcentajeFase);   
            $vector[]=array(
             "id_cronograma_fase"=>$id_cronograma_fase,
             "nombre"=>$item['nombre'],
@@ -123,7 +190,7 @@ class ClsProyecto
         return $vector;    			
     }
 
-    public function getElementosFaseProyecto($id_proyecto,$id_fase){
+    public function ListaElementosFaseProyecto($id_proyecto,$id_fase){
         $vector=array();
         $conexion=new Conexion();
         $db=$conexion->getConexion();

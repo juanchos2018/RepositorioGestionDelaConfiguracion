@@ -39,9 +39,9 @@ class ClsCronogramaElemento{
        $consulta->execute();
        while($fila=$consulta->fetch()){
              $vector[]=array(
-               "id_proyecto"=>$fila['id_proyecto'],
-               "id_fase"=>$fila['id_fase'],
-               "nombre_elemento"=>$fila['nombre_elemento']);           
+               "id_proyecto"=>      $fila['id_proyecto'],
+               "id_fase"=>          $fila['id_fase'],
+               "nombre_elemento"=>  $fila['nombre_elemento']);           
        }
        return $vector;    
    }

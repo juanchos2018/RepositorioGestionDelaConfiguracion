@@ -94,8 +94,12 @@
        <h5>Elementos de configuración</h5>
            <b-table striped hover :items="fases[item.index].tabla" :fields="fields2"  >
               <template  v-slot:cell(acciones)="row">
-                <b-form-checkbox    @change="onPreviewClick(row.index,row.item.id,row.item.NombreElemento,item.id_fase)"            
+                <div style="display: flex;">
+                  <b-form-checkbox    @change="onPreviewClick(row.index,row.item.id,row.item.NombreElemento,item.id_fase)"            
                 ></b-form-checkbox>
+                <strong>{{row.item.NombreElemento }}  </strong>  
+                </div>
+               
               </template>
             </b-table>
         </b-tab>   
@@ -157,15 +161,15 @@ export default {
            },
           fields: [
                    { label:"Acciones", key: 'acciones', sortable: false },
-                   { label:"Id", key: 'id_elemento', sortable: false },
-                   { label:"Nombre Elemento", key: 'nombre', sortable: false }, 
+                  
+                  
                    { label:"elegir", key: 'elegir', sortable: false } 
                   
              ],
             fields2: [
                   { label:"Acciones", key: 'acciones', sortable: false },
-                   { label:"Id", key: 'id', sortable: false },
-                   { label:"Nombre Elemento", key: 'NombreElemento', sortable: false },   
+               
+                    
              ],
         tabs: [],
         tablas:{
@@ -183,6 +187,7 @@ export default {
     mounted() {
     
       if(localStorage.idtipo) this.usuariojefeId = localStorage.id_usuario;
+      console.log(this.usuariojefeId)
      
     },
     methods:{      
@@ -203,12 +208,11 @@ export default {
           let estado="activo";
           let metodologia=this.metodologiaId;  
           var lista=this.listaFases;
-
           var cantidad=lista.length;
           var porcentajeFAse=100/parseInt(cantidad);
-
+          var porcentaje=0;
           var ListaElementos=this.listaElementos;
-          const obj={codigo,nombre,fechaini,fechater,descripcion,estado,metodologia,usuariojefeId,lista,ListaElementos};
+          const obj={codigo,nombre,fechaini,fechater,descripcion,estado,metodologia,usuariojefeId,lista,ListaElementos,porcentaje};
           axios.post('ApiWeb/Proyecto.php/',obj).then(response => {                       
                  console.log(response);
                   this.Listacronogramafase=response.data;

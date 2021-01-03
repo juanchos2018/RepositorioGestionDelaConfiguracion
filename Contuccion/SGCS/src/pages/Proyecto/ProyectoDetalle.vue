@@ -75,7 +75,7 @@
                </div>
                 <div style="margin-top:20px;margin-left:5%">
                  <h5>Terminado</h5>
-                 <h5>{{TareaNuevas}}</h5>  
+                 <h5>{{TareaTerminada}}</h5>  
               </div>    
              </div>               
               </Widget>       
@@ -112,8 +112,8 @@
                       <div v-else>
                         <b-icon icon="chevron-right">  </b-icon>  
                        </div>  
-                  </b-button>
-              <strong>{{item.nombre_elemento }}  </strong>  
+                </b-button>
+            <strong>{{item.nombre_elemento }}  </strong>  
           </template>
           <template  v-slot:row-details="">
             <a-list item-layout="horizontal" :data-source="listaversiones">                              
@@ -372,7 +372,19 @@ export default {
           let me=this;
           axios.get('ApiWeb/Consulta.php/?id_proyecto='+id_proyecto).then(response => {    
                   me.TareaNuevas=response.data[0].cantidad;  
-                  me.TareaProceso=response.data[1].cantidad;
+                  if(response.data.length>1){
+                    me.TareaProceso=response.data[1].cantidad;
+                  }
+                  else{ 
+                      me.TareaProceso="0";
+                  }
+                 if(response.data.length>2){
+                   me.TareaTerminada=response.data[2].cantidad;   
+                  }else{
+                      me.TareaTerminada="0";
+                  }
+                 
+                
                   console.log(response.data)  
                }).catch(function (error) {
                       console.log(error);

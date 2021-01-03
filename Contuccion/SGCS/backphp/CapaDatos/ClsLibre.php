@@ -36,6 +36,23 @@ class tablalibre{
 		$objconexion->desconectar();
 		return $this;
 	}
+	function consulta1($consul){
+		$objconexion = new conexion($this->conex);
+		
+		$this->query = $consul;
+		$this->identificador = $objconexion->identificador;
+		$this->recordset = $this->identificador->prepare($this->query);
+		$this->recordset->execute();
+	//	$retunidproyecto = $recordset->lastInsertId();
+		if($this->recordset) {
+			$this->nroregistros =  $this->recordset->rowCount();
+		}else{
+			$this->nroregistros = 0;
+		}
+		//echo $this->nroregistros ." es rowcunt()";
+		$objconexion->desconectar();
+		return $this;
+	}
 
 	function ProcSqlServ($name,$values,$n){
 

@@ -35,7 +35,7 @@ class ClsMetodologia
             $rs=$sql->consulta($consulta);
             return $rs;
         } 
-    public function getFaseMetodologia($id_metodologia){
+    public function ListaFaseMetodologia($id_metodologia){
         $sql = new tablalibre();
         $vector=array();    
         $tabla = array();       

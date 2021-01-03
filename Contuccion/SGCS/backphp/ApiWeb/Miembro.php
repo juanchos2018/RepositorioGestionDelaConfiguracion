@@ -7,14 +7,14 @@ if($method=="GET"){
     if(!empty($_GET['miembro_id'])){
         $miembro_id=$_GET['miembro_id'];
         $api=new ClsMiembro();
-        $obj=$api->getMiembro($miembro_id);
+        $obj=$api->ObtenerDatos($miembro_id);
         $json=json_encode($obj);
         echo $json;
     }
     else if(!empty($_GET['miembroresponsableID'])){
             $miembroresponsableID=$_GET['miembroresponsableID'];
             $api=new ClsMiembro();
-            $obj=$api->getTareasMiembro($miembroresponsableID);
+            $obj=$api->ListaTareasMiembro($miembroresponsableID);
             $json=json_encode($obj);
             echo $json;
     }
@@ -22,8 +22,16 @@ if($method=="GET"){
     else if(!empty($_GET['id_proyecto'])){
         $id_proyecto=$_GET['id_proyecto'];
         $api=new ClsMiembro();
-        $obj=$api->getMiembrosProyecto($id_proyecto);
+        $obj=$api->ListaMiembrosProyecto($id_proyecto);
         $json=json_encode($obj);
+        echo $json;
+    }
+    else{
+        //lostar todos los miembros
+        $vector=array();
+        $api=new ClsMiembro();
+        $vector=$api->ListarMiembros();
+        $json=json_encode($vector);
         echo $json;
     }
     

@@ -22,11 +22,11 @@ class ClsFase
         $vector = array();
         while($datos = $rs->recordset->fetch(PDO::FETCH_ASSOC)){
               $temp = new ClsFase;
-              $temp->id_fase = $datos["id_fase"];
-              $temp->nombre_fase = $datos["nombre_fase"];
-              $temp->metodologiaId = $datos["metodologiaId"];   
-              $temp->slot = $page;    
-              $temp->label = $datos["nombre_fase"];            	
+              $temp->id_fase        = $datos["id_fase"];
+              $temp->nombre_fase    = $datos["nombre_fase"];
+              $temp->metodologiaId  = $datos["metodologiaId"];   
+              $temp->slot           = $page;    
+              $temp->label          = $datos["nombre_fase"];            	
               array_push($vector,$temp);
         }
         return $vector;

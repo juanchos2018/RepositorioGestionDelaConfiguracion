@@ -5,11 +5,18 @@
        <Widget class="h-100 mb-6"  title="<h5> <span class='fw-semi-bold'> </span></h5>"  close collapse customHeader>
         <h5>{{item.nombre_proyecto}}</h5>
         <VueApexCharts width="350"  type="donut" :options="chartOptions"  :series="agrupados[item.index].series"  @dataPointSelection="dataPointSelectionHandler" @click="Detalle(item.id_proyecto)" ></VueApexCharts>
-   
-       </Widget>
-      
+     <b-button type="button"  style="float:right" variant="primary" @click="DetalleGrafico(item.id_proyecto)"  class="p-2 px-4 btn-xs">
+                        Detalle
+                 <b-icon icon="forward"></b-icon>
+              </b-button> 
+       </Widget>      
        </div>  
     </div>
+     <b-modal v-model="DialogoDetalle" hide-backdrop content-class="shadow" title="BootstrapVue">
+      <div>
+        
+      </div>
+    </b-modal>
 
 <!--
 
@@ -35,7 +42,7 @@
   </a-tree>
   -->
  
-  <br>
+ 
 
     <div class="steps-action">
       <!--
@@ -69,10 +76,7 @@
       <hr>
       <p>Fases</p>
       {{puntos}}
-
       {{puntos2}}-->   
-
-<br>
 
     </div>
   </div>
@@ -98,6 +102,8 @@ export default {
 
   data() {
     return {
+      DialogoDetalle:false,
+
       step1: '',
       step2: '',
        cStep: 1,  
@@ -265,12 +271,10 @@ export default {
           ListarListaTareas(){
                       let me=this;                     
                         axios.get('ApiWeb/Consulta.php/').then(response => {   
-                           me.ArrayOptions=response.data.data;                       
-                            //console.log(response.data)      
+                           me.ArrayOptions=response.data.data; 
                            }).catch(function (error) {
                                 console.log(error);
-                           }) .finally(() => {
-                              
+                           }) .finally(() => {                              
                    })
            },
            ListaDeProyectos(){
@@ -292,8 +296,24 @@ export default {
                           
                  })
            },
-      
-          
+            Detalle(id_proyecto)
+            {  
+                console.log(id_proyecto);
+                  this.DialogoDetalle=true;
+            },
+            dataPointSelectionHandler(e, chartContext, config) {
+           
+                console.log(config.dataPointIndex)
+               
+            },
+             DetalleDialogo(){    
+        
+             this.DialogoDetalle=true;
+            },
+           DetalleGrafico(id_proyecto){
+               this.$router.push({name:"detallegrafico",params:{id_proyecto} });
+              console.log(id_proyecto)
+           },          
            ListarPrueba(){
                        let me=this;
                        let result = []
@@ -332,15 +352,8 @@ export default {
                               
                      })
             },  
-            dataPointSelectionHandler(e, chartContext, config) {
+            
            
-                console.log(config.dataPointIndex)
-               
-            },
-            Detalle(id_proyecto)
-            {  
-                console.log(id_proyecto);
-            },
           next() {
             this.current++;
           },
