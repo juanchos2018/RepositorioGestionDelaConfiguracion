@@ -31,7 +31,7 @@ class ClsHistorial{
         $conexion=new Conexion();
         $db=$conexion->getConexion();
         $sql="SELECT * FROM historial_tarea_ecs AS his
-        WHERE his.id_timeline=".$id_timeline;
+        WHERE his.id_timeline=".$id_timeline ;
         $consulta=$db->prepare($sql);
         $consulta->execute();
         while($fila=$consulta->fetch()){

@@ -6,23 +6,23 @@
         <div class="col-4" v-for="item in proyectos" :key="item.key" style="margin-top:10px">  
             <b-card class="overflow-hidden"  footer-tag="footer" >
                 <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
-                    <b-dropdown-item  @click="Ver(item.id)">Ver</b-dropdown-item>
-                    <b-dropdown-item >Opcion 2</b-dropdown-item>                           
+                    <b-dropdown-item  @click="Ver(item.id)">Ver</b-dropdown-item>                                           
                 </b-dropdown>   
             <b-row no-gutters>
-              <b-card-title> <h5>{{item.nombre_proyecto}}</h5> </b-card-title>   
+              <b-card-title> <h5>{{item.nombre_proyecto}}</h5> </b-card-title>   <br>
+              
             <b-col md="12">
+                  <span class="badge badge-success">{{item.estado}}</span> 
                 <b-card-body>  
-                <b-card-text>
-            <h5>Datos</h5>
-          
-         
+                    
+                <b-card-text>                   
+                    <h5>{{item.nombre}}</h5>       
                 </b-card-text>   
                 </b-card-body>                  
-                 <div  style="background-color: white; float:right;">                     
-                      <b-badge variant="danger">12/12/12</b-badge>
-                       <b-badge variant="danger">12/12/12</b-badge>
-                   </div>           
+                 <div  style="background-color: white; ">                     
+                      <b-badge variant="danger">{{item.fecha_inicio}}</b-badge>
+                       <b-badge variant="danger" style="margin-left:10px">{{item.fecha_termino}}</b-badge>
+                 </div>           
             </b-col>
             </b-row>  
          </b-card>         

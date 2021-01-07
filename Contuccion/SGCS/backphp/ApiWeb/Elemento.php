@@ -14,18 +14,27 @@ if ($method=="POST"){
     }else{
         $elemento->codigo_elemento = $datos->codigo_elemento;
         $elemento->nombre = $datos->nombre; 
-        $resul=$elemento->Agregar($elemento);
-        if($resul->nroregistros>0){
+        $existe=$elemento->Existe($elemento);
+        if($existe>0){
             http_response_code(200);
-            $msg->mensaje = "elemento Registrada";
+            $msg->mensaje = "Existe";
             $msg->error = false;
             echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
         }else{
-            http_response_code(500);
-            $msg->mensaje = "Error al registrar Empresa";
-            $msg->error = true;
-            echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
+            $resul=$elemento->Agregar($elemento);
+            if($resul->nroregistros>0){
+                http_response_code(200);
+                $msg->mensaje = "elemento Registrada";
+                $msg->error = false;
+                echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
+            }else{
+                http_response_code(500);
+                $msg->mensaje = "Error al registrar Empresa";
+                $msg->error = true;
+                echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
         }
+        }
+        
     }
 }
 if($method=="GET"){

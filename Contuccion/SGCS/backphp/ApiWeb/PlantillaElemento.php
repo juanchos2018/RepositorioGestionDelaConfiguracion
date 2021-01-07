@@ -14,18 +14,27 @@ if ($method=="POST"){
     }else{
         $plantilla->faseId = $datos->faseId;
         $plantilla->elementoId = $datos->elementoId; 
-        $resul=$plantilla->Agregar($plantilla);
-        if($resul->nroregistros>0){
+        $existe=$plantilla->Existe($plantilla);
+        if($existe>0){
             http_response_code(200);
-            $msg->mensaje = "fase plantilla";
+            $msg->mensaje = "Existe";
             $msg->error = false;
             echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
         }else{
-            http_response_code(500);
-            $msg->mensaje = "Error al registrar plantilla";
-            $msg->error = true;
-            echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
+            $resul=$plantilla->Agregar($plantilla);
+            if($resul->nroregistros>0){
+                http_response_code(200);
+                $msg->mensaje = "Registrado";
+                $msg->error = false;
+                echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
+            }else{
+                http_response_code(500);
+                $msg->mensaje = "Error al registrar plantilla";
+                $msg->error = true;
+                echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
+            }
         }
+        
     }
 }
 if($method=="GET"){

@@ -11,15 +11,14 @@
         <div class="col-4" v-for="item in tareas" :key="item.key" style="margin-top:10px">  
             <b-card class="overflow-hidden"  footer-tag="footer" >
                 <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
-                    <b-dropdown-item  @click="EditarTarea(item.id_tarea,item.descripcion,item.porcentajeavance)">Editar</b-dropdown-item>
-                    <b-dropdown-item >Opcion 2</b-dropdown-item>                           
+                    <b-dropdown-item  @click="EditarTarea(item.id_tarea,item.descripcion,item.porcentajeavance,item.estado1)">Editar</b-dropdown-item>                                         
                 </b-dropdown>   
             <b-row no-gutters>
               <b-card-title> <h5>{{item.descripcion}}</h5> </b-card-title>   
             <b-col md="12">
                 <b-card-body>  
                 <b-card-text>
-               <h5>{{item.estado}}</h5>    
+               <h5>{{item.estado1}}</h5>    
                    <a-progress :percent="parseInt(item.porcentajeavance)" /> 
                </b-card-text>   
                 </b-card-body>                  
@@ -27,27 +26,26 @@
                       <b-badge variant="danger">{{item.fecha_inicio  | moment("DD-MM-YYYY")}}</b-badge>
                        <b-badge variant="danger" style="margin-left:5px">{{item.fecha_termino  | moment("DD-MM-YYYY")}}</b-badge>
                   </div>           
-            </b-col>
+             </b-col>
             </b-row>  
          </b-card>         
         </div>
         </div>  
             </b-tab>
                 <b-tab title="Tareas Terminadas">
-                     <div   class="row" > 
-                      
+                     <div   class="row" >                       
                         <div class="col-4" v-for="item in tareasterminadas" :key="item.key" style="margin-top:10px">  
                             <b-card class="overflow-hidden"  footer-tag="footer" >
                                 <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
                                     <b-dropdown-item  @click="showModal(item.id_tarea)" >Ver</b-dropdown-item>
-                                    <b-dropdown-item >Opcion 2</b-dropdown-item>                           
+                                   <b-dropdown-item  v-if="item.estado2=='Observado'"  @click="EditarTarea(item.id_tarea,item.descripcion,item.porcentajeavance,item.estado1)">Editar</b-dropdown-item>                                                         
                                 </b-dropdown>   
                             <b-row no-gutters>
                             <b-card-title> <h5>{{item.descripcion}}</h5> </b-card-title>   
                             <b-col md="12">
                                 <b-card-body>  
                                 <b-card-text>
-                            <h5>{{item.estado}}</h5>  
+                            <h5>{{item.estado1}}</h5>  
                             <div style="display: flex;">
                                  <a-progress :percent="parseInt(item.porcentajeavance)" /> 
                                  <div v-if="item.estado2=='Aprobado'">
@@ -61,10 +59,8 @@
                                    </div>                      
                                    <div v-else>
                                        <b-icon icon="x-circle" scale="2" variant="danger"></b-icon>
-                                   </div>
-                                
-                             </div>  
-                               
+                                   </div>                                
+                             </div>                                 
                             </b-card-text>   
                                 </b-card-body>                  
                                 <div  style="background-color: white;">                     
@@ -75,10 +71,10 @@
                             </b-row>  
                         </b-card>         
                         </div>
-                        </div> 
+                      </div> 
                 </b-tab>             
             </b-tabs>    
-         <tarea-editar @CerrarModal="CerrarModal" :DialogoTareaEditar="DialogoTareaEditar" v-bind:id_tarea="id_tarea"  v-bind:id_responsable="id_responsable" v-bind:descripcion="descripcion"  v-bind:porcentaje="porcentaje"   @update-number="update" ></tarea-editar>
+         <tarea-editar @CerrarModal="CerrarModal" :DialogoTareaEditar="DialogoTareaEditar" v-bind:id_tarea="id_tarea"  v-bind:id_responsable="id_responsable" v-bind:descripcion="descripcion"  v-bind:porcentaje="porcentaje" v-bind:estadotarea="estadotarea"   @update-number="update" ></tarea-editar>
    
         <b-modal  ref="my-modal" title="Respuesta "  body-class="myDiv">
             <p class="my-4">{{respuesta}}</p>
@@ -104,6 +100,7 @@ export default {
               porcentaje:null,
               id_responsable:'',
               respuesta:'',
+              estadotarea:'',
              
         }
     },
@@ -152,6 +149,8 @@ export default {
                              fecha_inicio:elem.fecha_inicio,
                              fecha_termino: elem.fecha_termino,
                              estado:elem.estado,  
+                             estado1:elem.estado1, 
+                             estado2:elem.estado2, 
                  
                        })
                  }
@@ -175,12 +174,13 @@ export default {
                     console.log(error);
               }) .finally(() => {
            })
-        },
-      
-        EditarTarea(idtarea,descripcion,porcentaje){
+        },      
+        EditarTarea(idtarea,descripcion,porcentaje,estado1){
             this.id_tarea=idtarea;
             this.descripcion=descripcion;
             this.porcentaje=parseInt(porcentaje);
+            this.estadotarea=estado1;
+
             console.log(porcentaje)
             this.DialogoTareaEditar=true;
         },

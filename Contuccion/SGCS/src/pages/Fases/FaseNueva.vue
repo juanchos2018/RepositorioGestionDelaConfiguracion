@@ -26,6 +26,7 @@
 <script>
 
 import axios from  'axios';
+import Swal from 'sweetalert2'
 export default {
     name: 'fase-nueva', 
     props:{
@@ -63,8 +64,13 @@ export default {
           let metodologiaId=this.idmetodologia;    
           const obj={nombre_fase,metodologiaId};
            axios.post('ApiWeb/Fase.php/',obj).then(response => {
-           this.Confirmacion();
-           this.ListarFases(this.idmetodologia)
+             var estado=response.data.mensaje;
+             if(estado=="Existe"){
+               this.Existe(); 
+             } else{
+              this.Confirmacion();
+              this.ListarFases(this.idmetodologia)
+             }
          
           }).catch(function (error) {
               console.log(error);
@@ -78,6 +84,15 @@ export default {
       CerrarModal(){              
           this.$emit('CerrarModal');
       },
+      Existe(){
+          Swal.fire({
+            title: '<strong>Alerta </strong>',
+            icon: 'info',
+            html:
+              'Este fase existe  ' ,
+          
+          })
+       }, 
       Confirmacion(){
           this.$swal({
               position: 'top-end',

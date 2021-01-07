@@ -21,9 +21,10 @@
                             '100%': '#87d068',
                           }"
                           :percent="parseInt(porcentajeavance)"
-                        />                 
+                        />      
+                        <h5 style="float:right; margin-right:20px">{{estado1}}</h5>           
                     <a-descriptions :title="descripcion">
-                        <a-descriptions-item label="Nombre">
+                        <a-descriptions-item label="Nombre" >
                           {{nombre_miembro}}
                         </a-descriptions-item>
                         <a-descriptions-item label="Fecha Inicio">
@@ -79,6 +80,8 @@ export default {
           porcentajeavance:null,
           urlevidencia:'',
           estado:'',   
+          estado1:'',
+          estado2:'',
           id_usuario:'',
           comnentario:'',
           timeline:[],
@@ -128,7 +131,8 @@ export default {
                  me.descripcion=response.data.descripcion   
                  me.porcentajeavance=response.data.porcentajeavance         
                  me.urlevidencia=response.data.urlevidencia   
-                 me.estado=response.data.estado   
+                 me.estado=response.data.estado
+                 me.estado1=response.data.estado1    
                }).catch(function (error) {
                     console.log(error);
               }) .finally(() => {

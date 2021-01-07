@@ -35,6 +35,7 @@
 <script>
 
 import axios from  'axios';
+import Swal from 'sweetalert2'
 export default {
     name: 'elemento-nuevo',
     props:{
@@ -72,9 +73,15 @@ export default {
           let codigo_elemento=this.codigo;   
           let nombre=this.nombre;                
           const obj={codigo_elemento,nombre};
-          axios.post('ApiWeb/Elemento.php/',obj).then(response => {    
-               this.ListarElemetos();
-               this.Confirmacion();      
+          axios.post('ApiWeb/Elemento.php/',obj).then(response => {  
+               var estado=response.data.mensaje;
+                  if(estado=="Existe"){
+                    this.Existe(); 
+                  } else{
+                   this.ListarElemetos();
+                   this.Confirmacion();    
+                  }  
+                 
           }).catch(function (error) {
               console.log(error);
           }) .finally(() => {
@@ -89,7 +96,16 @@ export default {
       },
        CerrarModal(){              
               this.$emit('CerrarModal');
-       },       
+       },  
+       Existe(){
+          Swal.fire({
+            title: '<strong>Alerta </strong>',
+            icon: 'info',
+            html:
+              'Ya existe este elemento en esta fase ' ,
+          
+          })
+       },     
        Confirmacion(){
           this.$swal({
               position: 'top-end',

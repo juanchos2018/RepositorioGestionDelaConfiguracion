@@ -4,7 +4,7 @@
      <div class="col-5" v-for="item in agrupados" :key="item.key">    
        <Widget class="h-100 mb-6"  title="<h5> <span class='fw-semi-bold'> </span></h5>"  close collapse customHeader>
         <h5>{{item.nombre_proyecto}}</h5>
-        <VueApexCharts width="350"  type="donut" :options="chartOptions"  :series="agrupados[item.index].series"  @dataPointSelection="dataPointSelectionHandler" @click="Detalle(item.id_proyecto)" ></VueApexCharts>
+        <VueApexCharts width="350"  type="donut" :options="chartOptions"  :series="agrupados[item.index].series"  @dataPointSelection="dataPointSelectionHandler" @click="Detalle(item.id_proyecto,item.index)" ></VueApexCharts>
      <b-button type="button"  style="float:right" variant="primary" @click="DetalleGrafico(item.id_proyecto)"  class="p-2 px-4 btn-xs">
                         Detalle
                  <b-icon icon="forward"></b-icon>
@@ -12,9 +12,14 @@
        </Widget>      
        </div>  
     </div>
+    {{agrupados}}
      <b-modal v-model="DialogoDetalle" hide-backdrop content-class="shadow" title="BootstrapVue">
       <div>
-        
+         <b-table :items="listaTareas" :fields="fields"  stacked="sm">   
+              <template v-slot:cell(accion)="item">
+                <b-button variant="primary" >Ver</b-button>
+              </template>
+         </b-table>
       </div>
     </b-modal>
 
@@ -104,14 +109,21 @@ export default {
     return {
       DialogoDetalle:false,
 
-      step1: '',
-      step2: '',
+       step1: '',
+       step2: '',
        cStep: 1,  
        current: 0,
         gData:'',
         treeData:'',
+        indexproyecto:'',
        agrupados:[],
        ArrayOptions:[],
+       listaTareas:[],
+        fields: [
+                    { label:"codigo", key: 'id_elemento', sortable: false },
+                    { label:"Nombre", key: 'nombre', sortable: false },    
+                    { label:"Acciones", key: 'accion', sortable: false },
+                    ],
        chartOptions: { labels: ["Nuevo", "Proceso", "Terminado"] },
         proyectos:[],
       expandedKeys: ['0-0', '0-0-0', '0-0-0-0'],
@@ -163,7 +175,6 @@ export default {
             },
       
        ],
-
       metodologias:[],
       fases:[],
       plantilla:[],
@@ -207,11 +218,9 @@ export default {
                         { title: 'elemento 6', key: '0-0-0-5' }],
                     },
                   ],
-            },
-           
+            },          
           
-          ],
-          
+          ],          
            latitulosbels:['titilo 1','titulo 2','titulo 3'],
            latitulosbels2:[],
            puntos:[12,16,20],
@@ -296,17 +305,35 @@ export default {
                           
                  })
            },
-            Detalle(id_proyecto)
+           Detalle(id_proyecto,index)
             {  
-                console.log(id_proyecto);
-                  this.DialogoDetalle=true;
+              //  console.log(id_proyecto);
+                this.indexproyecto=index;
+                console.log("index :",index)
+                this.DialogoDetalle=true;
             },
-            dataPointSelectionHandler(e, chartContext, config) {
-           
-                console.log(config.dataPointIndex)
-               
+            datos(indexgrafico){
+
+           var a =  this.agrupados[this.indexproyecto].charOptions.labels[indexgrafico];
+            console.log("index proyecto :", this.indexproyecto)
+            console.log(a)
             },
-             DetalleDialogo(){    
+           dataPointSelectionHandler(e, chartContext, config) {
+              //ide de nos e q
+                console.log("index pro",index)
+             // console.log(config);
+             // var a =  this.agrupados[indexproyecto].charOptions.labels[config.dataPointIndex];              
+              console.log("index grafico",config.dataPointIndex)
+          
+              setTimeout(() => {
+              //      this.datos(config.dataPointIndex);
+                }, 2);
+                              
+            },
+            DetalleTarea(){
+
+            },
+           DetalleDialogo(){    
         
              this.DialogoDetalle=true;
             },
@@ -343,8 +370,7 @@ export default {
                                       
                                       } 
                                   }                    
-                             }   
-                             
+                             }                               
                              
                             }).catch(function (error) {
                                 console.log(error);
@@ -352,9 +378,7 @@ export default {
                               
                      })
             },  
-            
-           
-          next() {
+           next() {
             this.current++;
           },
           prev() {

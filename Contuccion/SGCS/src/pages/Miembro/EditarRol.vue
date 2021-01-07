@@ -8,7 +8,7 @@
                   aria-describedby="input-live-help input-live-feedback"
                   class="p-2 px-4 btn-xs "
                   disabled
-                  >
+                 v-model="nombre" >
                </b-input>
              </b-form-group>                
           </div>
@@ -43,7 +43,7 @@ export default {
         type: Boolean,
         required: true,
         default: false
-      },id: [String, String]
+      },id: [String, String],nombre: [String, String]
       
     },
     data() {

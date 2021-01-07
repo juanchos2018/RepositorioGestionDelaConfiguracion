@@ -4,7 +4,7 @@
   <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogoFase=true"> 
               <i class="fa fa-plus-circle"></i> Nueva Fase
             </b-button>
-            <b-button variant="outline-primary" @click="DialogoFaseElemento=true">  <i class="fa fa-plus-circle"></i> ECS </b-button>
+            <b-button variant="outline-primary" class="m-1 p-2 px-4 btn-xs"   @click="DialogoFaseElemento=true">  <i class="fa fa-plus-circle"></i> ECS </b-button>
   </div> <br>
   <h4> Fases de la Metodologia  <strong>  {{nombremetodologia}}</strong>  </h4> 
   <br>
@@ -24,11 +24,11 @@
                 id="input-30" 
                 require
                 class="p-2 px-4 btn-xs"               
-              >
+               v-model="search"  >
           </b-form-input> 
          </div>   
          
-           <b-table striped hover :items="detalle2" :fields="fields">
+           <b-table striped hover :items="ListaFiltro" :fields="fields">
             <template v-slot:cell(acciones)="data">                      
                  <b-button variant="primary" size="sm" @click="MensajeEliminar(data.item.id_plantilla)" ><b-icon icon="trash" animation="fade" font-scale="1"></b-icon> </b-button>
               </template>  
@@ -62,9 +62,10 @@ export default {
             items:[],
             nombremetodologia:'',        
             current: 0,
+             search: '',
             pagina:'page1',    
             detalle2:[],
-             fields: [
+            fields: [
                          { label:"Id", key: 'id_elemento', sortable: false },
                          { label:"Nombre Elemento", key: 'nombre', sortable: false },  
                          { label:"Acciones", key: 'acciones', sortable: false },
@@ -83,6 +84,13 @@ export default {
     mounted(){
       this.GetDatos()
     },
+     computed: {
+            ListaFiltro() {
+                return this.detalle2.filter(post => {
+                return post.nombre.toLowerCase().includes(this.search.toLowerCase())
+            })
+        }
+     },
     methods:{
        click(){
             alert("clikc");
@@ -138,11 +146,10 @@ export default {
                         if (result.isConfirmed) {
                           this.Eliminar(id);
                         
-                        }
-                    })
+                  }
+             })
        },  
-       Eliminar(id){
-       
+       Eliminar(id){       
          var id_plantilla=id;
           const obj={id_plantilla};
           axios.get('ApiWeb/PlantillaElemento.php/?id_plantilla='+id_plantilla).then(response => {                       

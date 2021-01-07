@@ -11,11 +11,8 @@ if($method=="GET"){
         $obj=$api->BuscarHistorial($id);
         $json=json_encode($obj);
         echo $json;
-    }
-  
-    else{
-
-      
+    }  
+    else{      
         echo "sin Datos";
     }
 }

@@ -63,5 +63,13 @@ class ClsPlantillaElemento
         $rs=$sql->consulta($consulta);
         return $rs;
     }
+    function Existe($plantilla)
+    {
+       $buscar= new tablalibre();
+       $consulta ="SELECT * from plantillaelementoconfiguracion where  faseId ='$plantilla->faseId' and elementoId='$plantilla->elementoId'"; 
+       $rs=$buscar->consulta($consulta);
+       return $rs->nroregistros;   
+    
+    }
 }
 

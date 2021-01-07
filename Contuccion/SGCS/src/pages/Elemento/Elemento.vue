@@ -91,7 +91,7 @@ export default {
                     { label:"codigo", key: 'id_elemento', sortable: false },
                     { label:"Nombre", key: 'nombre', sortable: false },    
                     { label:"Acciones", key: 'accion', sortable: false },
-                ],
+                    ],
             }
         },
         created(){
@@ -160,9 +160,9 @@ export default {
             filteredList() {
                 return this.items.filter(post => {
                 return post.nombre.toLowerCase().includes(this.search.toLowerCase())
-            })
-      }
-    },
+               })
+            }
+          },
 }
 </script>
 <style src="./elemento.scss" lang="scss" scoped  />

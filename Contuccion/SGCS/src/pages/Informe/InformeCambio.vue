@@ -180,7 +180,7 @@ export default {
               }) .finally(() => {
            })
        },
-        change(e){
+       change(e){
      //    console.log(this.id_elemento.nombre_elemento);
       //  var key = event.target.value; // example: 1
         this.nombre_elemento = event.target.textContent; // example: One

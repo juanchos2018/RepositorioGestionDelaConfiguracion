@@ -1,18 +1,14 @@
 <template>
     <div>
         <div>
-          <b-card>
-               
-                <div class="row">
-               
-                  <b-form-group    class="col-md-12">
-               
+          <b-card>               
+                <div class="row">               
+                  <b-form-group    class="col-md-12">               
                 <div class="">               
                 <h5>{{nombre_elemento}}</h5>                  
                 </div>
                 </b-form-group>     
             </div>  
-
               <div  class="form-row">  
                 <b-form-group    class="col-md-4">
                 <label class="control-label font-weight-bold text-info">Fase</label> 
@@ -26,12 +22,9 @@
                 <label for="">{{ nombre_proyecto}}</label>                 
                 </div>
                 </b-form-group>
-        </div> 
-            
-            
-            <br>            
-               
-        </b-card>
+        </div>            
+              <br>          
+          </b-card>
         </div>
         <div>
          <br>
@@ -59,8 +52,9 @@
                                 <b-card-body >                   
                                 <b-card-title> <h5> {{item.descripcion}}</h5> </b-card-title>                    
                                 <b-card-text>
+                                    <h5>{{item.estado1}}</h5>
                                    <a-progress :percent="parseInt(item.porcentajeavance)" /> 
-                                   <h5>Responsable: {{item.nombre}}</h5>
+                                   <h5>Res. : {{item.nombre}}</h5>
                                 </b-card-text>                
                                 </b-card-body>                
                             </b-col>      

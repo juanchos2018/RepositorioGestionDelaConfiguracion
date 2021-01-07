@@ -12,28 +12,39 @@ if ($method=="POST"){
         $msg->error = true;
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
     }else{
-        $usuario->nombre = $datos->nombre;
-        $usuario->apellido = $datos->apellido; 
-        $usuario->correo = $datos->correo; 
-        $usuario->password = $datos->password; 
-        $usuario->tiposusuarioId = $datos->tiposusuarioId;        
-        $resul=$usuario->Agregar($usuario);
-        if($resul->nroregistros>0){
+        $usuario->nombre         = $datos->nombre;
+        $usuario->apellido       = $datos->apellido; 
+        $usuario->correo         = $datos->correo; 
+        $usuario->password       = $datos->password; 
+        $usuario->tiposusuarioId = $datos->tiposusuarioId;   
+
+        $cantidad=$usuario->Buscar($usuario->correo);
+        if ($cantidad>0){
             http_response_code(200);
-            $msg->mensaje = "usuario Registrada";
+            $msg->mensaje = "Existe";
             $msg->error = false;
             echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
-        }else{
-            http_response_code(500);
-            $msg->mensaje = "Error al registrar usuario";
-            $msg->error = true;
-            echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
+        } else{
+            $resul=$usuario->Agregar($usuario);
+            if($resul->nroregistros>0){
+                http_response_code(200);
+                $msg->mensaje = "Registrado";
+                $msg->error = false;
+                echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
+            }else{
+               http_response_code(500);
+                $msg->mensaje = "Error al registrar usuario";
+                $msg->error = true;
+                $msg->can = $resul->nroregistros;
+                echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
+            }
         }
+        
     }
 }
 if($method=="GET"){
     if(!empty($_GET['proyectoId'] )){
-       //&& !empty( $_GET['usuario_miembroid']  ) 
+      
        $proyectoId=$_GET['proyectoId'];
        $usuario_miembroid=$_GET['usuario_miembroid'];
        $api=new ClsUsuario();
@@ -45,6 +56,13 @@ if($method=="GET"){
         $id=$_GET['usuario_miembroid'];
         $api=new ClsUsuario();
         $obj=$api->get_proyectosusuario($id);
+        $json=json_encode($obj);
+        echo $json;
+    }
+    else  if(!empty($_GET['correo'])){
+        $correo=$_GET['correo'];
+        $api=new ClsUsuario();
+        $obj=$api->buscar($correo);
         $json=json_encode($obj);
         echo $json;
     }

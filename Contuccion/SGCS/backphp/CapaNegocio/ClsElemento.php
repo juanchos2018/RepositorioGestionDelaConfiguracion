@@ -43,5 +43,13 @@ class ClsElemento
         $rs=$sql->consulta($consulta);
         return $rs;
     }
+    function Existe($elemento)
+    {
+       $buscar= new tablalibre();
+       $consulta ="SELECT * from elementoconfiguracion  where  nombre ='$elemento->nombre' "; 
+       $rs=$buscar->consulta($consulta);
+       return $rs->nroregistros;   
+    
+    }
 }
 

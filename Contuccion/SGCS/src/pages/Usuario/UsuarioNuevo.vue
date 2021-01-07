@@ -47,14 +47,19 @@
               <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
              <span v-show="!isLoading">Registar Usuario</span>
             </b-button>
+              <b-button type="button"  @click="buscar" variant="primary"  class="p-2 px-4 btn-xs">
+             
+            buscar
+            </b-button>
         </div>
      </form>
   </b-modal>
 </template>
 
 <script>
-import firebase from '@/firebase'
+
 import axios from  'axios';
+import Swal from 'sweetalert2'
 //DialogMetodologia|
 export default {
     name: 'usuario-nuevo',
@@ -114,15 +119,42 @@ export default {
           const obj={nombre,apellido,correo,password,tiposusuarioId};
            axios.post('ApiWeb/Usuario.php/',obj).then(response => {
                        
-                //  console.log(response);
+                //  console.log(response.data.mensaje);
+                  var estado =response.data.mensaje;
+                  if(estado=="Existe"){
+                    this.Existe();
+                  }else{
                    this. Confirmacion();
                    this.ListarUsuarios();
+                  }
+                  
                 }).catch(function (error) {
                       console.log(error);
                 }) .finally(() => {
                      
               })
          },
+         buscar(){
+           var correo="jorge@gmail.com";
+            axios.get('ApiWeb/Usuario.php/?correo='+correo).then(response => {
+                       
+                  console.log(response.data);
+                  
+                }).catch(function (error) {
+                      console.log(error);
+                }) .finally(() => {
+                     
+              })
+         },
+         Existe(){
+          Swal.fire({
+            title: '<strong>Alerta </strong>',
+            icon: 'info',
+            html:
+              'Este correo ya esta en uso ' ,
+          
+          })
+       }, 
         Guardar(){    
               let newData = firebase.database().ref('Usuario/').push();
               newData.set({                 

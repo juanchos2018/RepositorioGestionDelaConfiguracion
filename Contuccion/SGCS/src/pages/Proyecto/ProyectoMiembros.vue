@@ -8,7 +8,8 @@
                 id="input-30" 
                 require
                 class="p-2 px-4 btn-xs"               
-               >
+               v-model="search"
+                autocomplete="off"    >
           </b-form-input> 
          </div> 
           <br>       
@@ -16,24 +17,23 @@
         </div>
     <div >         
       <div class="row" >             
-       <div class="col-4" v-for="item in items" :key="item.key">  
+       <div class="col-4" v-for="item in ListaFiltro" :key="item.key">  
               
         <b-card no-body class="overflow-hidden"    border-variant="primary" footer-tag="footer">
             <b-row no-gutters>
             <b-col md="3">
                 <div class="UserAvatar__IconImage-hmym9w-1 jtNJTZ" >
-                    <center> 
-                      
+                    <center>                       
                     <img src="../../assets/loguusu1.png" alt="Avatar" class="avatar1"/>  
                     </center>
                 </div>     
             </b-col>
-            <b-col md="8">
+            <b-col md="9">
                 <b-card-body >                   
                 <b-card-title > {{item.nombre}}</b-card-title>                    
-                <b-card-text>
-                    
+                <b-card-text>                    
                       <span class="badge badge-success">  {{item.nombre_rol}}</span>
+                      <h5>  {{item.correo}}</h5>
                 </b-card-text>                
                 </b-card-body>                
             </b-col>
@@ -41,8 +41,7 @@
                 <template #footer>
                      <div style="float:right">
                        <b-button variant="success" @click="Tareas(item.proyectoId+'-'+item.usuario_miembroid)" > <b-icon icon="list-task" animation="fade" font-scale="1"></b-icon> </b-button>
-
-                       <b-button variant="success" style="margin-left:5px" v-b-tooltip.hover title="Editar" @click="AbrirDialogo(item.id)" >    <b-icon icon="pencil-square" animation="fade" font-scale="1" ></b-icon>   </b-button>
+                       <b-button variant="success" style="margin-left:5px" v-b-tooltip.hover title="Editar" @click="AbrirDialogo(item.id,item.nombre)" >    <b-icon icon="pencil-square" animation="fade" font-scale="1" ></b-icon>   </b-button>
                      </div>                     
                 </template>
          </b-card>
@@ -50,7 +49,7 @@
        </div>
       </div>
     </div>  
-      <editar-rol @CerrarModal="CerrarModal"   :DialogoModificar="DialogoModificar"  v-bind:id="id" > </editar-rol>
+      <editar-rol @CerrarModal="CerrarModal"   :DialogoModificar="DialogoModificar"  v-bind:id="id"  v-bind:nombre="nombremiembro" > </editar-rol>
    
     </div>
 </template>
@@ -69,6 +68,8 @@ export default {
               DialogUsuario:false,
               DialogoModificar:false,
               id:'',
+              nombremiembro:'',
+              search: '',
              }
       },
       created(){
@@ -77,6 +78,13 @@ export default {
       mounted(){
           this.GetDatos()
           },
+      computed: {
+            ListaFiltro() {
+                return this.items.filter(post => {
+                return post.nombre.toLowerCase().includes(this.search.toLowerCase())
+            })
+          }
+      },
       methods:{
           GetDatos(){
             var item = this.$route.params.id_proyecto
@@ -84,8 +92,9 @@ export default {
                   this.ListarMiembrosProyecto(item);                   
               }   
           },
-          AbrirDialogo(id){
+          AbrirDialogo(id,nombre){
             this.id=id;
+            this.nombremiembro=nombre;
             this.DialogoModificar=true;  
 
           },

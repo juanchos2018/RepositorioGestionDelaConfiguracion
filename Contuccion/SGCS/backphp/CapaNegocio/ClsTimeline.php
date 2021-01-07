@@ -36,7 +36,7 @@ class ClsTimeline
         ON miem.usuario_miembroid =usu.id_usuario
         INNER JOIN tarea_ecs AS tarea
         ON tarea.id_tarea = timel.id_tarea
-        WHERE timel.id_tarea=".$id_tarea;
+        WHERE timel.id_tarea=".$id_tarea." ORDER BY  timel.id_timeline DESC";
         $consulta=$db->prepare($sql);
         $consulta->execute();        
          while($fila=$consulta->fetch()){

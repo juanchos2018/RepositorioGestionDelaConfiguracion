@@ -35,7 +35,7 @@
 </template> 
 <script>
 import axios from  'axios';
-
+import Swal from 'sweetalert2'
 export default {
   name: 'fases-elemento',
      props:{
@@ -81,7 +81,7 @@ export default {
              let me=this;
                   var elementos=[];
                   axios.get('ApiWeb/Elemento.php/').then(response => {  
-              //    axios.get('Backphp/ProcesoElemento.php/',).then(function(response){                      
+                                   
                   elementos=response.data.data;   
                   elementos.map(function(x){
                         me.elentosConfi.push({text: x.nombre,value:x.id_elemento});
@@ -94,7 +94,7 @@ export default {
          let me=this;        
          var fases=[];
            axios.get('ApiWeb/Fase.php/?metodologiaId='+metodologiaId).then(response => {  
-         //   axios.get('Backphp/ProcesoFase.php/?metodologiaId='+d).then(response => {               
+               
                  fases= response.data;                              
                  fases.map(function(x){
                     me.fasesmetodologia.push({text: x.nombre_fase,value:x.id_fase});                      
@@ -110,13 +110,29 @@ export default {
                 const obj={faseId,elementoId};
                 axios.post('ApiWeb/PlantillaElemento.php/',obj).then(response => {                       
                   console.log(response);
-                  this.Confirmacion();
+                  var estado=response.data.mensaje;
+                  if(estado=="Existe"){
+                    this.Existe(); 
+                  } else{
+                    this.Confirmacion();
+                  // this.ListarFases(this.idmetodologia)
+                  }
+                 
                 }).catch(function (error) {
                       console.log(error);
                 }) .finally(() => {
                      
             })
         },
+          Existe(){
+          Swal.fire({
+            title: '<strong>Alerta </strong>',
+            icon: 'info',
+            html:
+              'Ya existe este elemento en esta fase ' ,
+          
+          })
+       },
         Confirmacion(){
             this.$swal({
                 position: 'top-end',

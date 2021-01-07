@@ -11,14 +11,23 @@ class ClsMiembro{
  
     public function Agregar($usuario_miembroid,$rolId,$proyectoId){      
         $conexion=new Conexion();
-        $db=$conexion->getConexion();
-        $sql="INSERT INTO  miembroproyecto (usuario_miembroid,rolId,proyectoId) VALUES (:usuario_miembroid,:rolId,:proyectoId)";
-        $consulta=$db->prepare($sql);         
-        $consulta->bindParam(':usuario_miembroid',$usuario_miembroid); 
-        $consulta->bindParam(':rolId',$rolId); 
-        $consulta->bindParam(':proyectoId',$proyectoId); 
-        $consulta->execute();      
-        return '{"msg":"Agreado Miembro"}';
+        $db=$conexion->getConexion();    
+    
+        $nRows = $db->query("SELECT count(*) from miembroproyecto where usuario_miembroid=".$usuario_miembroid." AND proyectoId =".$proyectoId)->fetchColumn(); 
+     
+        if  ($nRows>0){
+            return '{"msg":"Existe"}';
+        }else{
+            $sql="INSERT INTO  miembroproyecto (usuario_miembroid,rolId,proyectoId) VALUES (:usuario_miembroid,:rolId,:proyectoId)";
+            $consulta=$db->prepare($sql);         
+            $consulta->bindParam(':usuario_miembroid',$usuario_miembroid); 
+            $consulta->bindParam(':rolId',$rolId); 
+            $consulta->bindParam(':proyectoId',$proyectoId); 
+            $consulta->execute();    
+            return '{"msg":"Agreado"}';
+        }
+      
+       
     }
     public function ObtenerDatos($miemdro_id){
         $vector=array();

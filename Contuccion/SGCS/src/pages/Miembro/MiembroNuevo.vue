@@ -38,6 +38,7 @@
 
 //DialogMetodologia
 import axios from  'axios';
+import Swal from 'sweetalert2'
 export default {
     name: 'miembro-nuevo',
     props:{
@@ -82,8 +83,14 @@ export default {
           let proyectoId=this.id_proyecto;   
           const obj={usuario_miembroid:usuario_miembroid,rolId:rolId,proyectoId:proyectoId};
            axios.post('ApiWeb/Miembro.php/',obj).then(response => {                       
-              console.log(response);
-               this.Confirmacion();                     
+                          
+              var estado=response.data.msg;
+              if (estado=="Existe"){
+                 this.ExisteMiembro(); 
+              } else{
+                this.Confirmacion();  
+              }
+             //                     
           }).catch(function (error) {
               console.log(error);
           }) .finally(() => {
@@ -98,21 +105,28 @@ export default {
                   var elementos=[];
                   axios.get('ApiWeb/Usuario.php/').then(function(response){                      
                   elementos=response.data.data;   
+
                   console.log(response.data)
                   elementos.map(function(x){
-                        me.usuarios.push({text: x.nombre,value:x.id_usuario});
+                    if(x.tipo=="Miembro"){
+                         me.usuarios.push({text: x.nombre,value:x.id_usuario});
+                    }
+                      
                  });  
               }).catch(function(error){
                   console.log(error);
            });       
-       },  
+      },  
        ListarRoles(){
              let me=this;
                   var elementos=[];
                   axios.get('ApiWeb/Rol.php/',).then(function(response){                      
                   elementos=response.data.data;   
                   elementos.map(function(x){
-                        me.roles.push({text: x.nombre,value:x.id_rol});
+                    if (x.nombre!="Jefe de Proyecto"){
+                         me.roles.push({text: x.nombre,value:x.id_rol});
+                    } 
+                       
                  });  
               }).catch(function(error){
                   console.log(error);
@@ -120,7 +134,16 @@ export default {
        },         
        CerrarModal(){              
               this.$emit('CerrarModal');
-       },       
+       },     
+       ExisteMiembro(){
+          Swal.fire({
+            title: '<strong>Alerta </strong>',
+            icon: 'info',
+            html:
+              'Este usuario ya es miembro ' ,
+          
+          })
+       }, 
        Confirmacion(){
           this.$swal({
               position: 'top-end',

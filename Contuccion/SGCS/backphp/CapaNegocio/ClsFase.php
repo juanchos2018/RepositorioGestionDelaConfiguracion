@@ -39,6 +39,13 @@ class ClsFase
         $rs=$sql->consulta($consulta);
         return $rs;
     } 
-
+    function Existe($fase)
+    {
+       $buscar= new tablalibre();
+       $consulta ="SELECT * from fase where  nombre_fase ='$fase->nombre_fase' and metodologiaId = '$fase->metodologiaId'"; 
+       $rs=$buscar->consulta($consulta);
+       return $rs->nroregistros;   
+    
+    }
 }
 

@@ -11,11 +11,22 @@ class ClsUsuario
 
     function Agregar($usuario)
     {
+       
         $sql = new tablalibre();
-        $consulta =" INSERT INTO  usuario (nombre,apellido,correo,password,tiposusuarioId) 
+        $consulta ="INSERT INTO  usuario (nombre,apellido,correo,password,tiposusuarioId) 
         values ('$usuario->nombre', '$usuario->apellido','$usuario->correo','$usuario->password','$usuario->tiposusuarioId')";
         $rs=$sql->consulta($consulta);
         return $rs;
+      
+    
+    }
+    function Buscar($correo)
+    {
+       $buscar= new tablalibre();
+       $consulta ="SELECT * from usuario where  correo ='$correo'"; 
+       $rs=$buscar->consulta($consulta);
+       return $rs->nroregistros;   
+    
     }
     public function Listar(){
         $sql = new tablalibre();   
@@ -27,10 +38,10 @@ class ClsUsuario
         while($datos = $rs->recordset->fetch(PDO::FETCH_ASSOC)){
               $temp = new ClsUsuario;
               $temp->id_usuario = $datos["id_usuario"];
-              $temp->nombre = $datos["nombre"];
-              $temp->apellido = $datos["apellido"]; 
-              $temp->correo = $datos["correo"];     
-              $temp->tipo = $datos["tipousuario"];         	
+              $temp->nombre     = $datos["nombre"];
+              $temp->apellido   = $datos["apellido"]; 
+              $temp->correo     = $datos["correo"];     
+              $temp->tipo       = $datos["tipousuario"];         	
               array_push($vector,$temp);
         }
         return $vector;
@@ -49,16 +60,15 @@ class ClsUsuario
         $rs=$sql->consulta($consulta);
         while($datos = $rs->recordset->fetch(PDO::FETCH_ASSOC)){
                 $temp = new ClsUsuario;
-                $temp->id = $datos["id"];
-                $temp->nombre = $datos["nombre"];
-                $temp->id_proyecto = $datos["id_proyecto"]; 
-                $temp->nombre_proyecto = $datos["nombre_proyecto"];         
-                $temp->listaMiembro = $listaMiembro;   
-              
-                $temp->estado = $datos["estado"];             
-                $temp->index = $contador;  	
-                $temp->fecha_inicio = $datos["fecha_inicio"];  
-                $temp->fecha_termino = $datos["fecha_termino"];  
+                $temp->id                = $datos["id"];
+                $temp->nombre            = $datos["nombre"];
+                $temp->id_proyecto       = $datos["id_proyecto"]; 
+                $temp->nombre_proyecto   = $datos["nombre_proyecto"];         
+                $temp->listaMiembro      = $listaMiembro; 
+                $temp->estado            = $datos["estado"];             
+                $temp->index             = $contador;  	
+                $temp->fecha_inicio      = $datos["fecha_inicio"];  
+                $temp->fecha_termino     = $datos["fecha_termino"];  
                
                 array_push($vector,$temp);  
                 $contador++;                    
@@ -80,8 +90,8 @@ class ClsUsuario
         $usuario = new ClsUsuario;
         if($rs->nroregistros<>0){
               $datos=$rs->recordset->fetch(PDO::FETCH_ASSOC);
-              $usuario->id = $datos["id"];     
-              $usuario->idusuarioJefe = $idusuarioJefe;          
+              $usuario->id              = $datos["id"];     
+              $usuario->idusuarioJefe   = $idusuarioJefe;          
         }       
         return $usuario;
     }

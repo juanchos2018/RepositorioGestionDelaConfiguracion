@@ -18,28 +18,39 @@
                 {{rango}}            
              </b-form-group>   
              --> 
-               <b-form-group  label="Porcentaje Avance:"  class="col-md-12">            
-                <a-slider v-model="rango"  @change="addNumber"  />   
-                {{rango}}                     
-              </b-form-group>  
-                    
+               <b-form-group  label="Porcentaje Avance:"  class="col-md-12">   
+                 <div v-if="estadotarea=='Terminado'">
+                   <a-slider v-model="rango"  @change="addNumber"  disabled />  
+                 </div>        
+                <div v-else>
+                   <a-slider v-model="rango"  @change="addNumber"  />  
+                 </div>                
+
+                 {{rango}}                     
+              </b-form-group>                      
           </div>
           <div class="form-row"> 
-               <b-form-group  label="Url Evidencia"  class="col-md-12">
+                <b-form-group  label="Url Evidencia"  class="col-md-12">
                         <b-form-input 
                           class="p-2 px-4 btn-xs" 
                           required          
                           v-model="urlevidencia" >
                         </b-form-input>
-                   </b-form-group>     
-                            
+                </b-form-group>                                                 
           </div>   
+           <div class="form-row"> 
+               <b-form-group  label="estado"  class="col-md-12">
+                        <b-form-input 
+                          class="p-2 px-4 btn-xs" 
+                          required          
+                          v-model="estadotarea" >
+                        </b-form-input>
+                </b-form-group>                                                
+          </div>  
           <div class="form-row">
             <b-form-group  label="descripcion"   class="col-md-12">
-            <b-form-textarea
-              
-                v-model="descripcion_avance"
-              
+            <b-form-textarea              
+                v-model="descripcion_avance"              
                 placeholder="Enter at least 10 characters"
                 rows="2"
               ></b-form-textarea>
@@ -50,7 +61,7 @@
           <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
           <b-button type="button"   variant="primary"  @click="RegistrarAvance" class="p-2 px-4 btn-xs">
               <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
-             <span v-show="!isLoading"> Registra Avance</span>
+              <span v-show="!isLoading"> Registra Avance</span>
             </b-button>           
         </div>
      </form>    
@@ -69,7 +80,7 @@ export default {
         type: Boolean,
         required: true,
         default: false
-      },id_tarea: [String, String],descripcion: [String, String] ,porcentaje:{type:Number},id_responsable:[String, String] 
+      },id_tarea: [String, String],descripcion: [String, String] ,porcentaje:{type:Number},id_responsable:[String, String],estadotarea:[String,String] 
       
     },
     data() {
