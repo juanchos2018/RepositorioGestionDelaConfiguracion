@@ -2,7 +2,7 @@
     <div>
       <div>
          <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogUsuario=true"> 
-            <i class="fa fa-plus-circle"></i> Nuevo
+            <i class="fa fa-plus-circle"></i> Nuevo Usuario
           </b-button>
           <br>           
         </div>

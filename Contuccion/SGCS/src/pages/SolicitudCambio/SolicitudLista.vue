@@ -14,8 +14,16 @@
           <br>
            <b-card>                  
              <b-table :items="items" :fields="fields"  stacked="sm">
-                    <template v-slot:cell(acciones)="item">
-                <b-button variant="primary"  class="p-2 px-4 btn-xs" @click="FrmCrearInforme(item.item.fecha,item.item.codigo, item.item.id_proyecto)">    <b-icon icon="layout-text-sidebar-reverse" ></b-icon> </b-button>
+              <template v-slot:cell(acciones)="item">
+                <div style="display: flex;">
+                    <b-button variant="primary"  class="p-2 px-4 btn-xs" @click="FrmCrearInforme(item.item.fecha,item.item.codigo, item.item.id_proyecto, item.item.id_solicitud)">    <b-icon icon="layout-text-sidebar-reverse" ></b-icon> </b-button>
+                    <div v-if="item.item.documento!=null">
+                        <a :href="item.item.documento" class="btn btn-primary p-2 px-3 btn-xs"  style="margin-left:10px" target="_blank">Ver</a>
+                    </div>
+                    <div v-else>
+                        <a href="#" class="btn btn-primary p-2 px-3 btn-xs"  style="margin-left:10px" >Ver</a>
+                    </div> 
+                </div>                            
               </template>
              </b-table>                 
            </b-card>
@@ -48,17 +56,22 @@ export default {
            ListarSolicitudes(){
               let me=this;
               axios.get('ApiWeb/SolicitudCambio.php/').then(response => {                    
-                      me.items = response.data.data;                      
+                      me.items = response.data.data;    
+                      console.log(response.data)                  
                   }).catch(function (error) {
                       console.log(error);
-                }) .finally(() => {                     
+                }) .finally(() => {                 s    
             })
           },
-          FrmCrearInforme(fecha,codigo,id_proyecto){
-                console.log(id_proyecto);                
-                var datos=fecha+'|'+codigo+'|'+id_proyecto;
+          FrmCrearInforme(fecha,codigo,id_proyecto,id_solicitud){
+                console.log(id_proyecto);      
+                 console.log(id_solicitud ); 
+                var datos=fecha+'|'+codigo+'|'+id_proyecto+'|'+id_solicitud;
                 this.$router.push({name:"informecambio", params:{datos}});
           },
+          Ver(){
+
+          }
     }
 }
 </script>

@@ -21,15 +21,17 @@ if ($method=="POST"){
         $solicitud->descripcion = $datos->descripcion;
         $solicitud->respuesta = $datos->respuesta; 
         $solicitud->estado = $datos->estado; 
+        $solicitud->documento = $datos->documento; 
+        $solicitud->elemento = $datos->elemento; 
         $resul=$solicitud->Agregar($solicitud);
         if($resul->nroregistros>0){
             http_response_code(200);
-            $msg->mensaje = "elemento Registrada";
+            $msg->mensaje = "Registrado";
             $msg->error = false;
             echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
         }else{
             http_response_code(500);
-            $msg->mensaje = "Error al registrar Empresa";
+            $msg->mensaje = "Error al registrar ";
             $msg->error = true;
             echo json_encode($msg, JSON_UNESCAPED_UNICODE); 
         }
@@ -48,7 +50,7 @@ if($method=="GET"){
         $resul=$solicutd->Listar();
         if(count($resul)>0){
                 http_response_code(200);
-                $msg->mensaje = "Listar elemento";
+                $msg->mensaje = "Lista";
                 $msg->cantidad = count($resul);
                 $msg->error = false;
                 $msg->data = $resul; 

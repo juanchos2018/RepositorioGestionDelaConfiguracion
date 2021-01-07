@@ -143,7 +143,8 @@ var router = new Router({
           }
         },
         {
-          path: 'solicitudnueva',
+         
+          path: 'components/solicitudnueva',
           name: 'solicitudnueva',
           component: SolicitudNueva,
           meta :{
@@ -152,7 +153,8 @@ var router = new Router({
           }
         },
         {
-          path: 'solicitudlista',
+         
+          path: 'components/solicitudlista',
           name: 'solicitudlista',
           component: SolicitudLista,
           meta :{

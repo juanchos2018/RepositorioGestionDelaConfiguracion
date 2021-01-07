@@ -22,15 +22,22 @@
                  </b-form-group> 
             </div>   
                <div class="form-row">
-                 <b-form-group    class="col-md-8">
-                    <h5>Elemento Configuración  :</h5>
-                    <a-select      style="width: 100%"  @change="handleChange"  v-model="id_proyecto"  >              
-                    <a-select-option v-for="d in items" :key="d.value">
+                 <b-form-group    class="col-md-4">
+                    <h5>Fase  :</h5>
+                    <a-select      style="width: 100%"  @change="Change"  v-model="id_fase"  >              
+                    <a-select-option v-for="d in fasesproyecto" :key="d.value">
                             {{ d.text }}
                     </a-select-option>
                     </a-select>  
                  </b-form-group> 
-                
+                      <b-form-group    class="col-md-4">
+                    <h5>Elemento Configuración  :</h5>
+                    <a-select      style="width: 100%"  @change="Change1"    >              
+                    <a-select-option v-for="d in elementos" :key="d.value">
+                            {{ d.text }}
+                    </a-select-option>
+                    </a-select>  
+                 </b-form-group> 
             </div>                 
         </b-card>
     <br>
@@ -58,12 +65,30 @@
                         ></b-form-textarea>
                     </b-form-group>
                   </div>            
-                  <b-button type="button" variant="primary"  @click="CrearSolicitudCambio" class="p-2 px-4 btn-xs">
+                 <!-- <b-button type="button" variant="primary"  @click="CrearSolicitudCambio" class="p-2 px-4 btn-xs">
                             Crear Solicitud
-                  </b-button>     
-                    <b-button variant="primary" @click="GenerarPdf"> GenerarPdf </b-button>      
+                  </b-button> -->    
+                  <b-button variant="primary" class="p-2 px-4 btn-xs float-right" @click="GenerarPdf"> GenerarPdf </b-button>
+                 <br>
+                    <label>Adjunte PDF</label>
+                    <input
+                    type="file"
+                    ref="cedulaTrabajador"
+                    accept="application/pdf"
+                    :disabled="loading"
+                    class="form-control"
+                    id="archivoCedulaConyuge"
+                    data-validate="Anexe Pdf"
+                    >
+                    <br>
+                      <b-button type="button" :disabled="loading"  variant="primary"  @click="agregar" class="p-2 px-4 btn-xs">
+                            Crear Solicitud
+                  </b-button>    
+                  <br>
+                                              
           </b-card>
      </div>
+    
     </div>
 </template>
 
@@ -72,14 +97,19 @@ import axios from  'axios';
 import { jsPDF } from "jspdf";
 import * as autoTable from 'jspdf-autotable'
 import pdf from 'vue-pdf'
+import firebase from '@/firebase'
+import 'firebase/storage';
 
 export default {
      components: { pdf  },
     data(){
         return{
             items:[],   
-            fasesproyecto:[],     
+            fasesproyecto:[],  
+            elementos:[],   
             id_proyecto:'',
+            id_fase:'',
+            nombre_elemento:'',
             fecha:'',
             objetivo:'',
             descripcion:'',
@@ -92,6 +122,11 @@ export default {
             id_jefeproyecto:'',
             nombre_solicitante:'',
             nombre_proyecto:'',
+            loading: false,
+            downloadUrl: '',
+            headers: {
+                authorization: 'authorization-text',
+            },
         }
     },
 
@@ -161,7 +196,19 @@ export default {
             this.nombre_proyecto = event.target.textContent; // example: One            
              console.log('name ',this.nombre_proyecto );
             this.ObtenerIdMiembro(idpro);
+            this.fasesproyecto=[];
+            this.MostarFaseMetodolgiaProyecto(idpro);
         },
+       handleChange1(info) {
+            if (info.file.status !== 'uploading') {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === 'done') {
+                this.$message.success(`${info.file.name} file uploaded successfully`);
+            } else if (info.file.status === 'error') {
+                this.$message.error(`${info.file.name} file upload failed.`);
+            }
+            },
         MostarFaseMetodolgiaProyecto(id){
           let me=this;
           var previa=[];
@@ -175,20 +222,90 @@ export default {
               }) .finally(() => {
            })
        },
-         ElentosFaseProyecto(id_fase){
+       ElentosFaseProyecto(id_fase){
             let me=this;
             var previa=[];
-            axios.get('ApiWeb/Proyecto.php/?parametro1='+me.id_proyecto+'&id_fase='+id_fase).then(response => {              
-                  
-                    previa=response.data;                    
+              axios.get('ApiWeb/Proyecto.php/?parametro1='+me.id_proyecto+'&id_fase='+id_fase).then(response => {       previa=response.data;                    
                     previa.map(function(x){
-                        me.elementosConfi.push({text: x.nombre_elemento,value:x.id_cronograma_elemento});
+                        me.elementos.push({text: x.nombre_elemento,value:x.id_cronograma_elemento});
                    })
                }).catch(function (error) {
                       console.log(error);
               }) .finally(() => {
-           })
-       },
+          })
+        },
+        Change(value){
+            this.elementos=[];
+           this.ElentosFaseProyecto(value);
+        },
+        Change1(e){      
+            this.nombre_elemento = event.target.textContent; // example: One            
+            console.log('name ',this.nombre_elemento );
+         },
+         async agregar1(){
+               try {
+                    const { files } = this.$refs.cedulaTrabajador;
+                    this.loading = true;
+                    const file = files[0];
+                    if (file) {
+                    const isPdf = file.type === 'application/pdf';
+                    if (isPdf) {
+                        const response = await firebase.storage().ref(`pdfs/${file.name}`).put(file);
+                        const url = await response.ref.getDownloadURL();
+                        this.downloadUrl = url;                        
+                    } else {
+                        console.log('Archivo no valido');
+                    }
+                    } else {
+                    console.log('falta el archivo');
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+                this.loading = false;
+         },
+        async agregar() {
+                try {
+                    const { files } = this.$refs.cedulaTrabajador;
+                    this.loading = true;
+                    const file = files[0];
+                    if (file) {
+                    const isPdf = file.type === 'application/pdf';
+                    if (isPdf) {
+                        const response = await firebase.storage().ref(`pdfs/${file.name}`).put(file);
+                        const url = await response.ref.getDownloadURL();
+                        this.downloadUrl = url;
+                            let id_proyecto=this.id_proyecto;  
+                            let miembrojefeId=this.id_jefeproyecto;
+                            let miembrosolicitanteId=this.usuario_miembroid;
+                            let fecha=this.fecha;
+                            let objetivo=this.objetivo;
+                            let descripcion=this.descripcion;
+                            let respuesta="";
+                            let estado="1";
+                            let documento=  this.downloadUrl;
+                            let elemento=this.nombre_elemento;
+                            const obj={id_proyecto,miembrojefeId,miembrosolicitanteId,fecha,objetivo,descripcion,respuesta,estado,documento,elemento};
+                            axios.post('ApiWeb/SolicitudCambio.php/',obj).then(response => {                       
+                                    console.log(response);               
+                                    this. Confirmacion();
+                                    }).catch(function (error) {
+                                        console.log(error);
+                                    }) .finally(() => {                     
+                                })
+                     
+                       
+                    } else {
+                        console.log('Archivo no valido');
+                    }
+                    } else {
+                    console.log('falta el archivo');
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+                this.loading = false;
+        },
         ObtenerCantidadSolicitud(){
 
         },
@@ -265,6 +382,7 @@ export default {
             doc.text(18,126, 'Descripción del Cambio solicitado :')
             doc.text(18,135, me.descripcion)
             doc.text(18,146, 'Elemento de Configuración del software afectado :')
+            doc.text(90,145, me.nombre_elemento)
             doc.text(18,156, 'Impacto :')
             doc.text(18,166, 'Esfuerzo estimado: ')
            //  doc.line(180, 20, 130, 20);

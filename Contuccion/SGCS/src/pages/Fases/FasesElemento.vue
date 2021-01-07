@@ -1,7 +1,7 @@
 <template>
     <div>
   <b-modal  v-model="Show" @hide="CerrarModal"
-            title="Nuevo Elemento" hide-footer   body-class="myDiv">
+            title="Nuevo Elemento Configuración" hide-footer   body-class="myDiv">
      <form action="">
        <div class="form-row">                 
           <b-form-group  label="Fase :"  class="col-md-12">

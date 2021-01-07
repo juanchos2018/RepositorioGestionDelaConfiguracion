@@ -10,7 +10,7 @@ class ClsInformeCambio
       
         $conexion=new Conexion();
          
-        $vector=array(); 
+       $vector=array(); 
         $db=$conexion->getConexion();
         $sql="INSERT INTO informecambio (codigo,solicitudcambioId,descripcion,tiempo,costo,impactoproblema,fecha,miembrojefeId,estado) 
          VALUES (:codigo,:solicitudcambioId,:descripcion,:tiempo,:costo,:impactoproblema,:fecha,:miembrojefeId,:estado)";
@@ -18,6 +18,7 @@ class ClsInformeCambio
         $consulta=$db->prepare($sql);
         $consulta->bindParam(':codigo',$codigo);
         $consulta->bindParam(':solicitudcambioId',$solicitudcambioId);
+        $consulta->bindParam(':impactoproblema',$impactoproblema);
         $consulta->bindParam(':descripcion',$descripcion);
         $consulta->bindParam(':tiempo',$tiempo);
         $consulta->bindParam(':costo',$costo);
@@ -25,14 +26,22 @@ class ClsInformeCambio
         $consulta->bindParam(':miembrojefeId',$miembrojefeId);
         $consulta->bindParam(':estado',$estado);
         $consulta->execute();
-        $retunidproyecto = $db->lastInsertId();
+        
+        $id_informecambio = $db->lastInsertId();
      
-   
-        foreach ($detalle as $item)    {   
-           $obj=new ClsInformeCambioDetalle();            
-           $id_cronograma_fase= $obj->Agregar($retunidproyecto,$item['cronogramaelemetoId'],$item['miembroresponsableId'],$item['descripcion'],$item['fechainicio'],$item['fechatermino'],$item['porcentajeavance'],$item['predecesota']);   
-         
-          }  
+    //  $id_informecambio=2;
+    //  $consulta->bindParam(':id_informecambio',$id_informecambio);
+    //  $consulta->bindParam(':cronogramaelemetoId',$cronogramaelemetoId);     
+    //  $consulta->bindParam(':descripcion',$descripcion);
+    //  $consulta->bindParam(':fechainicio',$fechainicio);
+    //  $consulta->bindParam(':fechatermino',$fechatermino);
+     // $consulta->bindParam(':porcentajeavance',$//);  
+
+   foreach ($detalle as $item)    {   
+        $obj=new ClsInformeCambioDetalle();            
+       $obj->Agregar($id_informecambio,$item['cronogramaelemetoId'],$item['descripcion'],$item['fechainicio'],$item['fechatermino'],$item['porcentajeavance']);   
+      
+    }  
         return "Agrregadgp";    			
     }
 

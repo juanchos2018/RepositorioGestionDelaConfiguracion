@@ -57,7 +57,19 @@
               { header: 'Listar', link: '/app/components/listar' }
             ]"
         />
-         <NavLink
+
+          <NavLink
+            :activeItem="activeItem"
+            header="Solicitud de Cambio"
+            link="/app/solicitud"
+            iconName="flaticon-network"
+            index="solicitud"
+            :childrenLinks="[
+              { header: 'Agregar', link: '/app/components/solicitudnueva' },
+              { header: 'Listar', link: '/app/components/solicitudlista' }
+            ]"
+        />
+    <!--     <NavLink
              v-if="esMiembro"
             :activeItem="activeItem"
             header="Solicitud"
@@ -73,7 +85,7 @@
             iconName="flaticon-network"
             index="solicitudlista"
             isHeader           
-        />
+        />-->
          <NavLink
             :activeItem="activeItem"
             header="Informecambio"

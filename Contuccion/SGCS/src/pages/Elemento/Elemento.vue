@@ -6,7 +6,7 @@
           <a href="#"   @click="Card" class="cambia"  ><i class="fa fa-th"></i></a>
         </div>
          <b-button type="button"  class="m-1 p-2 px-4 btn-xs" variant="primary" @click="DialogoElemento=true"> 
-            <i class="fa fa-plus-circle"></i> Nuevo
+            <i class="fa fa-plus-circle"></i> Agregar
           </b-button>
 
            <div style="width: 200px;float; float: right; display: inline-block;">

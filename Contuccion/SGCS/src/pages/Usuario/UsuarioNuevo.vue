@@ -45,12 +45,12 @@
           <b-button type="button"  @click="CerrarModal"  variant="light"  class="p-2 px-4 btn-xs">Cancelar</b-button>
           <b-button type="button"  @click="RegistrarUsuario" variant="primary"  class="p-2 px-4 btn-xs">
               <beat-loader :loading="isLoading" :color="'#68d391'" :size="8" />
-             <span v-show="!isLoading">Registar Usuario</span>
+             <span v-show="!isLoading">Crear Usuario</span>
             </b-button>
-              <b-button type="button"  @click="buscar" variant="primary"  class="p-2 px-4 btn-xs">
+         <!--     <b-button type="button"  @click="buscar" variant="primary"  class="p-2 px-4 btn-xs">
              
             buscar
-            </b-button>
+            </b-button>-->
         </div>
      </form>
   </b-modal>

@@ -12,27 +12,27 @@ class ClsSolicitudCambio
 	public $descripcion; 
     public $respuesta;
     public $estado;
-
+    public $documento;
+    public $elemento;
     function Agregar($solicitud)
     {
         $sql1 = new tablalibre();
         $con="SELECT * FROM solicitudcambio";
         $filas=$sql1->consulta($con);
-        $cantidafilas=0;
-     //   $cantidafilas = mysqli_num_rows($filas);
+        $cantidafilas=0;  
         while($datos = $filas->recordset->fetch(PDO::FETCH_ASSOC)){
            $cantidafilas++;
          }      
         $solicitud->codigo= "SC-".$cantidafilas;
         $sql = new tablalibre();
-        $consulta ="INSERT INTO solicitudcambio (codigo,id_proyecto,miembrojefeId,miembrosolicitanteId,fecha,objetivo,descripcion,respuesta,estado) 
-        values ('$solicitud->codigo', '$solicitud->id_proyecto','$solicitud->miembrojefeId', '$solicitud->miembrosolicitanteId','$solicitud->fecha', '$solicitud->objetivo', '$solicitud->descripcion', '$solicitud->respuesta', '$solicitud->estado')";
+        $consulta ="INSERT INTO solicitudcambio (codigo,id_proyecto,miembrojefeId,miembrosolicitanteId,fecha,objetivo,descripcion,respuesta,estado,documento,elemento) 
+        values ('$solicitud->codigo', '$solicitud->id_proyecto','$solicitud->miembrojefeId', '$solicitud->miembrosolicitanteId','$solicitud->fecha', '$solicitud->objetivo', '$solicitud->descripcion', '$solicitud->respuesta', '$solicitud->estado','$solicitud->documento','$solicitud->elemento')";
         $rs=$sql->consulta($consulta);
         return $rs;
     }
     public function Listar(){
         $sql = new tablalibre();
-        $consulta ="SELECT  soli.id_solicitud, soli.codigo,pro.id_proyecto, pro.nombre_proyecto, usu.nombre ,soli.estado,soli.fecha FROM solicitudcambio AS soli
+        $consulta ="SELECT  soli.id_solicitud, soli.codigo,pro.id_proyecto, pro.nombre_proyecto, usu.nombre ,soli.estado,soli.fecha,soli.documento,soli.elemento FROM solicitudcambio AS soli
         INNER JOIN proyecto AS pro
         on soli.id_proyecto=pro.id_proyecto
         INNER JOIN miembroproyecto AS mi  
@@ -44,13 +44,17 @@ class ClsSolicitudCambio
         $contador=1;
         while($datos = $rs->recordset->fetch(PDO::FETCH_ASSOC)){
               $temp = new ClsSolicitudCambio;
-              $temp->numero          =$contador;
+              
+              $temp->id_solicitud    = $datos["id_solicitud"];
+              $temp->numero          = $contador;
               $temp->codigo          = $datos["codigo"];
               $temp->id_proyecto     = $datos["id_proyecto"];
               $temp->nombre_proyecto = $datos["nombre_proyecto"];
               $temp->nombre          = $datos["nombre"];   
               $temp->estado          = $datos["estado"]; 
-              $temp->fecha           = $datos["fecha"];           	
+              $temp->fecha           = $datos["fecha"];     
+              $temp->documento       = $datos["documento"];     
+              $temp->elemento        = $datos["elemento"];     	
               array_push($vector,$temp);
               $contador++;
         }

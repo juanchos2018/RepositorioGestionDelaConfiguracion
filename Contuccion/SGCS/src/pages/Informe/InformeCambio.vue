@@ -19,17 +19,17 @@
                 ></b-form-input>
                 </b-form-group>
                     <b-form-group  label="Costo Economico "   class="col-md-3">
-                <b-form-input
-                          
+                <b-form-input                          
                 class="p-2 px-4 btn-xs" 
-                required          
+                required   
+                v-model="costoeconomico"      
                 ></b-form-input>
                 </b-form-group>
                     <b-form-group  label="Tiempo Estimado "   class="col-md-3">
-                <b-form-input
-                           
+                <b-form-input                           
                 class="p-2 px-4 btn-xs" 
-                required          
+                required   
+                v-model="tiempoestimado"       
                 ></b-form-input>
                 </b-form-group>
         </div>  
@@ -38,12 +38,13 @@
                     <b-form-textarea
                         placeholder="Enter at least 10 characters"
                         rows="3"
-                        ></b-form-textarea>
+                       v-model="decripcioninforme"  ></b-form-textarea>
                     </b-form-group>
                         <b-form-group  label="Inpacto del Problema"   class="col-md-6">
                     <b-form-textarea
                         placeholder="Enter at least 10 characters"
                         rows="3"
+                        v-model="impactoproblema"
                         ></b-form-textarea>
                     </b-form-group>
              </div>
@@ -82,7 +83,7 @@
                <b-form-textarea
                         placeholder="Enter at least 10 characters"
                         rows="3"
-                        ></b-form-textarea>
+                        v-model="descripcion"      ></b-form-textarea>
                 </b-form-group>
                     <b-button type="button"  variant="primary"  @click="AgregarDetalle" class="p-2 px-4 btn-xs">
                         Agregar
@@ -101,9 +102,10 @@
                             </b-card>
                         </b-form-group>
                      </div>
-                   <b-button type="button"  variant="primary"  class="p-2 px-4 btn-xs">
+                   <b-button type="button"  variant="primary" @click="GurdarInforme" class="p-2 px-4 btn-xs">
                         Guardar Informe
                     </b-button> 
+                    
 
     </div>
 </template>
@@ -123,15 +125,23 @@ export default {
                     { label:"Acciones", key: 'acciones', sortable: false },
                    ],
             costo:'',       
+            costoeconomico:'',    
             fecha:'',
             codigo:'',  
-            tiempo:'',     
+            tiempo:'',   
+            tiempoestimado:'',  
             id_proyecto:'', 
+            id_solicitud:'',
             id_fase:'',
             cro_ecs_Id:'',
+            impactoproblema:'',
             fasesproyecto:[],
             elementosConfi:[],
             nombre_elemento:'',
+            miembrojefeId:'',
+            id_usuario:'',
+            descripcion:'',
+            decripcioninforme:'',
             detalle:[],     
         }
     },
@@ -139,6 +149,7 @@ export default {
 
     },
     mounted() {
+          if(localStorage.idtipo) this.id_usuario = localStorage.id_usuario;
          this.GetDatos();    
     },
     methods: {
@@ -149,7 +160,9 @@ export default {
             this.fecha=dato[0];
             this.codigo=dato[1];
             this.id_proyecto=dato[2];
+            this.id_solicitud=dato[3];
             this.MostarFaseMetodolgiaProyecto(dato[2]); 
+            this.ObtenerIdMiembro(dato[2]);
            
           }  
        },     
@@ -166,6 +179,17 @@ export default {
               }) .finally(() => {
            })
        },
+       ObtenerIdMiembro(proyectoId){
+          // var id="1";
+                 axios.get('ApiWeb/Usuario.php/?proyectoId='+proyectoId+"&usuario_miembroid="+this.id_usuario).then(response => {                       
+                console.log(response.data);                             
+              //   this.usuario_miembroid=response.data.id;
+                 this.miembrojefeId=response.data.idusuarioJefe;
+                }).catch(function (error) {
+                      console.log(error);
+              }) .finally(() => {                     
+           })
+        }  ,
        ElentosFaseProyecto(id_fase){
             let me=this;
             var previa=[];
@@ -183,27 +207,91 @@ export default {
        change(e){
      //    console.log(this.id_elemento.nombre_elemento);
       //  var key = event.target.value; // example: 1
-        this.nombre_elemento = event.target.textContent; // example: One
-            
-       console.log('name ',this.nombre_elemento );
-         
+       this.nombre_elemento = event.target.textContent; // example: One            
+       console.log('name ',this.nombre_elemento );         
      },
-     AgregarDetalle1(){
+     GurdarInforme(){
+          this.listaElementos=[];         
          
+          let codigo=this.codigo;
+          let solicitudcambioId=this.id_solicitud;
+          let descripcion=this.decripcioninforme;
+          let tiempo=this.tiempoestimado;
+          let costo=this.costoeconomico;
+          let impactoproblema=this.impactoproblema;
+          let fecha=this.fecha;
+          let miembrojefeId=this.miembrojefeId;  
+          var estado="Nuevo";        
+          var ListaDetalle=this.detalle;
+          const obj={codigo,solicitudcambioId,descripcion,tiempo,costo,impactoproblema,fecha,miembrojefeId,estado,ListaDetalle};
+          axios.post('ApiWeb/InformeCambio.php/',obj).then(response => {                       
+                 console.log(response);
+                 
+                 this. Confirmacion();
+            alert("AGread")
+                }).catch(function (error) {
+                      console.log(error);
+              }) .finally(() => {                     
+          })
+     },
+     REgistrarDetalle(){
+        // alert("resitrrfar")
+             let  id_informecambio= 1;         
+             let   cronogramaelemetoId=2;
+             let   descripcion="descriaosdfsad";
+             let   porcentajeavance=1;    
+            let    fechainicio='fecha';
+             let   fechatermino='fechatermino';
+               const obj={id_informecambio,cronogramaelemetoId,descripcion,porcentajeavance,fechainicio,fechatermino};
+                       axios.post('ApiWeb/InformeCambioDetalle.php/',obj).then(response => {                       
+                 console.log(response);
+                 
+                  this. Confirmacion();
+                        alert("AGread")
+                }).catch(function (error) {
+                      console.log(error);
+              }) .finally(() => {                     
+          })
+     },
+     Confirmacion(){
+            this.$swal({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Registrado',
+                text:'texto',
+                showConfirmButton: false,
+                timer: 3000
+              })
+         this.LimpiarVista();
      },
      AgregarDetalle(){
          // this.$set(this.PreVenta, 'DetallePreVenta', datos)      
           var nu=this.detalle.length+1
           this.detalle.push(
             {   numero:nu,
-                ecs:this.nombre_elemento,
-                cronogrameletoid: this.cro_ecs_Id,
+                ecs:this.nombre_elemento,              
+                cronogramaelemetoId: this.cro_ecs_Id,
                 tiempo: this.tiempo,
                 costo:this.costo,
-            })      
-          
-       },
-       handleChange(value){
+                descripcion:this.descripcion,
+                porcentajeavance:'0',            
+                fechainicio:'fecha',
+                fechatermino:'fechatermino'
+            })  
+     },
+    LimpiarVista(){
+          this.detalle=[];
+          this.codigo="";
+      
+          this.decripcioninforme="";
+          this.tiempoestimado="";
+          this.costoeconomico="";
+          this.impactoproblema="";
+          this.fecha="";
+          this.miembrojefeId="";  
+
+    },
+    handleChange(value){
            this.elementosConfi=[];
            this.ElentosFaseProyecto(value);
        }
