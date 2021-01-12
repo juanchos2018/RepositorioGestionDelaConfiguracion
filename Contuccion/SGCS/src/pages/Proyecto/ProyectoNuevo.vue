@@ -210,9 +210,10 @@ export default {
           var lista=this.listaFases;
           var cantidad=lista.length;
           var porcentajeFAse=100/parseInt(cantidad);
+          console.log(porcentajeFAse)
           var porcentaje=0;
           var ListaElementos=this.listaElementos;
-          const obj={codigo,nombre,fechaini,fechater,descripcion,estado,metodologia,usuariojefeId,lista,ListaElementos,porcentaje};
+          const obj={codigo,nombre,fechaini,fechater,descripcion,estado,metodologia,usuariojefeId,lista,ListaElementos,porcentaje,porcentajeFAse};
           axios.post('ApiWeb/Proyecto.php/',obj).then(response => {                       
                  console.log(response);
                   this.Listacronogramafase=response.data;

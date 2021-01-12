@@ -9,7 +9,7 @@
             <span class="badge badge-success">{{estado}}</span>
             </b-form-group>
              <b-form-group    class="col-md-8">
-               <a-progress :percent="50" status="active" />
+               <a-progress :percent="parseInt(TotalProcentajeProyecto)" status="active" />
             </b-form-group>
          </div> 
        <div  class="form-row">  
@@ -76,10 +76,12 @@
                 <div style="margin-top:20px;margin-left:5%">
                  <h5>Terminado</h5>
                  <h5>{{TareaTerminada}}</h5>  
+                 
               </div>    
              </div>               
               </Widget>       
            </b-form-group>
+           {{rangoAnterior}}
        </div>  
  
    <div>
@@ -92,18 +94,34 @@
         <h4 class="mb-0" style="color:#FFFFFF">Metodologia : {{metodologia}}</h4>
       </template>
     <a-steps :current="current" @change="onChange" :style="stepStyle"  type="navigation" >
+     
       <a-step v-for="item in fases" :key="item.title" :title="item.title"  />
-    </a-steps>
- 
-    <div >
-    <!--  {{ steps[current].content  sub-title="00:00:05"  }}   <b-icon icon="caret-right"> </b-icon>   <div class="col-4" v-for="item in items" :key="item.key"> -->
+      <br>    
+      </a-steps>
+       <div class="row" >   
+         <div  class="col-3" v-for="item in fases"  :key="item.key" > 
+          <div >
+           <a-progress :percent="parseInt(item.porcentaje_avance)" status="active" />
+        </div>
+        <div>
+           <a-button type="primary" @click="DialogoRango(item.porcentaje_avance,item.id_cronograma_fase,item.porcentaje)">
+               Editar
+           </a-button>      
+        </div>
+      </div>
+      </div>
+    <hr>
+    <div>            
+    <!--   <div style="width:25%">
+         <a-progress :percent="50" status="active" />
+      </div> {{ steps[current].content  sub-title="00:00:05"  }}   <b-icon icon="caret-right"> </b-icon>   <div class="col-4" v-for="item in items" :key="item.key"> -->
        <b-table
         :items="elementosConfi"  
         sort-icon-left
         :fields="fields"
         responsive="sm"
         v-model="currentItems"
-         show-empty>
+        show-empty>
          <template v-slot:cell(nombre_elemento)="{ detailsShowing, item }">
             <b-button variant="outline-primary" style="margin-right:10px"  @click="toggleDetails(item)"> 
                 <div v-if="detailsShowing">
@@ -137,7 +155,7 @@
           </template>
 
             <template v-slot: empty = "scope"> 
-            <h4> Lista Vacioa </h4> 
+            <h4> Lista Vacia </h4> 
           </template> 
           <template v-slot: emptyfiltered = "scope"> 
             <h4> No hay Nada</h4> 
@@ -223,7 +241,7 @@ import moment from 'moment'
 
 import StepProgressBar from './StepProgressBarComponent.vue'
 import axios from  'axios';
-
+import Swal from 'sweetalert2'
 
 export default {
   name:'proyecto-detalle',
@@ -277,9 +295,11 @@ export default {
       nombre_fase:'',
       nombre_elemento:'',
       nombreProyecto:'',
+      TotalProcentajeProyecto:'',
       id_proyecto:'',
       id_miembro:'',
       idcronogramamalemento:'',
+      id_cronograma_fase:'',
       fecha_inicio:'',
       fecha_termino:'',
       descripcion:'',
@@ -290,6 +310,8 @@ export default {
       TareaProceso:'',
       TareaTerminada:'',
       DialogoElementoVersion:false,     
+      RangoFase:'',
+      rangoAnterior:'',
     };
   },
   created(){
@@ -305,7 +327,6 @@ export default {
                 }
                 me.stepProgressBarParams.currentStep += 1;
             });
-
             $('#back').click(function() {
               if (me.stepProgressBarParams.currentStep == 1) {
                 return;
@@ -314,8 +335,7 @@ export default {
             });
        });
   },
-  methods: {
-    
+  methods: {    
        GetDatos(){
            var id = this.$route.params.id_proyecto
           if(id){         
@@ -329,7 +349,8 @@ export default {
        MostarFaseMetodolgiaProyecto(id){
           let me=this;
           axios.get('ApiWeb/Proyecto.php/?id_proyecto='+id).then(response => {              
-                  me.fases = response.data;                  
+                  me.fases = response.data;   
+                  console.log(response.data)               
                   me.ElentosFaseProyecto(me.id_proyecto, me.fases[0].id_fase);     
                   me.nombre_fase =me.fases[0].nombre_fase;                   
                }).catch(function (error) {
@@ -363,6 +384,7 @@ export default {
                   me.metodologia=response.data[0].nombre_metodologia;     
                   me.estado=response.data[0].estado;    
                   me.descripcion=response.data[0].descripcion;    
+                  me.TotalProcentajeProyecto=response.data[0].porcentaje;
                }).catch(function (error) {
                       console.log(error);
               }) .finally(() => {
@@ -382,17 +404,14 @@ export default {
                    me.TareaTerminada=response.data[2].cantidad;   
                   }else{
                       me.TareaTerminada="0";
-                  }
-                 
-                
+                  }  
                   console.log(response.data)  
                }).catch(function (error) {
                       console.log(error);
               }) .finally(() => {
            })
        },  
-       NuevaVersion(idcromograma,nombre){
-     
+       NuevaVersion(idcromograma,nombre){     
         this.idcronogramamalemento=idcromograma;      
         this.nombre_elemento=nombre; 
         this.DialogoElementoVersion=true;
@@ -406,7 +425,7 @@ export default {
 
         const obj={elemntoconfiguracionID,version,fecha_inicio,fecha_termino,miembroresponsableID};
         axios.post('ApiWeb/Version.php/',obj).then(response => {                       
-                        console.log(response.data);
+                   
               this.Confirmacion();             
            
           }).catch(function (error) {
@@ -440,8 +459,7 @@ export default {
                      //  console.log(response.data);                     
                   }).catch(function (error) {
                       console.log(error);
-                  }) .finally(() => {
-                     
+                }) .finally(() => {                     
            })
        },
        ListaMiembros(id){
@@ -455,7 +473,7 @@ export default {
                  }).catch(function (error) {
                        console.log(error);
               }) .finally(() => {
-           })
+          })
        },
        Tarea(id_version,miembro_id){
          var element=this.nombre_elemento;
@@ -466,6 +484,34 @@ export default {
        
          this.$router.push({name:"tarealemento" ,params:{datos} });         
        },
+       DialogoRango(rango,id_cronograma_fase,porcentaje){
+         let me =this;
+         me.rangoAnterior=rango;
+         me.id_cronograma_fase=id_cronograma_fase;
+         Swal.fire({
+            title: 'Avance  Fase',
+            icon: 'question',
+            input: 'range',
+            inputLabel: 'Porcentaje',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Avance!',
+            inputAttributes: {
+              min: 0,
+              max: 100,
+              step: 1
+             },
+            inputValue: rango,
+             preConfirm: function(value) {               
+                 me.RangoFase=value               
+              }
+          }).then((result) => {
+              if (result.isConfirmed) {
+               // alert( me.RangoFase)
+                 me.EditarPorcentajeFase(me.id_cronograma_fase, me.RangoFase,porcentaje)
+                 ///id_cronograma_fase
+              }
+            })
+       },
        Confirmacion(){
             this.$swal({
                 position: 'top-end',
@@ -475,6 +521,48 @@ export default {
                 showConfirmButton: false,
                 timer: 3000
               })
+       },
+       EditarPorcentajeProyecto(porcentajeProyeto){
+            let id_proyecto=this.id_proyecto;  
+            let porcentaje=porcentajeProyeto;  
+            const obj={id_proyecto,porcentaje};
+            axios.put('ApiWeb/Proyecto.php/',obj).then(response => {     
+                      console.log(response.data)  
+                      this.DatosProyecto(id_proyecto);                  
+                  }).catch(function (error) {
+                      console.log(error);
+                  }) .finally(() => {              
+            })  
+       }, 
+       EditarPorcentajeFase(id_cronograma_f,RangoFase,porce){
+            let id_cronograma_fase=id_cronograma_f;  
+            let porcentaje=RangoFase;  
+
+           
+          //  console.log(porcentajeProyeto);
+            var  porcentajeVerdadero=RangoFase- this.rangoAnterior;
+
+             var porcentajeProyeto =(porcentajeVerdadero*porce)/100;
+            console.log(porcentajeVerdadero);
+            const obj={id_cronograma_fase,porcentaje};
+            axios.put('ApiWeb/CronogramaFase.php/',obj).then(response => {     
+                    console.log(response.data)    
+                    this.EditarPorcentajeProyecto(porcentajeProyeto);
+                    this.Confirmacion();                                           
+                }).catch(function (error) {
+                    console.log(error);
+                }) .finally(() => {              
+           })  
+       },
+       Obntener(){
+         //Borrar esto we 
+           var prueba="43"
+           axios.get('ApiWeb/Proyecto.php/?prueba='+prueba).then(response => {     
+                     console.log(response.data)                                               
+                 }).catch(function (error) {
+                     console.log(error);
+                 }) .finally(() => {              
+            }) 
        },
        CerrarModal(){
          this.DialogoElementoVersion=false;

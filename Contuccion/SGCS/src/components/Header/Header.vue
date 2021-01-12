@@ -9,7 +9,7 @@
           <i class="la la-bars la-lg" />
         </a>    
          <div class="site-branding-text d-md-down-none">
-            <h5 class="site-title"  style="font-size:1.30vw; margin-left:15px" > <strong> Gestion de la Configuración </strong></h5>
+            <h5 class="site-title"  style="font-size:1.30vw; margin-left:15px" > <strong> Gestion de la Configuración Software</strong></h5>
             <p class="site-description" style="font-size:1.0vw; color:#808080" ></p>
           </div>
       </b-nav-item>      

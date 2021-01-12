@@ -22,7 +22,7 @@
                 <label for="">{{ nombre_proyecto}}</label>                 
                 </div>
                 </b-form-group>
-        </div>            
+                </div>            
               <br>          
           </b-card>
         </div>
@@ -69,8 +69,52 @@
                     </div>
                     </div>                                
                 </b-tab>
-                <b-tab title="Second">
-                    <p>I'm the second tab</p>
+                <b-tab title="Terminado">
+                     <div class="row" >             
+                    <div class="col-4" v-for="item in tareasterminadas" :key="item.key">                
+                        <b-card no-body class="overflow-hidden"  footer-tag="footer">
+                            <b-row no-gutters>
+                            <b-col md="3">
+                                <div class="UserAvatar__IconImage-hmym9w-1 jtNJTZ" >
+                                    <center> 
+                                    <img src="../../assets/tarea.png" alt="Avatar" class="avatar1"/> 
+                                    </center>
+                                </div>     
+                            </b-col>
+                            <b-col md="8">
+                                <b-card-body >                   
+                                <b-card-title> <h5> {{item.descripcion}}</h5> </b-card-title>                    
+                                <b-card-text>
+                                    <h5>{{item.estado1}}</h5>
+                                     <div style="display: flex;">
+                                   <a-progress :percent="parseInt(item.porcentajeavance)" /> 
+                                    <div v-if="item.estado2=='Aprobado'">
+                                   <b-icon icon="check-square" scale="2" variant="success" v-b-tooltip.hover title="Aprobado"></b-icon>
+                                  </div>    
+                                  <div v-else-if="item.estado2 == 'Revision'">
+                                       <b-icon icon="hourglass-split" scale="2" variant="primary" v-b-tooltip.hover title="Revision"></b-icon>
+                                   </div>   
+                                    <div v-else-if="item.estado2 == 'Observado'">
+                                        <b-icon icon="exclamation-triangle-fill" scale="2" variant="warning" v-b-tooltip.hover title="Observado"></b-icon>
+                                   </div>                      
+                                   <div v-else>
+                                       <b-icon icon="x-circle" scale="2" variant="danger"></b-icon>
+                                  </div> 
+                                   </div>
+                                   <h5>Res. : {{item.nombre}}</h5>
+                                </b-card-text>                
+                                </b-card-body>                
+                            </b-col>      
+                             </b-row>      
+                                  <template #footer  footer-class="myDiv">
+                                    <div  style="background-color: white; float:right;">
+                                    <b-button variant="success" v-b-tooltip.hover title="Detalle"  @click="DetalleTarea(item.id_tarea)"> <b-icon icon="card-list" animation="fade" font-scale="1" ></b-icon> </b-button>
+                                   </div>                                          
+                                </template>
+                        </b-card>
+                        <br>
+                    </div>
+                    </div>  
                 </b-tab>             
             </b-tabs>
           </b-card>  
@@ -98,6 +142,7 @@ export default {
           id_version:'',
           miembros:[],
           tareasversion:[],
+          tareasterminadas:[],
           DialogoTarea:false,
           DialogoDetalleTarea:false,
       }
@@ -126,10 +171,9 @@ export default {
             ListaMiembros(id){
                     let me=this;
                     var previa=[];
-                     axios.get('ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {  
-                    
+                     axios.get('ApiWeb/Miembro.php/?id_proyecto='+id).then(response => {                      
                             previa=response.data;  
-                            console.log(response.data)
+                          //  console.log(response.data)
                             previa.map(function(x){
                               me.miembros.push({text: x.nombre,value:x.id});
                             })
@@ -140,13 +184,39 @@ export default {
             },
             ListarTareasVersion(id){
                     let me=this;                   
-                    axios.get('ApiWeb/Tarea.php/?id_tarea='+id).then(response => {  
-                           me.tareasversion=response.data;  
+                    axios.get('ApiWeb/Tarea.php/?id_tarea='+id).then(response => {                          
+                            response.data.forEach(elem => {
+                                if (elem.estado1=="Terminado") {
+                                    me.tareasterminadas.push({                                        
+                                        id_tarea:elem.id_tarea,
+                                        descripcion: elem.descripcion,
+                                        porcentajeavance: elem.porcentajeavance,
+                                        fecha_inicio:elem.fecha_inicio,
+                                        fecha_termino: elem.fecha_termino,
+                                        nombre:elem.nombre,
+                                        estado:elem.estado,   
+                                        estado1:elem.estado1, 
+                                        estado2:elem.estado2,                  
+                                    })
+                            }else{
+                                    me.tareasversion.push({
+                                        id_tarea:elem.id_tarea,
+                                        descripcion: elem.descripcion,
+                                        porcentajeavance: elem.porcentajeavance,
+                                        fecha_inicio:elem.fecha_inicio,
+                                        fecha_termino: elem.fecha_termino,
+                                        estado:elem.estado,  
+                                        nombre:elem.nombre,
+                                        estado1:elem.estado1, 
+                                        estado2:elem.estado2,                  
+                                  })
+                                 }                        
+                             }); 
                            console.log(response.data)                            
                             }).catch(function (error) {
                                console.log(error);
                      }) .finally(() => {
-                 }) 
+               }) 
             },
             DetalleTarea(id_tarea){
                 this.$router.push({name:"tareadetalle",params:{id_tarea} });

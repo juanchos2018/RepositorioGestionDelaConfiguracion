@@ -60,10 +60,11 @@ export default {
     data(){
         return{
             items:[],
-            nombremetodologia:'',        
+            nombremetodologia:'',
+            id_metodologia:'',        
             current: 0,
-             search: '',
-            pagina:'page1',    
+            search: '',
+         
             detalle2:[],
             fields: [
                          { label:"Id", key: 'id_elemento', sortable: false },
@@ -79,10 +80,10 @@ export default {
         }
     },
     created(){   
-      this.$eventHub.$on('Listar-Fase', this.ListarFasePorMetodologia);
+          this.$eventHub.$on('Listar-Fase', this.ListarFasePorMetodologia);
     },
     mounted(){
-      this.GetDatos()
+          this.GetDatos()
     },
      computed: {
             ListaFiltro() {
@@ -104,6 +105,7 @@ export default {
           if(item){          
             var val = item.split("-")
             this.datos.id_metodologia = val[0]
+            this.id_metodologia=val[0];
             this.datos.nombre=val[1]   
             this.nombremetodologia=val[1];
             this.ListarFasePorMetodologia(val[0]);  

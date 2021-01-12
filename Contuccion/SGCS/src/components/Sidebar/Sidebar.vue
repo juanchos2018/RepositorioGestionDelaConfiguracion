@@ -21,6 +21,7 @@
         />
         
          <NavLink
+             v-if="esJefe"
             :activeItem="activeItem"
             header="Metodologias"
             link="/app/metodologia"
@@ -29,6 +30,7 @@
             isHeader
         />
            <NavLink
+            v-if="esJefe"
             :activeItem="activeItem"
             header="ECS"
             link="/app/elemento"
@@ -47,6 +49,7 @@
            
         />-->
           <NavLink
+           v-if="esJefe"
             :activeItem="activeItem"
             header="Proyectos"
             link="/app/proyecto"
@@ -54,10 +57,21 @@
             index="proyecto"
             :childrenLinks="[
               { header: 'Agregar', link: '/app/components/agregar' },
-              { header: 'Listar', link: '/app/components/listar' }
-            ]"
+              { header: 'Listar', link: '/app/components/listar' },
+            
+             ]"
         />
-
+        <NavLink
+            v-if="esAdministrador"
+            :activeItem="activeItem"
+            header="Proyectos"
+            link="/app/proyecto"
+            iconName="flaticon-network"
+            index="proyecto"
+            :childrenLinks="[            
+              { header: 'Listar', link: '/app/components/listarproyecto' }
+             ]"
+        />
           <NavLink
             :activeItem="activeItem"
             header="Solicitud de Cambio"
@@ -68,7 +82,7 @@
               { header: 'Agregar', link: '/app/components/solicitudnueva' },
               { header: 'Listar', link: '/app/components/solicitudlista' }
             ]"
-        />
+           />
     <!--     <NavLink
              v-if="esMiembro"
             :activeItem="activeItem"
@@ -85,16 +99,29 @@
             iconName="flaticon-network"
             index="solicitudlista"
             isHeader           
-        />-->
-         <NavLink
+        />
+           <NavLink
             :activeItem="activeItem"
             header="Informecambio"
             link="/app/informecambio"
             iconName="flaticon-network"
             index="informecambio"
             isHeader           
-        />
-        
+        />  
+        -->
+            
+          <NavLink
+             v-if="esAdministrador"
+            :activeItem="activeItem"
+            header="Informe Cambio"
+            link="/app/informe"
+            iconName="flaticon-network"
+            index="informe"
+            :childrenLinks="[
+              { header: 'Listar', link: '/app/components/informelistar' },
+              
+            ]"
+           />
            <NavLink
             v-if="esAdministrador"
             :activeItem="activeItem"
@@ -178,6 +205,9 @@ export default {
      esMiembro(){
       return  this.$store.state.tipousuario =='Miembro';
     },
+    esJefe(){
+      return  this.$store.state.tipousuario =='Jefe';
+    }
   },
 };
 </script>

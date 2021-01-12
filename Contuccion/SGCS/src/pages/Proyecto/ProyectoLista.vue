@@ -24,7 +24,7 @@
                 </template>      
                     <b-dropdown-item @click="AbrirDialogo(item.id_proyecto)">Nuevo Miembro</b-dropdown-item>
                     <b-dropdown-item @click="Miembros(item.id_proyecto)">Miembros</b-dropdown-item>                   
-                    <b-dropdown-item >Editar</b-dropdown-item>     
+                             
                 </b-dropdown>             
             <b-card-title>{{item.nombre_proyecto}}</b-card-title>  
             <br>    
@@ -74,11 +74,11 @@ export default {
               idusuario:'',
               mycolor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
               colores:['primary','success','info','warning','dark','secondary'],
-               selectedImage: ''
+              selectedImage: ''
         }
     },
     created(){
-    //   this.ListarProyecto();
+       this.ListarProyecto();
     //   this.LisrarMiembrosProyecto();
     },
      computed: {
@@ -90,8 +90,8 @@ export default {
     },
     mounted() {
      if(localStorage.idtipo) this.idtipousuario = localStorage.idtipo;
-      if(localStorage.idtipo) this.idusuario = localStorage.id_usuario;
-       this.ListarPoryectosUsuario(this.idusuario);   
+     if(localStorage.idtipo) this.idusuario = localStorage.id_usuario;
+    //   this.ListarPoryectosUsuario(this.idusuario);   
     },
     methods:{
         Nuevo(){
@@ -112,7 +112,8 @@ export default {
         ListarProyecto(){
              let me=this;
               axios.get('ApiWeb/Proyecto.php/').then(response => {                    
-                      me.items = response.data;                      
+                      me.items = response.data;  
+                       me.LisrarMiembrosProyecto();                     
                   }).catch(function (error) {
                       console.log(error);
                 }) .finally(() => {                     

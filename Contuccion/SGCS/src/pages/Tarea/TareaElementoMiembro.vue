@@ -8,8 +8,8 @@
                 <b-tab title="Tareas por terminar" active>             
        <div   class="row" > 
         <!--  {{ steps[current].content  sub-title="00:00:05"  }}-->
-        <div class="col-4" v-for="item in tareas" :key="item.key" style="margin-top:10px">  
-            <b-card class="overflow-hidden"  footer-tag="footer" >
+        <div class="col-4" v-for="item in tareas" :key="item.key" style="margin-top:10px" >  
+            <b-card class="overflow-hidden"  footer-tag="footer"  border-variant="primary" >
                 <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
                     <b-dropdown-item  @click="EditarTarea(item.id_tarea,item.descripcion,item.porcentajeavance,item.estado1)">Editar</b-dropdown-item>                                         
                 </b-dropdown>   
@@ -35,7 +35,7 @@
                 <b-tab title="Tareas Terminadas">
                      <div   class="row" >                       
                         <div class="col-4" v-for="item in tareasterminadas" :key="item.key" style="margin-top:10px">  
-                            <b-card class="overflow-hidden"  footer-tag="footer" >
+                            <b-card class="overflow-hidden"  footer-tag="footer" border-variant="success" >
                                 <b-dropdown class="dropdown-icon"   variant="#FFFFF" style="float:right" right >            
                                     <b-dropdown-item  @click="showModal(item.id_tarea)" >Ver</b-dropdown-item>
                                    <b-dropdown-item  v-if="item.estado2=='Observado'"  @click="EditarTarea(item.id_tarea,item.descripcion,item.porcentajeavance,item.estado1)">Editar</b-dropdown-item>                                                         
@@ -59,7 +59,7 @@
                                    </div>                      
                                    <div v-else>
                                        <b-icon icon="x-circle" scale="2" variant="danger"></b-icon>
-                                   </div>                                
+                                  </div>                                
                              </div>                                 
                             </b-card-text>   
                                 </b-card-body>                  
@@ -74,7 +74,7 @@
                       </div> 
                 </b-tab>             
             </b-tabs>    
-         <tarea-editar @CerrarModal="CerrarModal" :DialogoTareaEditar="DialogoTareaEditar" v-bind:id_tarea="id_tarea"  v-bind:id_responsable="id_responsable" v-bind:descripcion="descripcion"  v-bind:porcentaje="porcentaje" v-bind:estadotarea="estadotarea"   @update-number="update" ></tarea-editar>
+         <tarea-editar @CerrarModal="CerrarModal" :DialogoTareaEditar="DialogoTareaEditar" v-bind:id_tarea="id_tarea"  v-bind:id_responsable="id_responsable" v-bind:descripcion="descripcion"  v-bind:porcentaje="porcentaje" v-bind:estadotarea="estadotarea"   @update-number="update"  v-on:ListarTareas-Emit="ListarTareas" ></tarea-editar>
    
         <b-modal  ref="my-modal" title="Respuesta "  body-class="myDiv">
             <p class="my-4">{{respuesta}}</p>
@@ -111,7 +111,7 @@ export default {
          this.GetDatos() 
     },
     methods: {
-        update(num){
+       update(num){
             console.log(num)
         },
       GetDatos(){
@@ -119,16 +119,15 @@ export default {
              if(id){        
                  this.id_responsable=id;
                  this.ListarTareas(id);                  
-             }      
+            }      
        },
-       ListarTareas(id){
-           //v-on:ListarTareas-Emit="ListarTareas"
+       ListarTareas(id){ 
              let me=this;         
              var elementos=[];
              me.tareasterminadas=[];
              me.tareas=[];
              axios.get('ApiWeb/Miembro.php/?miembroresponsableID='+id,).then(function(response){   
-               console.log(response.data)   
+             ///  console.log(response.data)   
                 response.data.forEach(elem => {
                     if (elem.estado1=="Terminado") {
                          me.tareasterminadas.push({
@@ -150,14 +149,11 @@ export default {
                              fecha_termino: elem.fecha_termino,
                              estado:elem.estado,  
                              estado1:elem.estado1, 
-                             estado2:elem.estado2, 
-                 
+                             estado2:elem.estado2,                  
                        })
                  }
                
-              });                
-                 
-                                    
+              });                                     
               }).catch(function(error){
                   console.log(error);
            });       
@@ -167,7 +163,7 @@ export default {
             this.$refs['my-modal'].show()
              let me=this;
              axios.get('ApiWeb/Tarea.php/?id='+id_tarea).then(response => {             
-               //  console.log(response.data)
+          
                  me.respuesta=response.data.respuesta;                
              
                }).catch(function (error) {

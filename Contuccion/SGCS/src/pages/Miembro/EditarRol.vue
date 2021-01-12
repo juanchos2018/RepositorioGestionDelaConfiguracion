@@ -8,7 +8,7 @@
                   aria-describedby="input-live-help input-live-feedback"
                   class="p-2 px-4 btn-xs "
                   disabled
-                 v-model="nombre" >
+                  v-model="nombre" >
                </b-input>
              </b-form-group>                
           </div>
@@ -16,7 +16,7 @@
               <b-form-group  label="Nombre Rol:"  class="col-md-12">
                 <a-select    v-model="id_rol" >              
                  <a-select-option v-for="d in roles" :key="d.value">
-                {{ d.text }}
+                         {{ d.text }}
               </a-select-option>
                </a-select> 
              </b-form-group> 
@@ -51,7 +51,7 @@ export default {
           contador:0,
           CodeMetodologia:'M',
           codigo:'',
-          nombre:'',            
+                   
           isLoading:false,          
           Show:this.DialogoModificar,
           roles:[],
@@ -72,12 +72,16 @@ export default {
     },
     methods: {
        ListarRoles(){
-             let me=this;
+                  let me=this;
                   var elementos=[];
-                  axios.get('Backphp/ApiWeb/Rol.php/',).then(function(response){                      
+                  axios.get('ApiWeb/Rol.php/',).then(function(response){                      
                   elementos=response.data.data;   
+                  console.log(response.data)
                   elementos.map(function(x){
-                        me.roles.push({text: x.nombre,value:x.id_rol});
+                    //    me.roles.push({text: x.nombre,value:x.id_rol});
+                      if (x.nombre!="Jefe de Proyecto"){
+                         me.roles.push({text: x.nombre,value:x.id_rol});
+                       } 
                  });  
               }).catch(function(error){
                   console.log(error);
@@ -87,7 +91,7 @@ export default {
           let rolId=this.id_rol;       
           let id=this.id;                 
           const obj={rolId,id};
-          axios.put('Backphp/ApiWeb/Miembro.php/',obj).then(response => {                       
+          axios.put('ApiWeb/Miembro.php/',obj).then(response => {                       
               console.log(response);
               //  this.ListarElemetos();
                this.Confirmacion();

@@ -13,6 +13,7 @@ import Metodologia from '@/pages/Metodologias/Metodologia';
 import Registro from '@/pages/Registro/Registro';
 import Fases from '@/pages/Fases/Fases';
 import Proyecto from '@/pages/Proyecto/Proyecto';
+import ProyectoLista from '@/pages/Proyecto/ProyectoLista';
 import ProyectoNuevo from '@/pages/Proyecto/ProyectoNuevo';
 import ProyectoDetalle from '@/pages/Proyecto/ProyectoDetalle';
 import ProyectoMiembros from '@/pages/Proyecto/ProyectoMiembros';
@@ -27,6 +28,7 @@ import TareaElementoMiembro from '@/pages/Tarea/TareaElementoMiembro';
 import TareaDetalle from '@/pages/Tarea/TareaDetalle';
 import TareaUsuario from '@/pages/Tarea/TareaUsuario';
 import InformeCambio from '@/pages/Informe/InformeCambio';
+import InformeCambioLista from '@/pages/Informe/InformeCambioLista';
 import store from './store/index'
 
 Vue.use(Router);
@@ -112,9 +114,7 @@ var router = new Router({
           path: 'registro',
           name: 'registro',
           component: Registro,
-        },
-        
-        
+        },   
         {
           path: 'proyectomiembro:id_proyecto',
           name: 'proyectomiembro',
@@ -142,24 +142,30 @@ var router = new Router({
             Jefe:true       
           }
         },
-        {
-         
+        {         
           path: 'components/solicitudnueva',
           name: 'solicitudnueva',
           component: SolicitudNueva,
           meta :{
-            Miembro :true,   
-                 
+            Miembro :true,                    
           }
         },
-        {
-         
+        {         
           path: 'components/solicitudlista',
           name: 'solicitudlista',
           component: SolicitudLista,
           meta :{
             Administrador :true,   
             Jefe:true       
+          }
+        },
+        {         
+          path: 'components/informelistar',
+          name: 'informelista',
+          component: InformeCambioLista,
+          meta :{
+            Administrador :true,   
+                  
           }
         },
         {
@@ -189,6 +195,15 @@ var router = new Router({
             Jefe:true       
           }
         },
+        {
+          path: 'components/listarproyecto',
+          name: 'listar',
+          component: ProyectoLista,
+          meta :{
+            Administrador :true,                     
+          }
+        },
+        //ProyectoLista
         {
           path: 'components/tarealemento:datos',
           name: 'tarealemento',

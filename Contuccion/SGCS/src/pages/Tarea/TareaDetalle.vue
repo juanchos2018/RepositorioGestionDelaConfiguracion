@@ -37,23 +37,39 @@
                           {{estado}}
                         </a-descriptions-item>
                         <a-descriptions-item label="Url Evidencia">
-                        <b-link href="urlevidencia">link</b-link>
+                   <!--    <b-link href="urlevidencia">link</b-link>-->
+                         <a :href="urlevidencia"    target="_blank">Link</a>
                         </a-descriptions-item>
                       </a-descriptions>
                 
                   <label for="">Comentario :</label>
                   <p> {{comnentario}}</p>
+                  <div style="float:right;margin-right:20px; display:flex ">                  
+                  <h5 style="margin-right:20px;  ">   {{estado2}}</h5>
+                  <div v-if="estado2=='Aprobado'"> 
+                      <b-icon icon="check-square" scale="2" variant="success"></b-icon>
+                  </div>
+                  <div v-else-if="estado2 == 'Revision'"> 
+                     <b-icon icon="hourglass-split" scale="2" variant="success"></b-icon>
+                  </div>
+                  <div v-else-if="estado2 == 'Observado'">
+                      <b-icon icon="exclamation-triangle-fill" scale="2" variant="warning" v-b-tooltip.hover title="Observado"></b-icon>
+                  </div> 
+                  <div v-else-if="estado2 == null">
+                      <b-icon icon="hourglass-split" scale="2" variant="warning" v-b-tooltip.hover title="Observado"></b-icon>
+                  </div> 
+                  </div>                
+                  
                 </b-card>
               </div>
               <br>
                 <div style="float:right">
                <!-- <b-button variant="danger"  class="p-2 px-4 btn-xs">Rechazar</b-button> -->
-                <b-button variant="success"  class="p-2 px-4 btn-xs" @click="Responder" style="margin-left:5px">Responder</b-button>
+                <b-button variant="success"  class="p-2 px-4 btn-xs" @click="MostrarMensaje" style="margin-left:5px">Responder</b-button>
               </div>
             </b-form-group>    
         </div>  
-        <hr>
-     
+        <hr>     
   </div>
 </template>
 
@@ -123,8 +139,7 @@ export default {
          },
         BuscarTarea(id_tarea1){
            let me=this;
-            axios.get('ApiWeb/Tarea.php/?id_tarea1='+id_tarea1).then(response => {             
-             
+            axios.get('ApiWeb/Tarea.php/?id_tarea1='+id_tarea1).then(response => {   
                  me.nombre_miembro=response.data.nombre; 
                  me.fecha_inicio=response.data.fecha_inicio;
                  me.fecha_termino=response.data.fecha_termino   
@@ -133,10 +148,18 @@ export default {
                  me.urlevidencia=response.data.urlevidencia   
                  me.estado=response.data.estado
                  me.estado1=response.data.estado1    
+                 me.estado2=response.data.estado2
                }).catch(function (error) {
                     console.log(error);
               }) .finally(() => {
            })
+        },
+        MostrarMensaje(){
+          if(this.estado2=="Aprobado"){
+            this.MensajeTareaAprobada();
+          }else{
+            this.Responder();
+          }
         },
         Responder(){
           const swalWithBootstrapButtons =  this.$swal.mixin({
@@ -159,11 +182,10 @@ export default {
               }).then((result) => {
                 if (result.isConfirmed) {
                     this.EditarTareaMiembro(this.id_tareamiembro,"Terminado","Terminado","Aprobado");
-                } else if (result.dismiss === Swal.DismissReason.cancel  ) {
-                   //  this.RecharzarTarea();
+                } else if (result.dismiss === Swal.DismissReason.cancel  ) {                  
                      this.RecharzarTarea();
                 }
-              })
+           })
         },     
         onChange(current) {
           console.log('onChange:', current);
@@ -176,30 +198,26 @@ export default {
            let me=this;
             axios.get('ApiWeb/Historial.php/?id_timeline='+id_timelinea).then(response => {            
              
-               if(response.data.length>0){
-                me.comnentario=response.data[0].descripcion;
-                me.urlevidencia=response.data[0].urlevidencia;
-               }else{
+                if(response.data.length>0){
+                   me.comnentario=response.data[0].descripcion;
+                   me.urlevidencia=response.data[0].urlevidencia;
+                }else{
                    me.comnentario="";
-               }
-              
-              
+                }  
                }).catch(function (error) {
                     console.log(error);
               }) .finally(() => {
            })
-
         },
         CerrarModal(){              
            this.$emit('CerrarModal');
         },   
         EditarTareaMiembro(idtarea,esta,esta1,esta2){
-
                   let id_tarea=idtarea; 
                   let estado=esta;  
                   let estado1=esta1;  
                   let estado2=esta2;  
-                   let respuesta="Aprobado"; 
+                  let respuesta="Aprobado"; 
                   const obj={id_tarea,estado,estado1,estado2,respuesta};
                   axios.put('ApiWeb/Historial.php/',obj).then(response => {     
                       console.log(response.data)   
@@ -210,8 +228,8 @@ export default {
                         )
                   }).catch(function (error) {
                       console.log(error);
-                  }) .finally(() => {              
-                }) 
+                }) .finally(() => {              
+             }) 
         },   
         RecharzarTarea(){
          let me =this;
@@ -225,6 +243,9 @@ export default {
             }
           })
         },       
+        MensajeTareaAprobada(){
+           Swal.fire('Esta Tarea ya esta Aprobada');
+        },
         EnviarMensaje(mensaje){
           // this.EditarTareaMiembro(this.id_tareamiembro,"Terminado","Terminado","Aprobado");
                   let id_tarea=this.id_tareamiembro; 

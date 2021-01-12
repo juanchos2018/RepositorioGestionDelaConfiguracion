@@ -23,8 +23,13 @@
             <b-row no-gutters>
             <b-col md="3">
                 <div class="UserAvatar__IconImage-hmym9w-1 jtNJTZ" >
-                    <center>                       
-                    <img src="../../assets/loguusu1.png" alt="Avatar" class="avatar1"/>  
+                    <center>  
+                      <div v-if="item.nombre_rol=='Jefe de Proyecto'">
+                         <img src="../../assets/logojefe2.png" alt="Avatar" class="avatar1"/>  
+                      </div> 
+                       <div v-else>
+                          <img src="../../assets/loguusu1.png" alt="Avatar" class="avatar1"/>  
+                      </div>  
                     </center>
                 </div>     
             </b-col>

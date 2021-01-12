@@ -141,9 +141,7 @@ export default {
                       estadota="Proceso";
                       estado1="Proceso";
                   }
-
                   let estado=estadota;  
-
                   const obj={id_tarea,urlevidencia,porcentajeavance,estado,estado1};
                   axios.put('ApiWeb/Tarea.php/',obj).then(response => {     
                       console.log(response.data)   
@@ -161,11 +159,10 @@ export default {
                   let fecha=this.fecha_actual;
                   let hora=this.hora_actual;    
                   let estado=estadota;   
-                  let id_tarea=this.id_tarea;     
-
-                    let descripcion_avance=this.descripcion_avance;  
-                    let porcentajeavance=this.rango;  
-                    let urlevidencia=this.urlevidencia;
+                  let id_tarea=this.id_tarea;  
+                  let descripcion_avance=this.descripcion_avance;  
+                  let porcentajeavance=this.rango;  
+                  let urlevidencia=this.urlevidencia;
 
                   const obj={miembroresponsableID,fecha,hora,estado,id_tarea,porcentajeavance,urlevidencia,descripcion_avance};
 
@@ -175,10 +172,8 @@ export default {
                       console.log(error);
                   }) .finally(() => {              
                 })
-            },      
-           
-            ListarTareas(id){
-           
+            },                 
+            ListarTareas(id){           
                 this.$emit('ListarTareas-Emit',id);
             },  
              onChange(value) {

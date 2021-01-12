@@ -17,7 +17,13 @@
                     <center> 
              
                    <div style="font-size: 4rem;">
-                <b-icon icon="person-circle" animation="fade" font-scale="1" ></b-icon>
+                  
+                      <div v-if="item.tipo=='Miembro'">
+                         <b-icon icon="person-circle" animation="fade" font-scale="1" ></b-icon> 
+                      </div> 
+                       <div v-else>
+                          <b-icon icon="person-bounding-box" animation="fade" font-scale="1" ></b-icon> 
+                      </div>  
                 </div>
                     </center>
                 </div>     
